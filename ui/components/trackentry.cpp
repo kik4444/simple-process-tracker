@@ -61,7 +61,7 @@ void TrackEntry::setData(QString processName, uint processDuration, QString date
 
     ui->selectButton->hide();
     ui->lineEdit->setText(processName);
-    ui->durationLabel->setText(parseProcessDuration(processDuration));
+    ui->durationButton->setText(parseProcessDuration(processDuration));
     ui->dateAddedLabel->setText(dateAdded);
     ui->trackingCheckBox->setChecked(trackingIsActive);
 
@@ -84,7 +84,7 @@ void TrackEntry::updateDuration()
     if (processIsRunning)
     {
         processDuration += updateInterval;
-        ui->durationLabel->setText(parseProcessDuration(processDuration));
+        ui->durationButton->setText(parseProcessDuration(processDuration));
     }
 
     process->deleteLater();
@@ -136,3 +136,12 @@ void TrackEntry::on_removeButton_clicked()
     emit removeClearedEntries();
 }
 
+
+void TrackEntry::on_durationButton_clicked()
+{
+    bool ok;
+    QString durationInput = QInputDialog::getText(this, "Custom duration", "Set custom duration", QLineEdit::Normal, "00:00:00", &ok);
+    QStringList splitDuration = durationInput.split(":");
+    if (ok && splitDuration.size() == 3)
+        processDuration = splitDuration[0].toUInt() * 3600 + splitDuration[1].toUInt() * 60 + splitDuration[2].toUInt();
+}
