@@ -44,9 +44,15 @@
     </widget>
    </item>
    <item>
-    <widget class="QLabel" name="durationLabel">
+    <widget class="QPushButton" name="durationButton">
+     <property name="cursor">
+      <cursorShape>PointingHandCursor</cursorShape>
+     </property>
      <property name="text">
       <string>00:00:00</string>
+     </property>
+     <property name="flat">
+      <bool>true</bool>
      </property>
     </widget>
    </item>

@@ -9,6 +9,9 @@
 //For removal confirmation
 #include <QMessageBox>
 
+//For inputting custom duration
+#include <QInputDialog>
+
 namespace Ui {
 class TrackEntry;
 }
@@ -43,6 +46,8 @@ private slots:
     void on_trackingCheckBox_stateChanged(int arg1);
 
     void on_removeButton_clicked();
+
+    void on_durationButton_clicked();
 
 private:
     QString parseProcessDuration(uint processDuration);
