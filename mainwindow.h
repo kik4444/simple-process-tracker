@@ -20,6 +20,9 @@
 //For running in the background
 #include <QSystemTrayIcon>
 
+//For recording date added
+#include <QDateTime>
+
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
 QT_END_NAMESPACE

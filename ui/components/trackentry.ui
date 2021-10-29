@@ -51,6 +51,13 @@
     </widget>
    </item>
    <item>
+    <widget class="QLabel" name="dateAddedLabel">
+     <property name="text">
+      <string>Date added</string>
+     </property>
+    </widget>
+   </item>
+   <item>
     <widget class="QCheckBox" name="trackingCheckBox">
      <property name="cursor">
       <cursorShape>PointingHandCursor</cursorShape>

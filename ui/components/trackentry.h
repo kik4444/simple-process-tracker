@@ -24,9 +24,10 @@ public:
 
     QString getProcessName();
     uint getProcessDuration();
+    QString getDateAdded();
     bool getTrackingIsActive();
 
-    void setData(QString processName, uint processDuration, bool trackingIsActive);
+    void setData(QString processName, uint processDuration, QString dateAdded, bool trackingIsActive);
 
 signals:
     void removeClearedEntries();
