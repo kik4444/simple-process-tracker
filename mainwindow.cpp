@@ -11,6 +11,16 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
+void MainWindow::on_actionDebug_triggered()
+{
+    for (uint i = 0; i < ui->trackerListWidget->count(); i++)
+    {
+        QListWidgetItem *widgetItem = ui->trackerListWidget->item(i);
+        TrackEntry *trackEntry= dynamic_cast<TrackEntry*>(ui->trackerListWidget->itemWidget(widgetItem));
+        qDebug() << trackEntry->getProcessName();
+    }
+}
+
 void MainWindow::on_actionAdd_triggered()
 {
 //    TrackEntry *trackEntry = new TrackEntry();
