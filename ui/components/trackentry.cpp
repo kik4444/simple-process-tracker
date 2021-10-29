@@ -1,3 +1,4 @@
+#include "../../mainwindow.h"
 #include "trackentry.h"
 #include "ui_trackentry.h"
 
@@ -25,7 +26,8 @@ void TrackEntry::setData(QString processName, uint processDuration)
 
 void TrackEntry::on_selectButton_clicked()
 {
-
+    ProcessDialog *processDialog = new ProcessDialog();
+    processDialog->exec();
 }
 
 TrackEntry::~TrackEntry()
