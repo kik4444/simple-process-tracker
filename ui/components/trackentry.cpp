@@ -65,8 +65,22 @@ void TrackEntry::setData(QString processName, uint processDuration, bool trackin
 
 void TrackEntry::updateDuration()
 {
-    processDuration += updateInterval;
-    ui->durationLabel->setText(parseProcessDuration(processDuration));
+    bool processIsRunning = false;
+    QProcess *process = new QProcess(this);
+
+    #if defined Q_OS_LINUX
+
+    process->start("pgrep", QStringList() << "-nx" << getProcessName());
+    process->waitForFinished();
+    processIsRunning = !QString(process->readAllStandardOutput()).isEmpty();
+
+    #endif
+
+    if (processIsRunning)
+    {
+        processDuration += updateInterval;
+        ui->durationLabel->setText(parseProcessDuration(processDuration));
+    }
 }
 
 void TrackEntry::on_selectButton_clicked()
