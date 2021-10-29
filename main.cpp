@@ -9,6 +9,8 @@ int main(int argc, char *argv[])
     QCoreApplication::setApplicationName(QLatin1String("Simple Process Tracker"));
     QCoreApplication::setOrganizationName(QLatin1String("Simple Process Tracker"));
 
+    a.setQuitOnLastWindowClosed(false);
+
     MainWindow w;
     w.show();
     return a.exec();

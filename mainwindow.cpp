@@ -24,6 +24,18 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent) , ui(new Ui::MainW
 
         settings.endGroup();
     }
+
+    systemTrayIcon = new QSystemTrayIcon(this);
+    systemTrayIcon->setIcon(QIcon(":/Assets/Icons/app-icon.svg"));
+
+    QMenu *systemTrayIconMenu = new QMenu();
+    systemTrayIconMenu->addAction("Open", this, &MainWindow::trayIconActionOpen);
+    systemTrayIconMenu->addAction("Exit", this, &MainWindow::trayIconActionExit);
+
+    connect(systemTrayIcon, &QSystemTrayIcon::activated, this, &MainWindow::trayIconActivated);
+
+    systemTrayIcon->setContextMenu(systemTrayIconMenu);
+    systemTrayIcon->show();
 }
 
 MainWindow::~MainWindow()
@@ -53,12 +65,7 @@ MainWindow::~MainWindow()
 
 void MainWindow::on_actionDebug_triggered()
 {
-    for (uint i = 0; i < ui->trackerListWidget->count(); i++)
-    {
-        QListWidgetItem *widgetItem = ui->trackerListWidget->item(i);
-        TrackEntry *trackEntry= dynamic_cast<TrackEntry*>(ui->trackerListWidget->itemWidget(widgetItem));
-        qDebug() << trackEntry->getProcessName();
-    }
+
 }
 
 void MainWindow::on_actionAdd_triggered()
@@ -80,4 +87,20 @@ void MainWindow::removeClearedEntries()
         if (trackEntry->getProcessName().isEmpty())
             delete widgetItem;
     }
+}
+
+void MainWindow::trayIconActionOpen()
+{
+    this->show();
+}
+
+void MainWindow::trayIconActivated(int activationReason)
+{
+    if (activationReason == QSystemTrayIcon::Trigger)
+        systemTrayIcon->contextMenu()->popup(QCursor::pos());
+}
+
+void MainWindow::trayIconActionExit()
+{
+    qApp->quit();
 }
