@@ -104,3 +104,8 @@ void MainWindow::trayIconActionExit()
 {
     qApp->quit();
 }
+
+void MainWindow::on_actionExit_triggered()
+{
+    qApp->quit();
+}

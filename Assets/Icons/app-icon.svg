@@ -14,9 +14,9 @@
    xmlns="http://www.w3.org/2000/svg"
    xmlns:svg="http://www.w3.org/2000/svg"><defs
    id="defs282">
-	
-	
-	
+
+
+
 </defs>
 <pattern
    y="512"
@@ -479,24 +479,25 @@
 	</g>
 </pattern>
 <g
-   id="g991"><g
-     id="g966"><g
-       id="g961"><g
-         id="g237"
-         style="fill:#b5f1f4;fill-opacity:1">
+   id="g966"
+   style="stroke:#b5f1f4;stroke-opacity:1"><g
+     id="g961"
+     style="stroke:#b5f1f4;stroke-opacity:1"><g
+       id="g237"
+       style="fill:#b5f1f4;fill-opacity:1;stroke:#b5f1f4;stroke-opacity:1">
 		<circle
-   fill="#fb9700"
+   fill="#b5f1f4"
    cx="256"
    cy="256.00101"
    r="256"
    id="circle235"
-   style="fill:#b5f1f4;fill-opacity:1" />
+   style="fill:#b5f1f4;fill-opacity:1;stroke:#b5f1f4;stroke-opacity:1" />
 	</g></g></g><path
-     fill="#d06500"
-     d="M 505.594,199.187 355.059,100.83 v 174.828 h -180 v 141.604 l 135.859,88.77 C 425.898,480.883 512,378.524 512,256.001 c 0,-19.537 -2.262,-38.533 -6.406,-56.814 z"
-     id="path239"
-     style="fill:#84dbff;fill-opacity:1" /><g
-     id="g275">
+   fill="#84dbff"
+   d="M 505.594,199.187 355.059,100.83 v 174.828 h -180 v 141.604 l 135.859,88.77 C 425.898,480.883 512,378.524 512,256.001 c 0,-19.537 -2.262,-38.533 -6.406,-56.814 z"
+   id="path239"
+   style="fill:#84dbff;fill-opacity:1" /><g
+   id="g275">
 		<g
    id="g255">
 			<path
@@ -566,5 +567,5 @@
    fill="#000412"
    d="m 267.898,253.5 c 0,5.799 -4.703,10.502 -10.5,10.502 -5.805,0 -10.5,-4.703 -10.5,-10.502 0,-5.799 4.695,-10.5 10.5,-10.5 5.797,0 10.5,4.701 10.5,10.5 z"
    id="path273" />
-	</g></g>
+	</g>
 </svg>
