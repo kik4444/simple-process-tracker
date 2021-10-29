@@ -109,6 +109,20 @@ void TrackEntry::on_trackingCheckBox_stateChanged(int arg1)
 
 void TrackEntry::on_removeButton_clicked()
 {
+    if (!getProcessName().isEmpty())
+    {
+        QMessageBox confirmDialog(this);
+        confirmDialog.setWindowTitle("Confirm removal");
+        confirmDialog.setText("Are you sure you wish to remove this process?");
+        confirmDialog.setIcon(QMessageBox::Question);
+        confirmDialog.setStandardButtons(QMessageBox::Yes | QMessageBox::No);
+        confirmDialog.setDefaultButton(QMessageBox::No);
+        int answer = confirmDialog.exec();
+
+        if (answer != QMessageBox::Yes)
+            return;
+    }
+
     QSettings settings(QSettings::IniFormat, QSettings::UserScope, "simple-process-tracker", "config");
     settings.remove(getProcessName());
     ui->lineEdit->clear();

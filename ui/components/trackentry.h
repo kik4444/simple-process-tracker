@@ -2,7 +2,12 @@
 #define TRACKENTRY_H
 
 #include <QWidget>
+
+//For updating duration
 #include <QTimer>
+
+//For removal confirmation
+#include <QMessageBox>
 
 namespace Ui {
 class TrackEntry;
