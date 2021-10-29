@@ -26,8 +26,12 @@ private slots:
 
     void on_listWidget_itemActivated(QListWidgetItem *item);
 
+    void on_lineEdit_textChanged(const QString &arg1);
+
 private:
     Ui::ProcessDialog *ui;
+
+    QStringList processList;
 };
 
 #endif // PROCESSDIALOG_H

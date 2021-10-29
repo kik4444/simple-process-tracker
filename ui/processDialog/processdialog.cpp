@@ -7,11 +7,10 @@ ProcessDialog::ProcessDialog(QWidget *parent) : QDialog(parent), ui(new Ui::Proc
     ui->setupUi(this);
 
     QProcess *process = new QProcess(this);
-    QStringList processList;
 
     #if defined Q_OS_LINUX
 
-    process->start("ps", QStringList() << "-eo" << "cmd");
+    process->start("ps", QStringList() << "-eo" << "comm");
     process->waitForFinished();
     processList = QString(process->readAllStandardOutput()).split("\n");
 
@@ -51,3 +50,17 @@ void ProcessDialog::on_buttonBox_accepted()
 {
     on_listWidget_itemActivated(ui->listWidget->currentItem());
 }
+
+void ProcessDialog::on_lineEdit_textChanged(const QString &arg1)
+{
+    ui->listWidget->clear();
+
+    if (!arg1.isEmpty())
+    {
+        QStringList results = processList.filter(arg1, Qt::CaseInsensitive);
+        ui->listWidget->addItems(results);
+    }
+    else
+        ui->listWidget->addItems(processList);
+}
+
