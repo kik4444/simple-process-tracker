@@ -5,6 +5,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent) , ui(new Ui::MainW
 {
     ui->setupUi(this);
 
+    //Load process data
     QSettings settings(QSettings::IniFormat, QSettings::UserScope, "simple-process-tracker", "config");
     QMap<uint, QString> processOrder;
     foreach (QString process, settings.childGroups())
@@ -29,6 +30,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent) , ui(new Ui::MainW
         settings.endGroup();
     }
 
+    //Create system tray icon
     systemTrayIcon = new QSystemTrayIcon(this);
     systemTrayIcon->setIcon(QIcon(":/Assets/Icons/app-icon.svg"));
 
@@ -40,9 +42,21 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent) , ui(new Ui::MainW
 
     systemTrayIcon->setContextMenu(systemTrayIconMenu);
     systemTrayIcon->show();
+
+    //Set autosave timer
+    QTimer *autoSaveTimer = new QTimer(this);
+    autoSaveTimer->setTimerType(Qt::VeryCoarseTimer);
+    connect(autoSaveTimer, &QTimer::timeout, this, &MainWindow::saveProcessData);
+    autoSaveTimer->start(autoSaveTimerInterval);
 }
 
 MainWindow::~MainWindow()
+{
+    saveProcessData();
+    delete ui;
+}
+
+void MainWindow::saveProcessData()
 {
     QSettings settings(QSettings::IniFormat, QSettings::UserScope, "simple-process-tracker", "config");
 
@@ -64,8 +78,6 @@ MainWindow::~MainWindow()
             settings.endGroup();
         }
     }
-
-    delete ui;
 }
 
 void MainWindow::on_actionDebug_triggered()

@@ -43,6 +43,8 @@ private slots:
     void trayIconActivated(int activationReason);
     void trayIconActionExit();
 
+    void saveProcessData();
+
     void on_actionAdd_triggered();
 
     void on_actionDebug_triggered();
@@ -55,5 +57,6 @@ private:
     QSystemTrayIcon *systemTrayIcon;
 
     const int trackEntrySize = 50;
+    const int autoSaveTimerInterval = 60000;
 };
 #endif // MAINWINDOW_H
