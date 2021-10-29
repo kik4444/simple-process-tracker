@@ -23,6 +23,9 @@ public:
 
     void setData(QString processName, uint processDuration, bool trackingIsActive);
 
+signals:
+    void removeClearedEntries();
+
 public slots:
     void processChosen(QString processName);
 
@@ -32,6 +35,8 @@ private slots:
     void on_selectButton_clicked();
 
     void on_trackingCheckBox_stateChanged(int arg1);
+
+    void on_removeButton_clicked();
 
 private:
     QString parseProcessDuration(uint processDuration);
