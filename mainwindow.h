@@ -24,5 +24,7 @@ private slots:
 
 private:
     Ui::MainWindow *ui;
+
+    const int trackEntrySize = 50;
 };
 #endif // MAINWINDOW_H
