@@ -36,6 +36,11 @@ uint TrackEntry::getProcessDuration()
     return this->processDuration;
 }
 
+QString TrackEntry::getDateAdded()
+{
+    return ui->dateAddedLabel->text();
+}
+
 bool TrackEntry::getTrackingIsActive()
 {
     return trackingIsActive;
@@ -49,7 +54,7 @@ void TrackEntry::setTimerState()
         timer->stop();
 }
 
-void TrackEntry::setData(QString processName, uint processDuration, bool trackingIsActive)
+void TrackEntry::setData(QString processName, uint processDuration, QString dateAdded, bool trackingIsActive)
 {
     this->processDuration = processDuration;
     this->trackingIsActive = trackingIsActive;
@@ -57,6 +62,7 @@ void TrackEntry::setData(QString processName, uint processDuration, bool trackin
     ui->selectButton->hide();
     ui->lineEdit->setText(processName);
     ui->durationLabel->setText(parseProcessDuration(processDuration));
+    ui->dateAddedLabel->setText(dateAdded);
     ui->trackingCheckBox->setChecked(trackingIsActive);
 
     setTimerState();
@@ -96,6 +102,7 @@ void TrackEntry::processChosen(QString processName)
     trackingIsActive = true;
 
     ui->lineEdit->setText(processName);
+    ui->dateAddedLabel->setText(QDateTime::currentDateTime().toString("yyyy/MM/dd"));
     ui->selectButton->hide();
     ui->trackingCheckBox->setChecked(trackingIsActive);
     setTimerState();

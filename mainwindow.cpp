@@ -15,7 +15,11 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent) , ui(new Ui::MainW
         settings.beginGroup(processOrder[i]);
 
         TrackEntry *trackEntry = new TrackEntry();
-        trackEntry->setData(processOrder[i], settings.value("duration", 0).toUInt(), settings.value("trackingIsActive", false).toBool());
+
+        trackEntry->setData(processOrder[i], settings.value("duration", 0).toUInt(),
+            settings.value("dateAdded", QDateTime::currentDateTime().toString("yyyy/MM/dd")).toString(),
+            settings.value("trackingIsActive", false).toBool());
+
         connect(trackEntry, &TrackEntry::removeClearedEntries, this, &MainWindow::removeClearedEntries);
         QListWidgetItem *listWidgetItem = new QListWidgetItem(ui->trackerListWidget);
         ui->trackerListWidget->addItem(listWidgetItem);
@@ -53,6 +57,7 @@ MainWindow::~MainWindow()
             settings.beginGroup(processName);
 
             settings.setValue("duration", trackEntry->getProcessDuration());
+            settings.setValue("dateAdded", trackEntry->getDateAdded());
             settings.setValue("trackingIsActive", trackEntry->getTrackingIsActive());
             settings.setValue("position", i);
 
