@@ -8,6 +8,9 @@
 #include "ui/components/trackentry.h"
 #include "ui/processDialog/processdialog.h"
 
+//For reading process list
+#include <QProcess>
+
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
 QT_END_NAMESPACE
