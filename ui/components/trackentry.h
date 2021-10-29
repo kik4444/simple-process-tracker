@@ -2,6 +2,7 @@
 #define TRACKENTRY_H
 
 #include <QWidget>
+#include <QTimer>
 
 namespace Ui {
 class TrackEntry;
@@ -26,13 +27,22 @@ public slots:
     void processChosen(QString processName);
 
 private slots:
+    void updateDuration();
+
     void on_selectButton_clicked();
+
+    void on_trackingCheckBox_stateChanged(int arg1);
 
 private:
     QString parseProcessDuration(uint processDuration);
+    void setTimerState();
 
     uint processDuration = 0;
     bool trackingIsActive = false;
+
+    QTimer *timer;
+    const uint timerInterval = 1000;
+    uint updateInterval = timerInterval / 1000;
 };
 
 #endif // TRACKENTRY_H
