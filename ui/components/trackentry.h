@@ -18,6 +18,9 @@ public:
 
     void setData(QString processName, uint processDuration);
 
+private slots:
+    void on_selectButton_clicked();
+
 private:
     QString parseProcessDuration(uint processDuration);
 };

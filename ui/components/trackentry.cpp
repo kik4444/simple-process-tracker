@@ -17,9 +17,15 @@ QString TrackEntry::parseProcessDuration(uint processDuration)
 
 void TrackEntry::setData(QString processName, uint processDuration)
 {
+    ui->selectButton->setEnabled(false);
     ui->lineEdit->setText(processName);
     ui->lineEdit->setReadOnly(true);
     ui->durationLabel->setText(parseProcessDuration(processDuration));
+}
+
+void TrackEntry::on_selectButton_clicked()
+{
+
 }
 
 TrackEntry::~TrackEntry()

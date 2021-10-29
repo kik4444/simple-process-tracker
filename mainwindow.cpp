@@ -13,11 +13,16 @@ MainWindow::~MainWindow()
 
 void MainWindow::on_actionAdd_triggered()
 {
-    qDebug() << "Add new action";
+//    TrackEntry *trackEntry = new TrackEntry();
+//    trackEntry->setData("Some process", 123456);
+//    QListWidgetItem *listWidgetItem = new QListWidgetItem(ui->trackerListWidget);
+//    ui->trackerListWidget->addItem(listWidgetItem);
+//    ui->trackerListWidget->setItemWidget(listWidgetItem, trackEntry);
+//    listWidgetItem->setSizeHint(QSize(50, 50)); //width ,height
+
     TrackEntry *trackEntry = new TrackEntry();
-    trackEntry->setData("Some process", 100);
-    QListWidgetItem *LWI = new QListWidgetItem(ui->trackerListWidget);
-    ui->trackerListWidget->addItem(LWI);
-    ui->trackerListWidget->setItemWidget(LWI, trackEntry);
-    LWI->setSizeHint(QSize(50, 50)); //width ,height
+    QListWidgetItem *listWidgetItem = new QListWidgetItem(ui->trackerListWidget);
+    ui->trackerListWidget->addItem(listWidgetItem);
+    ui->trackerListWidget->setItemWidget(listWidgetItem, trackEntry);
+    listWidgetItem->setSizeHint(QSize(trackEntrySize, trackEntrySize)); //width ,height
 }
