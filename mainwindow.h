@@ -4,8 +4,9 @@
 #include <QMainWindow>
 #include <QtDebug>
 
-//For individual tracking entries
+//For additional components or UIs
 #include "ui/components/trackentry.h"
+#include "ui/processDialog/processdialog.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
