@@ -27,7 +27,15 @@ void TrackEntry::setData(QString processName, uint processDuration)
 void TrackEntry::on_selectButton_clicked()
 {
     ProcessDialog *processDialog = new ProcessDialog();
+    connect(processDialog, &ProcessDialog::processChosen, this, &TrackEntry::processChosen);
     processDialog->exec();
+}
+
+void TrackEntry::processChosen(QString processName)
+{
+    ui->lineEdit->setText(processName);
+    ui->selectButton->setEnabled(false);
+    ui->lineEdit->setReadOnly(true);
 }
 
 TrackEntry::~TrackEntry()

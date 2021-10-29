@@ -7,18 +7,13 @@ ProcessDialog::ProcessDialog(QWidget *parent) : QDialog(parent), ui(new Ui::Proc
     ui->setupUi(this);
 
     QProcess *process = new QProcess(this);
+    QStringList processList;
 
     #if defined Q_OS_LINUX
 
-    //do linux stuff
-    //ps -eo cmd
     process->start("ps", QStringList() << "-eo" << "cmd");
     process->waitForFinished();
-    QStringList processList = QString(process->readAllStandardOutput()).split("\n") << "";
-    foreach (QString p, processList)
-    {
-        qDebug() << p;
-    }
+    processList = QString(process->readAllStandardOutput()).split("\n");
 
     #elif defined Q_OS_MACOS
 
@@ -29,9 +24,30 @@ ProcessDialog::ProcessDialog(QWidget *parent) : QDialog(parent), ui(new Ui::Proc
     //do windows stuff
 
     #endif
+
+    processList.removeDuplicates();
+    processList.removeAll(QString(""));
+    processList.sort(Qt::CaseInsensitive);
+    ui->listWidget->addItems(processList);
 }
 
 ProcessDialog::~ProcessDialog()
 {
     delete ui;
+}
+
+void ProcessDialog::on_buttonBox_rejected()
+{
+    this->~ProcessDialog();
+}
+
+void ProcessDialog::on_listWidget_itemActivated(QListWidgetItem *item)
+{
+    emit processChosen(item->text());
+    this->~ProcessDialog();
+}
+
+void ProcessDialog::on_buttonBox_accepted()
+{
+    on_listWidget_itemActivated(ui->listWidget->currentItem());
 }
