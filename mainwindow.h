@@ -26,6 +26,9 @@ public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
+public slots:
+    void removeClearedEntries();
+
 private slots:
     void on_actionAdd_triggered();
 
