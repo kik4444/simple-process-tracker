@@ -22,6 +22,10 @@ add_executable(simple-process-tracker
     ui/components/trackentry.h
     ui/components/trackentry.cpp
     ui/components/trackentry.ui
+
+    ui/processDialog/processdialog.h
+    ui/processDialog/processdialog.cpp
+    ui/processDialog/processdialog.ui
 )
 
 target_link_libraries(simple-process-tracker PRIVATE
