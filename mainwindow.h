@@ -11,6 +11,9 @@
 //For reading process list
 #include <QProcess>
 
+//For saving / loading processes
+#include <QSettings>
+
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
 QT_END_NAMESPACE
