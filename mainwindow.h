@@ -5,7 +5,7 @@
 #include <QtDebug>
 
 //For additional components or UIs
-#include "ui/components/trackentry.h"
+#include "ui/trackentry/trackentry.h"
 #include "ui/processDialog/processdialog.h"
 
 //For reading process list

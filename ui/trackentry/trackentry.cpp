@@ -9,6 +9,8 @@ TrackEntry::TrackEntry(QWidget *parent) : QWidget(parent), ui(new Ui::TrackEntry
     timer = new QTimer(this);
     timer->setTimerType(Qt::VeryCoarseTimer);
     connect(timer, &QTimer::timeout, this, &TrackEntry::updateDuration);
+
+    //ui->iconLabel->setPixmap(QPixmap("/nonsensical/path").scaled(35, 35, Qt::KeepAspectRatio, Qt::SmoothTransformation));
 }
 
 TrackEntry::~TrackEntry()
