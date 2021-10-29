@@ -16,6 +16,11 @@ QString TrackEntry::parseProcessDuration(uint processDuration)
             + QStringLiteral("%1").arg(processDuration % 60, 2, 10, QLatin1Char('0'));
 }
 
+QString TrackEntry::getProcessName()
+{
+    return ui->lineEdit->text();
+}
+
 void TrackEntry::setData(QString processName, uint processDuration)
 {
     ui->selectButton->setEnabled(false);
@@ -36,6 +41,7 @@ void TrackEntry::processChosen(QString processName)
     ui->lineEdit->setText(processName);
     ui->selectButton->setEnabled(false);
     ui->lineEdit->setReadOnly(true);
+    trackingIsActive = true;
 }
 
 TrackEntry::~TrackEntry()

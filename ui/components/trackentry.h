@@ -16,6 +16,8 @@ public:
     ~TrackEntry();
     Ui::TrackEntry *ui;
 
+    QString getProcessName();
+
     void setData(QString processName, uint processDuration);
 
 public slots:
@@ -26,6 +28,8 @@ private slots:
 
 private:
     QString parseProcessDuration(uint processDuration);
+
+    bool trackingIsActive = false;
 };
 
 #endif // TRACKENTRY_H

@@ -26,6 +26,8 @@ public:
 private slots:
     void on_actionAdd_triggered();
 
+    void on_actionDebug_triggered();
+
 private:
     Ui::MainWindow *ui;
 
