@@ -16,9 +16,10 @@ public:
     ~TrackEntry();
     Ui::TrackEntry *ui;
 
-    void setText(QString buttonText, QString lineText);
+    void setData(QString processName, uint processDuration);
 
 private:
+    QString parseProcessDuration(uint processDuration);
 };
 
 #endif // TRACKENTRY_H

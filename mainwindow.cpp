@@ -14,10 +14,10 @@ MainWindow::~MainWindow()
 void MainWindow::on_actionAdd_triggered()
 {
     qDebug() << "Add new action";
-//    TrackEntry *trackEntry = new TrackEntry();
-//    trackEntry->setText("Button text", "Howdy partner");
-//    QListWidgetItem *lwi = new QListWidgetItem(ui->trackerListWidget);
-//    ui->trackerListWidget->addItem(lwi);
-//    ui->trackerListWidget->setItemWidget(lwi, trackEntry);
-//    lwi->setSizeHint(QSize(50, 50)); //width ,height
+    TrackEntry *trackEntry = new TrackEntry();
+    trackEntry->setData("Some process", 100);
+    QListWidgetItem *LWI = new QListWidgetItem(ui->trackerListWidget);
+    ui->trackerListWidget->addItem(LWI);
+    ui->trackerListWidget->setItemWidget(LWI, trackEntry);
+    LWI->setSizeHint(QSize(50, 50)); //width ,height
 }
