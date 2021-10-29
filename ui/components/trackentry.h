@@ -18,6 +18,9 @@ public:
 
     void setData(QString processName, uint processDuration);
 
+public slots:
+    void processChosen(QString processName);
+
 private slots:
     void on_selectButton_clicked();
 
