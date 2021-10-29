@@ -69,6 +69,7 @@
    </attribute>
    <addaction name="actionAdd"/>
    <addaction name="actionDebug"/>
+   <addaction name="actionExit"/>
   </widget>
   <action name="actionAdd">
    <property name="icon">
@@ -86,6 +87,18 @@
   <action name="actionDebug">
    <property name="text">
     <string>Debug</string>
+   </property>
+  </action>
+  <action name="actionExit">
+   <property name="icon">
+    <iconset resource="resources.qrc">
+     <normaloff>:/Assets/Icons/exit-icon.svg</normaloff>:/Assets/Icons/exit-icon.svg</iconset>
+   </property>
+   <property name="text">
+    <string>Exit</string>
+   </property>
+   <property name="toolTip">
+    <string>Exits the app</string>
    </property>
   </action>
  </widget>

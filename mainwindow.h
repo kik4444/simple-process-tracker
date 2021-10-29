@@ -44,6 +44,8 @@ private slots:
 
     void on_actionDebug_triggered();
 
+    void on_actionExit_triggered();
+
 private:
     Ui::MainWindow *ui;
 
