@@ -21,8 +21,21 @@ QString TrackEntry::getProcessName()
     return ui->lineEdit->text();
 }
 
-void TrackEntry::setData(QString processName, uint processDuration)
+uint TrackEntry::getProcessDuration()
 {
+    return this->processDuration;
+}
+
+bool TrackEntry::getTrackingIsActive()
+{
+    return trackingIsActive;
+}
+
+void TrackEntry::setData(QString processName, uint processDuration, bool trackingIsActive)
+{
+    this->processDuration = processDuration;
+    this->trackingIsActive = trackingIsActive;
+
     ui->selectButton->setEnabled(false);
     ui->lineEdit->setText(processName);
     ui->lineEdit->setReadOnly(true);

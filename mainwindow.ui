@@ -32,7 +32,14 @@
      <number>0</number>
     </property>
     <item>
-     <widget class="QListWidget" name="trackerListWidget"/>
+     <widget class="QListWidget" name="trackerListWidget">
+      <property name="dragEnabled">
+       <bool>false</bool>
+      </property>
+      <property name="dragDropMode">
+       <enum>QAbstractItemView::NoDragDrop</enum>
+      </property>
+     </widget>
     </item>
    </layout>
   </widget>

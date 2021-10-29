@@ -17,8 +17,10 @@ public:
     Ui::TrackEntry *ui;
 
     QString getProcessName();
+    uint getProcessDuration();
+    bool getTrackingIsActive();
 
-    void setData(QString processName, uint processDuration);
+    void setData(QString processName, uint processDuration, bool trackingIsActive);
 
 public slots:
     void processChosen(QString processName);
@@ -29,6 +31,7 @@ private slots:
 private:
     QString parseProcessDuration(uint processDuration);
 
+    uint processDuration = 0;
     bool trackingIsActive = false;
 };
 
