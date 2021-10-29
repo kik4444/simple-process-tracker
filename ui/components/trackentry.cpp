@@ -5,7 +5,18 @@
 TrackEntry::TrackEntry(QWidget *parent) : QWidget(parent), ui(new Ui::TrackEntry)
 {
     ui->setupUi(this);
+
+    timer = new QTimer(this);
+    timer->setTimerType(Qt::VeryCoarseTimer);
+    connect(timer, &QTimer::timeout, this, &TrackEntry::updateDuration);
+    setTimerState();
 }
+
+TrackEntry::~TrackEntry()
+{
+    delete ui;
+}
+
 
 QString TrackEntry::parseProcessDuration(uint processDuration)
 {
@@ -31,6 +42,14 @@ bool TrackEntry::getTrackingIsActive()
     return trackingIsActive;
 }
 
+void TrackEntry::setTimerState()
+{
+    if (trackingIsActive)
+        timer->start(timerInterval);
+    else
+        timer->stop();
+}
+
 void TrackEntry::setData(QString processName, uint processDuration, bool trackingIsActive)
 {
     this->processDuration = processDuration;
@@ -39,6 +58,13 @@ void TrackEntry::setData(QString processName, uint processDuration, bool trackin
     ui->selectButton->setEnabled(false);
     ui->lineEdit->setText(processName);
     ui->lineEdit->setReadOnly(true);
+    ui->durationLabel->setText(parseProcessDuration(processDuration));
+    ui->trackingCheckBox->setChecked(trackingIsActive);
+}
+
+void TrackEntry::updateDuration()
+{
+    processDuration += updateInterval;
     ui->durationLabel->setText(parseProcessDuration(processDuration));
 }
 
@@ -57,7 +83,8 @@ void TrackEntry::processChosen(QString processName)
     trackingIsActive = true;
 }
 
-TrackEntry::~TrackEntry()
+void TrackEntry::on_trackingCheckBox_stateChanged(int arg1)
 {
-    delete ui;
+    trackingIsActive = (bool)arg1;
+    setTimerState();
 }

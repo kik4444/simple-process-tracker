@@ -48,12 +48,12 @@
     </widget>
    </item>
    <item>
-    <widget class="QPushButton" name="pauseButton">
+    <widget class="QCheckBox" name="trackingCheckBox">
      <property name="cursor">
       <cursorShape>PointingHandCursor</cursorShape>
      </property>
      <property name="text">
-      <string>Pause</string>
+      <string>Tracking</string>
      </property>
     </widget>
    </item>
