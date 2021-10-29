@@ -6,12 +6,16 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent) , ui(new Ui::MainW
     ui->setupUi(this);
 
     QSettings settings(QSettings::IniFormat, QSettings::UserScope, "simple-process-tracker", "config");
+    QMap<uint, QString> processOrder;
     foreach (QString process, settings.childGroups())
+        processOrder.insert(settings.value(process + "/position").toUInt(), process);
+
+    for (uint i = 0; i < processOrder.size(); i++)
     {
-        settings.beginGroup(process);
+        settings.beginGroup(processOrder[i]);
 
         TrackEntry *trackEntry = new TrackEntry();
-        trackEntry->setData(process, settings.value("duration", 0).toUInt(), settings.value("trackingIsActive", false).toBool());
+        trackEntry->setData(processOrder[i], settings.value("duration", 0).toUInt(), settings.value("trackingIsActive", false).toBool());
         connect(trackEntry, &TrackEntry::removeClearedEntries, this, &MainWindow::removeClearedEntries);
         QListWidgetItem *listWidgetItem = new QListWidgetItem(ui->trackerListWidget);
         ui->trackerListWidget->addItem(listWidgetItem);
@@ -38,6 +42,7 @@ MainWindow::~MainWindow()
 
             settings.setValue("duration", trackEntry->getProcessDuration());
             settings.setValue("trackingIsActive", trackEntry->getTrackingIsActive());
+            settings.setValue("position", i);
 
             settings.endGroup();
         }
@@ -48,7 +53,12 @@ MainWindow::~MainWindow()
 
 void MainWindow::on_actionDebug_triggered()
 {
-
+    for (uint i = 0; i < ui->trackerListWidget->count(); i++)
+    {
+        QListWidgetItem *widgetItem = ui->trackerListWidget->item(i);
+        TrackEntry *trackEntry= dynamic_cast<TrackEntry*>(ui->trackerListWidget->itemWidget(widgetItem));
+        qDebug() << trackEntry->getProcessName();
+    }
 }
 
 void MainWindow::on_actionAdd_triggered()
