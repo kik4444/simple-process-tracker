@@ -80,6 +80,8 @@ void TrackEntry::updateDuration()
         processDuration += updateInterval;
         ui->durationLabel->setText(parseProcessDuration(processDuration));
     }
+
+    process->deleteLater();
 }
 
 void TrackEntry::on_selectButton_clicked()

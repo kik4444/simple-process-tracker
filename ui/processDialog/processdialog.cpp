@@ -24,6 +24,8 @@ ProcessDialog::ProcessDialog(QWidget *parent) : QDialog(parent), ui(new Ui::Proc
 
     #endif
 
+    process->deleteLater();
+
     processList.removeDuplicates();
     processList.removeAll(QString(""));
     processList.sort(Qt::CaseInsensitive);
