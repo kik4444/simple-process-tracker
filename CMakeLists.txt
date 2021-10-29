@@ -19,9 +19,9 @@ add_executable(simple-process-tracker
     main.cpp
     resources.qrc
 
-    ui/components/trackentry.h
-    ui/components/trackentry.cpp
-    ui/components/trackentry.ui
+    ui/trackentry/trackentry.h
+    ui/trackentry/trackentry.cpp
+    ui/trackentry/trackentry.ui
 
     ui/processDialog/processdialog.h
     ui/processDialog/processdialog.cpp

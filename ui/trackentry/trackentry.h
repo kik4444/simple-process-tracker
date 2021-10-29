@@ -12,6 +12,9 @@
 //For inputting custom duration
 #include <QInputDialog>
 
+//For icons
+#include <QPixmap>
+
 namespace Ui {
 class TrackEntry;
 }
