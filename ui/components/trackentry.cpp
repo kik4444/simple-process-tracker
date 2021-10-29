@@ -54,7 +54,7 @@ void TrackEntry::setData(QString processName, uint processDuration, bool trackin
     this->processDuration = processDuration;
     this->trackingIsActive = trackingIsActive;
 
-    ui->selectButton->setEnabled(false);
+    ui->selectButton->hide();
     ui->lineEdit->setText(processName);
     ui->durationLabel->setText(parseProcessDuration(processDuration));
     ui->trackingCheckBox->setChecked(trackingIsActive);
@@ -96,7 +96,7 @@ void TrackEntry::processChosen(QString processName)
     trackingIsActive = true;
 
     ui->lineEdit->setText(processName);
-    ui->selectButton->setEnabled(false);
+    ui->selectButton->hide();
     ui->trackingCheckBox->setChecked(trackingIsActive);
     setTimerState();
 }
