@@ -17,6 +17,9 @@
 //For reordering processes
 #include <QMap>
 
+//For running in the background
+#include <QSystemTrayIcon>
+
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
 QT_END_NAMESPACE
@@ -33,12 +36,18 @@ public slots:
     void removeClearedEntries();
 
 private slots:
+    void trayIconActionOpen();
+    void trayIconActivated(int activationReason);
+    void trayIconActionExit();
+
     void on_actionAdd_triggered();
 
     void on_actionDebug_triggered();
 
 private:
     Ui::MainWindow *ui;
+
+    QSystemTrayIcon *systemTrayIcon;
 
     const int trackEntrySize = 50;
 };
