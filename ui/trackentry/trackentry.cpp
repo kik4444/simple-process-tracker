@@ -103,23 +103,7 @@ void TrackEntry::updateDuration()
     QElapsedTimer etimer;
     etimer.start();
 
-    bool processIsRunning = false;
-
-    #if defined Q_OS_LINUX
-
-    processIsRunning = Platform::isProcessRunning(getProcessName());
-
-    #elif defined Q_OS_MACOS
-
-    //do macos stuff
-
-    #elif defined Q_OS_WINDOWS
-
-    processIsRunning = winIsProcessRunning(getProcessName().toStdWString().c_str());
-
-    #endif
-
-    if (processIsRunning)
+    if (Platform::isProcessRunning(getProcessName()))
     {
         timer->setInterval(timerInterval);
         processDuration += updateInterval;
