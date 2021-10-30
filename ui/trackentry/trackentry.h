@@ -18,6 +18,15 @@
 //For icons
 #include <QPixmap>
 
+//For Windows API to check process status
+#ifdef Q_OS_WINDOWS
+
+#include <windows.h>
+#include <tlhelp32.h>
+#include <tchar.h>
+
+#endif
+
 namespace Ui {
 class TrackEntry;
 }
@@ -60,6 +69,10 @@ private:
     QString parseProcessDuration(uint processDuration);
     void setTimerState();
     bool eventFilter(QObject *object, QEvent *event);
+
+    #ifdef Q_OS_WINDOWS
+    bool IsProcessRunning(const TCHAR* const executableName);
+    #endif
 
     uint processDuration = 0;
     bool trackingIsActive = false;

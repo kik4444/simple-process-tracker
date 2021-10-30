@@ -115,18 +115,48 @@ void TrackEntry::updateDuration()
 
     #elif defined Q_OS_WINDOWS
 
-    //do windows stuff
+    processIsRunning = IsProcessRunning(getProcessName().toStdWString().c_str());
 
     #endif
+
+    process->deleteLater();
 
     if (processIsRunning)
     {
         processDuration += updateInterval;
         ui->durationButton->setText(parseProcessDuration(processDuration));
     }
-
-    process->deleteLater();
 }
+
+#ifdef Q_OS_WINDOWS
+//Credit to https://stackoverflow.com/a/57164620
+bool TrackEntry::IsProcessRunning(const TCHAR *const executableName)
+{
+    PROCESSENTRY32 entry;
+    entry.dwSize = sizeof(PROCESSENTRY32);
+
+    const auto snapshot = CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, NULL);
+
+    if (!Process32First(snapshot, &entry))
+    {
+        CloseHandle(snapshot);
+        return false;
+    }
+
+    do
+    {
+        if (!_tcsicmp(entry.szExeFile, executableName))
+        {
+            CloseHandle(snapshot);
+            return true;
+        }
+    }
+    while (Process32Next(snapshot, &entry));
+
+    CloseHandle(snapshot);
+    return false;
+}
+#endif
 
 void TrackEntry::on_selectButton_clicked()
 {
