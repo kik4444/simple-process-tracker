@@ -100,9 +100,6 @@ void TrackEntry::setData(QString processName, QString iconPath, uint processDura
 
 void TrackEntry::updateDuration()
 {
-    QElapsedTimer etimer;
-    etimer.start();
-
     if (Platform::isProcessRunning(getProcessName()))
     {
         timer->setInterval(timerInterval);
@@ -111,8 +108,6 @@ void TrackEntry::updateDuration()
     }
     else
         timer->setInterval(delayedTimerInterval);
-
-    qDebug() << etimer.elapsed();
 }
 
 void TrackEntry::on_selectButton_clicked()
