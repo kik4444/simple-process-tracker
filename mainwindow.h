@@ -23,6 +23,9 @@
 //For recording date added
 #include <QDateTime>
 
+//For platform-specific actions
+#include "custom/platform_specifics.h"
+
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
 QT_END_NAMESPACE
@@ -46,8 +49,6 @@ private slots:
     void saveProcessData();
 
     void on_actionAdd_triggered();
-
-    void on_actionDebug_triggered();
 
     void on_actionExit_triggered();
 

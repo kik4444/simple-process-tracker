@@ -80,11 +80,6 @@ void MainWindow::saveProcessData()
     }
 }
 
-void MainWindow::on_actionDebug_triggered()
-{
-    qDebug() << "Hello there";
-}
-
 void MainWindow::on_actionAdd_triggered()
 {
     TrackEntry *trackEntry = new TrackEntry();

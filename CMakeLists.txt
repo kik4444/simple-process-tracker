@@ -26,6 +26,8 @@ add_executable(simple-process-tracker
     ui/processDialog/processdialog.h
     ui/processDialog/processdialog.cpp
     ui/processDialog/processdialog.ui
+
+    custom/platform_specifics.h
 )
 
 target_link_libraries(simple-process-tracker PRIVATE
