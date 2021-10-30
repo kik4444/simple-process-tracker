@@ -18,7 +18,14 @@
 //For icons
 #include <QPixmap>
 
-//For Windows API to check process status
+//For checking if process is running on Linux
+#ifdef Q_OS_LINUX
+
+#include <QDir>
+
+#endif
+
+//For Windows API to check if process is running
 #ifdef Q_OS_WINDOWS
 
 #include <windows.h>

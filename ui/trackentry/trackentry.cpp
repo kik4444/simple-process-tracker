@@ -101,13 +101,21 @@ void TrackEntry::setData(QString processName, QString iconPath, uint processDura
 void TrackEntry::updateDuration()
 {
     bool processIsRunning = false;
-    QProcess *process = new QProcess(this);
 
     #if defined Q_OS_LINUX
 
-    process->start("pidof", QStringList() << getProcessName());
-    process->waitForFinished();
-    processIsRunning = !QString(process->readAllStandardOutput()).isEmpty();
+    foreach (QString pid, QDir("/proc").entryList(QDir::Dirs | QDir::NoDotAndDotDot, QDir::Name))
+    {
+        QFile file("/proc/" + pid + "/comm");
+        if (file.open(QIODevice::ReadOnly))
+        {
+            if (QString::compare(file.readAll(), getProcessName() + "\n") == 0)
+            {
+                processIsRunning = true;
+                break;
+            }
+        }
+    }
 
     #elif defined Q_OS_MACOS
 
@@ -118,8 +126,6 @@ void TrackEntry::updateDuration()
     processIsRunning = winIsProcessRunning(getProcessName().toStdWString().c_str());
 
     #endif
-
-    process->deleteLater();
 
     if (processIsRunning)
     {
