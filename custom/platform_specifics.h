@@ -2,6 +2,20 @@
 #define PLATFORM_SPECIFICS_H
 #include "../mainwindow.h"
 
+//For checking if process is running on Linux
+#if defined Q_OS_LINUX
+
+#include <QDir>
+
+//For Windows API to check if process is running
+#elif defined Q_OS_WINDOWS
+
+#include <windows.h>
+#include <tlhelp32.h>
+#include <tchar.h>
+
+#endif
+
 class Platform
 {
 public:
@@ -24,6 +38,7 @@ public:
         //mac stuff
 
         #elif defined Q_OS_WINDOWS
+        //Credit - https://stackoverflow.com/a/57164620
 
         PROCESSENTRY32 entry;
         entry.dwSize = sizeof(PROCESSENTRY32);
