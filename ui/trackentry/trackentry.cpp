@@ -129,9 +129,12 @@ void TrackEntry::updateDuration()
 
     if (processIsRunning)
     {
+        timer->setInterval(timerInterval);
         processDuration += updateInterval;
         ui->durationButton->setText(parseProcessDuration(processDuration));
     }
+    else
+        timer->setInterval(delayedTimerInterval);
 }
 
 #ifdef Q_OS_WINDOWS
