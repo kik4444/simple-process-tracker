@@ -87,6 +87,7 @@ private:
 
     QTimer *timer;
     const uint timerInterval = 1000;
+    const uint delayedTimerInterval = 10000;
     uint updateInterval = timerInterval / 1000;
 
     const uint iconSize = 35;
