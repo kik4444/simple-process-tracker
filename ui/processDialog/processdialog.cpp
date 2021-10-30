@@ -20,7 +20,10 @@ ProcessDialog::ProcessDialog(QWidget *parent) : QDialog(parent), ui(new Ui::Proc
 
     #elif defined Q_OS_WINDOWS
 
-    //do windows stuff
+    process->start("cmd.exe", QStringList() << "/k");
+    process->write("for /f \"tokens=1 delims=,\" %F in ('tasklist /nh /fo csv') do @echo %~F\n\rexit\n\r");
+    process->waitForFinished();
+    processList = QString(process->readAllStandardOutput()).split("\n");
 
     #endif
 
@@ -44,7 +47,7 @@ void ProcessDialog::on_buttonBox_rejected()
 
 void ProcessDialog::on_listWidget_itemActivated(QListWidgetItem *item)
 {
-    emit processChosen(item->text());
+    emit processChosen(item->text().remove("\n").remove("\r"));
     this->~ProcessDialog();
 }
 
