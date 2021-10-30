@@ -115,36 +115,6 @@ void TrackEntry::updateDuration()
     qDebug() << etimer.elapsed();
 }
 
-#ifdef Q_OS_WINDOWS
-//Credit to https://stackoverflow.com/a/57164620
-bool TrackEntry::winIsProcessRunning(const TCHAR *const executableName)
-{
-    PROCESSENTRY32 entry;
-    entry.dwSize = sizeof(PROCESSENTRY32);
-
-    const auto snapshot = CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, NULL);
-
-    if (!Process32First(snapshot, &entry))
-    {
-        CloseHandle(snapshot);
-        return false;
-    }
-
-    do
-    {
-        if (!_tcsicmp(entry.szExeFile, executableName))
-        {
-            CloseHandle(snapshot);
-            return true;
-        }
-    }
-    while (Process32Next(snapshot, &entry));
-
-    CloseHandle(snapshot);
-    return false;
-}
-#endif
-
 void TrackEntry::on_selectButton_clicked()
 {
     ProcessDialog *processDialog = new ProcessDialog();
