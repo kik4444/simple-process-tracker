@@ -105,7 +105,7 @@ void TrackEntry::updateDuration()
 
     #if defined Q_OS_LINUX
 
-    process->start("pgrep", QStringList() << "-nx" << getProcessName());
+    process->start("pidof", QStringList() << getProcessName());
     process->waitForFinished();
     processIsRunning = !QString(process->readAllStandardOutput()).isEmpty();
 
@@ -115,7 +115,7 @@ void TrackEntry::updateDuration()
 
     #elif defined Q_OS_WINDOWS
 
-    processIsRunning = IsProcessRunning(getProcessName().toStdWString().c_str());
+    processIsRunning = winIsProcessRunning(getProcessName().toStdWString().c_str());
 
     #endif
 
@@ -130,7 +130,7 @@ void TrackEntry::updateDuration()
 
 #ifdef Q_OS_WINDOWS
 //Credit to https://stackoverflow.com/a/57164620
-bool TrackEntry::IsProcessRunning(const TCHAR *const executableName)
+bool TrackEntry::winIsProcessRunning(const TCHAR *const executableName)
 {
     PROCESSENTRY32 entry;
     entry.dwSize = sizeof(PROCESSENTRY32);

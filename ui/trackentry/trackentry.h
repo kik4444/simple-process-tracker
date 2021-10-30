@@ -71,7 +71,7 @@ private:
     bool eventFilter(QObject *object, QEvent *event);
 
     #ifdef Q_OS_WINDOWS
-    bool IsProcessRunning(const TCHAR* const executableName);
+    bool winIsProcessRunning(const TCHAR* const executableName);
     #endif
 
     uint processDuration = 0;
