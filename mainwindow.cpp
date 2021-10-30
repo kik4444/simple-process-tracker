@@ -6,7 +6,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent) , ui(new Ui::MainW
     ui->setupUi(this);
 
     //Load process data
-    QSettings settings(QSettings::IniFormat, QSettings::UserScope, "simple-process-tracker", "config");
+    QSettings settings(QSettings::IniFormat, QSettings::UserScope, "simple-process-tracker", "processList");
     QMap<uint, QString> processOrder;
     foreach (QString process, settings.childGroups())
         processOrder.insert(settings.value(process + "/position").toUInt(), process);
@@ -25,7 +25,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent) , ui(new Ui::MainW
         QListWidgetItem *listWidgetItem = new QListWidgetItem(ui->trackerListWidget);
         ui->trackerListWidget->addItem(listWidgetItem);
         ui->trackerListWidget->setItemWidget(listWidgetItem, trackEntry);
-        listWidgetItem->setSizeHint(QSize(trackEntrySize, trackEntrySize)); //width ,height
+        listWidgetItem->setSizeHint(QSize(trackEntrySize, trackEntrySize)); //width, height
 
         settings.endGroup();
     }
@@ -58,7 +58,7 @@ MainWindow::~MainWindow()
 
 void MainWindow::saveProcessData()
 {
-    QSettings settings(QSettings::IniFormat, QSettings::UserScope, "simple-process-tracker", "config");
+    QSettings settings(QSettings::IniFormat, QSettings::UserScope, "simple-process-tracker", "processList");
 
     for (uint i = 0; i < ui->trackerListWidget->count(); i++)
     {
@@ -82,7 +82,7 @@ void MainWindow::saveProcessData()
 
 void MainWindow::on_actionDebug_triggered()
 {
-
+    qDebug() << "Hello there";
 }
 
 void MainWindow::on_actionAdd_triggered()

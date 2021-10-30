@@ -156,7 +156,7 @@ void TrackEntry::on_removeButton_clicked()
             return;
     }
 
-    QSettings settings(QSettings::IniFormat, QSettings::UserScope, "simple-process-tracker", "config");
+    QSettings settings(QSettings::IniFormat, QSettings::UserScope, "simple-process-tracker", "processList");
     settings.remove(getProcessName());
     ui->lineEdit->clear();
     emit removeClearedEntries();
