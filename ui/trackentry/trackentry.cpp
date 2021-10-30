@@ -10,7 +10,11 @@ TrackEntry::TrackEntry(QWidget *parent) : QWidget(parent), ui(new Ui::TrackEntry
     timer->setTimerType(Qt::VeryCoarseTimer);
     connect(timer, &QTimer::timeout, this, &TrackEntry::updateDuration);
 
-    //ui->iconLabel->setPixmap(QPixmap("/nonsensical/path").scaled(35, 35, Qt::KeepAspectRatio, Qt::SmoothTransformation));
+    //Set listening for clicks on the icon label
+    ui->iconLabel->installEventFilter(this);
+
+    //For default icon
+    ui->iconLabel->setPixmap(QPixmap(":/Assets/Icons/app-icon.svg").scaled(35, 35, Qt::KeepAspectRatio, Qt::SmoothTransformation));
 }
 
 TrackEntry::~TrackEntry()
@@ -18,6 +22,18 @@ TrackEntry::~TrackEntry()
     delete ui;
 }
 
+bool TrackEntry::eventFilter(QObject *object, QEvent *event)
+{
+    if (object == ui->iconLabel && event->type() == QEvent::MouseButtonPress)
+    {
+        QString fileName = QFileDialog::getOpenFileName(this, "Open Image", "", "Image Files (*.png *.jpg *.jpeg *.bmp *.tiff *.tif)");
+
+        if (!fileName.isEmpty())
+            ui->iconLabel->setPixmap(QPixmap(fileName).scaled(35, 35, Qt::KeepAspectRatio, Qt::SmoothTransformation));
+    }
+
+    return false;
+}
 
 QString TrackEntry::parseProcessDuration(uint processDuration)
 {
@@ -81,6 +97,14 @@ void TrackEntry::updateDuration()
     process->waitForFinished();
     processIsRunning = !QString(process->readAllStandardOutput()).isEmpty();
 
+    #elif defined Q_OS_MACOS
+
+    //do macos stuff
+
+    #elif defined Q_OS_WINDOWS
+
+    //do windows stuff
+
     #endif
 
     if (processIsRunning)
@@ -122,7 +146,7 @@ void TrackEntry::on_removeButton_clicked()
     {
         QMessageBox confirmDialog(this);
         confirmDialog.setWindowTitle("Confirm removal");
-        confirmDialog.setText("Are you sure you wish to remove this process?");
+        confirmDialog.setText(QString("Are you sure you wish to remove %1?").arg(getProcessName()));
         confirmDialog.setIcon(QMessageBox::Question);
         confirmDialog.setStandardButtons(QMessageBox::Yes | QMessageBox::No);
         confirmDialog.setDefaultButton(QMessageBox::No);

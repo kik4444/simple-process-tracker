@@ -12,6 +12,9 @@
 //For inputting custom duration
 #include <QInputDialog>
 
+//For selecting an icon
+#include <QFileDialog>
+
 //For icons
 #include <QPixmap>
 
@@ -55,6 +58,7 @@ private slots:
 private:
     QString parseProcessDuration(uint processDuration);
     void setTimerState();
+    bool eventFilter(QObject *object, QEvent *event);
 
     uint processDuration = 0;
     bool trackingIsActive = false;
