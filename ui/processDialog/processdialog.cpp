@@ -6,32 +6,7 @@ ProcessDialog::ProcessDialog(QWidget *parent) : QDialog(parent), ui(new Ui::Proc
 {
     ui->setupUi(this);
 
-    QProcess *process = new QProcess(this);
-
-    #if defined Q_OS_LINUX
-
-    process->start("ps", QStringList() << "-eo" << "comm");
-    process->waitForFinished();
-    processList = QString(process->readAllStandardOutput()).split("\n");
-
-    #elif defined Q_OS_MACOS
-
-    //do macos stuff
-
-    #elif defined Q_OS_WINDOWS
-
-    process->start("cmd.exe", QStringList() << "/k");
-    process->write("for /f \"tokens=1 delims=,\" %F in ('tasklist /nh /fo csv') do @echo %~F\n\rexit\n\r");
-    process->waitForFinished();
-    processList = QString(process->readAllStandardOutput()).split("\n");
-
-    #endif
-
-    process->deleteLater();
-
-    processList.removeDuplicates();
-    processList.removeAll(QString(""));
-    processList.sort(Qt::CaseInsensitive);
+    processList = Platform::getProcessList(this);
     ui->listWidget->addItems(processList);
 }
 

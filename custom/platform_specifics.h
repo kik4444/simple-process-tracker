@@ -19,6 +19,38 @@
 class Platform
 {
 public:
+    static QStringList getProcessList(ProcessDialog *thiz)
+    {
+        QStringList processList;
+        QProcess *qprocess = new QProcess(thiz);
+
+        #if defined Q_OS_LINUX
+
+        qprocess->start("ps", QStringList() << "-eo" << "comm");
+        qprocess->waitForFinished();
+        processList = QString(qprocess->readAllStandardOutput()).split("\n");
+
+        #elif defined Q_OS_MACOS
+
+        //mac stuff
+
+        #elif defined Q_OS_WINDOWS
+
+        qprocess->start("cmd.exe", QStringList() << "/k");
+        qprocess->write("for /f \"tokens=1 delims=,\" %F in ('tasklist /nh /fo csv') do @echo %~F\n\rexit\n\r");
+        qprocess->waitForFinished();
+        processList = QString(qprocess->readAllStandardOutput()).split("\n");
+
+        #endif
+
+        qprocess->deleteLater();
+
+        processList.removeDuplicates();
+        processList.removeAll(QString(""));
+        processList.sort(Qt::CaseInsensitive);
+        return processList;
+    }
+
     static bool isProcessRunning(QString processName)
     {
         #if defined Q_OS_LINUX
