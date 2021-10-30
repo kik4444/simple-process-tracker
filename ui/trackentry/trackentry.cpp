@@ -14,7 +14,7 @@ TrackEntry::TrackEntry(QWidget *parent) : QWidget(parent), ui(new Ui::TrackEntry
     ui->iconLabel->installEventFilter(this);
 
     //For default icon
-    ui->iconLabel->setPixmap(QPixmap(":/Assets/Icons/app-icon.svg").scaled(35, 35, Qt::KeepAspectRatio, Qt::SmoothTransformation));
+    ui->iconLabel->setPixmap(QPixmap(iconPath).scaled(iconSize, iconSize, Qt::KeepAspectRatio, Qt::SmoothTransformation));
 }
 
 TrackEntry::~TrackEntry()
@@ -26,10 +26,15 @@ bool TrackEntry::eventFilter(QObject *object, QEvent *event)
 {
     if (object == ui->iconLabel && event->type() == QEvent::MouseButtonPress)
     {
-        QString fileName = QFileDialog::getOpenFileName(this, "Open Image", "", "Image Files (*.png *.jpg *.jpeg *.bmp *.tiff *.tif)");
+        QString fileName = QFileDialog::getOpenFileName(this, "Open Image", "", "Image Files (*.svg *.svgz *.png *.jpg *.jpeg *.bmp *.tiff *.tif)");
 
-        if (!fileName.isEmpty())
-            ui->iconLabel->setPixmap(QPixmap(fileName).scaled(35, 35, Qt::KeepAspectRatio, Qt::SmoothTransformation));
+        QPixmap icon(fileName);
+
+        if (!fileName.isEmpty() && !icon.isNull())
+        {
+            ui->iconLabel->setPixmap(icon.scaled(iconSize, iconSize, Qt::KeepAspectRatio, Qt::SmoothTransformation));
+            iconPath = fileName;
+        }
     }
 
     return false;
@@ -47,6 +52,11 @@ QString TrackEntry::parseProcessDuration(uint processDuration)
 QString TrackEntry::getProcessName()
 {
     return ui->lineEdit->text();
+}
+
+QString TrackEntry::getIconPath()
+{
+    return iconPath;
 }
 
 uint TrackEntry::getProcessDuration()
@@ -72,13 +82,15 @@ void TrackEntry::setTimerState()
         timer->stop();
 }
 
-void TrackEntry::setData(QString processName, uint processDuration, QString dateAdded, bool trackingIsActive)
+void TrackEntry::setData(QString processName, QString iconPath, uint processDuration, QString dateAdded, bool trackingIsActive)
 {
+    this->iconPath = iconPath;
     this->processDuration = processDuration;
     this->trackingIsActive = trackingIsActive;
 
     ui->selectButton->hide();
     ui->lineEdit->setText(processName);
+    ui->iconLabel->setPixmap(QPixmap(iconPath).scaled(iconSize, iconSize, Qt::KeepAspectRatio, Qt::SmoothTransformation));
     ui->durationButton->setText(parseProcessDuration(processDuration));
     ui->dateAddedLabel->setText(dateAdded);
     ui->trackingCheckBox->setChecked(trackingIsActive);
