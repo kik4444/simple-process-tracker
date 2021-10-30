@@ -68,7 +68,6 @@
     <bool>false</bool>
    </attribute>
    <addaction name="actionAdd"/>
-   <addaction name="actionDebug"/>
    <addaction name="actionExit"/>
   </widget>
   <action name="actionAdd">
@@ -82,11 +81,6 @@
    </property>
    <property name="toolTip">
     <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Add new process to track&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-   </property>
-  </action>
-  <action name="actionDebug">
-   <property name="text">
-    <string>Debug</string>
    </property>
   </action>
   <action name="actionExit">
