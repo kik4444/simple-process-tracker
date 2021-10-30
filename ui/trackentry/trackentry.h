@@ -32,11 +32,12 @@ public:
     Ui::TrackEntry *ui;
 
     QString getProcessName();
+    QString getIconPath();
     uint getProcessDuration();
     QString getDateAdded();
     bool getTrackingIsActive();
 
-    void setData(QString processName, uint processDuration, QString dateAdded, bool trackingIsActive);
+    void setData(QString processName, QString iconPath, uint processDuration, QString dateAdded, bool trackingIsActive);
 
 signals:
     void removeClearedEntries();
@@ -62,10 +63,13 @@ private:
 
     uint processDuration = 0;
     bool trackingIsActive = false;
+    QString iconPath = ":/Assets/Icons/app-icon.svg";
 
     QTimer *timer;
     const uint timerInterval = 1000;
     uint updateInterval = timerInterval / 1000;
+
+    const uint iconSize = 35;
 };
 
 #endif // TRACKENTRY_H

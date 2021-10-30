@@ -17,9 +17,8 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent) , ui(new Ui::MainW
 
         TrackEntry *trackEntry = new TrackEntry();
 
-        trackEntry->setData(processOrder[i], settings.value("duration", 0).toUInt(),
-            settings.value("dateAdded", QDateTime::currentDateTime().toString("yyyy/MM/dd")).toString(),
-            settings.value("trackingIsActive", false).toBool());
+        trackEntry->setData(processOrder[i], settings.value("iconPath").toString(), settings.value("duration", 0).toUInt(),
+            settings.value("dateAdded").toString(), settings.value("trackingIsActive", false).toBool());
 
         connect(trackEntry, &TrackEntry::removeClearedEntries, this, &MainWindow::removeClearedEntries);
         QListWidgetItem *listWidgetItem = new QListWidgetItem(ui->trackerListWidget);
@@ -63,13 +62,14 @@ void MainWindow::saveProcessData()
     for (uint i = 0; i < ui->trackerListWidget->count(); i++)
     {
         QListWidgetItem *widgetItem = ui->trackerListWidget->item(i);
-        TrackEntry *trackEntry= dynamic_cast<TrackEntry*>(ui->trackerListWidget->itemWidget(widgetItem));
+        TrackEntry *trackEntry = dynamic_cast<TrackEntry*>(ui->trackerListWidget->itemWidget(widgetItem));
 
         QString processName = trackEntry->getProcessName();
         if (!processName.isEmpty())
         {
             settings.beginGroup(processName);
 
+            settings.setValue("iconPath", trackEntry->getIconPath());
             settings.setValue("duration", trackEntry->getProcessDuration());
             settings.setValue("dateAdded", trackEntry->getDateAdded());
             settings.setValue("trackingIsActive", trackEntry->getTrackingIsActive());
@@ -100,7 +100,7 @@ void MainWindow::removeClearedEntries()
     for (uint i = 0; i < ui->trackerListWidget->count(); i++)
     {
         QListWidgetItem *widgetItem = ui->trackerListWidget->item(i);
-        TrackEntry *trackEntry= dynamic_cast<TrackEntry*>(ui->trackerListWidget->itemWidget(widgetItem));
+        TrackEntry *trackEntry = dynamic_cast<TrackEntry*>(ui->trackerListWidget->itemWidget(widgetItem));
         if (trackEntry->getProcessName().isEmpty())
             delete widgetItem;
     }
