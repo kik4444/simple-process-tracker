@@ -90,6 +90,16 @@
     </widget>
    </item>
    <item>
+    <widget class="QPushButton" name="hideButton">
+     <property name="cursor">
+      <cursorShape>PointingHandCursor</cursorShape>
+     </property>
+     <property name="text">
+      <string>Hide</string>
+     </property>
+    </widget>
+   </item>
+   <item>
     <widget class="QPushButton" name="removeButton">
      <property name="cursor">
       <cursorShape>PointingHandCursor</cursorShape>

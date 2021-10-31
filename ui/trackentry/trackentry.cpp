@@ -22,6 +22,9 @@ TrackEntry::TrackEntry(QWidget *parent) : QWidget(parent), ui(new Ui::TrackEntry
     //Set icon
     ui->iconLabel->setPixmap(QPixmap(iconPath));
     ui->iconLabel->setMaximumSize(iconSize, iconSize);
+
+    //Set hide button text
+    setHideButtonText();
 }
 
 TrackEntry::~TrackEntry()
@@ -193,4 +196,15 @@ void TrackEntry::on_durationButton_clicked()
     QStringList splitDuration = durationInput.split(":");
     if (ok && splitDuration.size() == 3)
         processDuration = splitDuration[0].toUInt() * 3600 + splitDuration[1].toUInt() * 60 + splitDuration[2].toUInt();
+}
+
+void TrackEntry::on_hideButton_clicked()
+{
+    hidden = !hidden;
+    setHideButtonText();
+}
+
+void TrackEntry::setHideButtonText()
+{
+    ui->hideButton->setText(hidden ? "Unhide" : "Hide");
 }
