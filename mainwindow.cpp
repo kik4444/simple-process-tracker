@@ -15,27 +15,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent) , ui(new Ui::MainW
     }
 
     //Load process data
-    QSettings settings(QSettings::IniFormat, QSettings::UserScope, "simple-process-tracker", "processList");
-    QMap<uint, QString> processOrder;
-    foreach (QString process, settings.childGroups())
-    {
-        if (!settings.value(process + "/hidden").toBool())
-            processOrder.insert(settings.value(process + "/position").toUInt(), process);
-    }
-
-    for (uint i = 0; i < processOrder.size(); i++)
-    {
-        settings.beginGroup(processOrder[i]);
-
-        TrackEntry *trackEntry = new TrackEntry();
-
-        trackEntry->setData(processOrder[i], settings.value("iconPath").toString(), settings.value("duration", 0).toUInt(),
-            settings.value("dateAdded").toString(), settings.value("trackingIsActive", false).toBool(), settings.value("hidden", false).toBool());
-
-        configureTrackEntry(trackEntry);
-
-        settings.endGroup();
-    }
+    loadProcessData(false);
 
     //Create system tray icon
     systemTrayIcon = new QSystemTrayIcon(this);
@@ -61,6 +41,33 @@ MainWindow::~MainWindow()
 {
     saveProcessData();
     delete ui;
+}
+
+void MainWindow::loadProcessData(bool showHidden)
+{
+    ui->trackerListWidget->clear();
+
+    QSettings settings(QSettings::IniFormat, QSettings::UserScope, "simple-process-tracker", "processList");
+    QMap<uint, QString> processOrder;
+    foreach (QString process, settings.childGroups())
+    {
+        if (!settings.value(process + "/hidden").toBool() || showHidden)
+            processOrder.insert(settings.value(process + "/position").toUInt(), process);
+    }
+
+    for (uint i = 0; i < processOrder.size(); i++)
+    {
+        settings.beginGroup(processOrder[i]);
+
+        TrackEntry *trackEntry = new TrackEntry();
+
+        trackEntry->setData(processOrder[i], settings.value("iconPath").toString(), settings.value("duration", 0).toUInt(),
+            settings.value("dateAdded").toString(), settings.value("trackingIsActive", false).toBool(), settings.value("hidden", false).toBool());
+
+        configureTrackEntry(trackEntry);
+
+        settings.endGroup();
+    }
 }
 
 void MainWindow::saveProcessData()
@@ -162,4 +169,11 @@ void MainWindow::on_actionOptions_triggered()
 void MainWindow::on_actionPoll_triggered()
 {
     emit forcePollProcesses();
+}
+
+void MainWindow::on_actionShow_hidden_triggered()
+{
+    //saveProcessData();
+    showHidden = !showHidden;
+    loadProcessData(showHidden);
 }
