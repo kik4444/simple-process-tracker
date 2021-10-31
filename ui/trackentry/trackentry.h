@@ -59,10 +59,13 @@ private slots:
 
     void on_durationButton_clicked();
 
+    void on_hideButton_clicked();
+
 private:
     QString parseProcessDuration(uint processDuration);
     void setTimerState();
     bool eventFilter(QObject *object, QEvent *event);
+    void setHideButtonText();
 
     QString iconPath = ":/Assets/Icons/app-icon.svg";
     uint processDuration = 0;
