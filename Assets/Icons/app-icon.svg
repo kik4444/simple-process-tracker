@@ -480,23 +480,23 @@
 </pattern>
 <g
    id="g966"
-   style="stroke:#b5f1f4;stroke-opacity:1"><g
+   style="stroke:none;stroke-opacity:1;fill:#4796e7;fill-opacity:1"><g
      id="g961"
-     style="stroke:#b5f1f4;stroke-opacity:1"><g
+     style="stroke:none;stroke-opacity:1;fill:#4796e7;fill-opacity:1"><g
        id="g237"
-       style="fill:#b5f1f4;fill-opacity:1;stroke:#b5f1f4;stroke-opacity:1">
+       style="fill:#4796e7;fill-opacity:1;stroke:none;stroke-opacity:1">
 		<circle
-   fill="#b5f1f4"
+   fill="#4796e7"
    cx="256"
    cy="256.00101"
    r="256"
    id="circle235"
-   style="fill:#b5f1f4;fill-opacity:1;stroke:#b5f1f4;stroke-opacity:1" />
+   style="fill:#4796e7;fill-opacity:1;stroke:none;stroke-opacity:1" />
 	</g></g></g><path
-   fill="#84dbff"
+   fill="#2566a8"
    d="M 505.594,199.187 355.059,100.83 v 174.828 h -180 v 141.604 l 135.859,88.77 C 425.898,480.883 512,378.524 512,256.001 c 0,-19.537 -2.262,-38.533 -6.406,-56.814 z"
    id="path239"
-   style="fill:#84dbff;fill-opacity:1" /><g
+   style="fill:#2a6eb2;fill-opacity:1;stroke:none" /><g
    id="g275">
 		<g
    id="g255">
