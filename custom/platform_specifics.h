@@ -53,7 +53,6 @@ public:
 
     static bool isProcessRunning(QString processName)
     {
-        qDebug() << "Real poll";
         #if defined Q_OS_LINUX
 
         foreach (QString pid, QDir("/proc").entryList(QDir::Dirs | QDir::NoDotAndDotDot, QDir::Name))
