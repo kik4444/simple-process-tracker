@@ -10,7 +10,7 @@
     <x>0</x>
     <y>0</y>
     <width>397</width>
-    <height>249</height>
+    <height>289</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -33,7 +33,7 @@
       <item>
        <widget class="QLabel" name="label_3">
         <property name="text">
-         <string>How frequently in seconds to check if a running process is still running or if a stopped process has not yet started.</string>
+         <string>How frequently in seconds to check if a running process is still running or if a stopped process has not yet started. The lower the value is, the more accurate the tracking is at the cost of more CPU usage.</string>
         </property>
         <property name="alignment">
          <set>Qt::AlignCenter</set>

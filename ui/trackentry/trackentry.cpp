@@ -113,7 +113,7 @@ void TrackEntry::setData(QString processName, QString iconPath, uint processDura
 
 void TrackEntry::pollProcess()
 {
-    processPollTimer->setInterval(processPollTimerInterval);
+    processPollTimer->setInterval(MainWindow::userSettings["runningPollInterval"].toUInt() * 1000);
 
     if (Platform::isProcessRunning(getProcessName()))
     {
@@ -122,7 +122,7 @@ void TrackEntry::pollProcess()
     }
     else
     {
-        processPollTimer->setInterval(delayedProcessPollTimerInterval);
+        processPollTimer->setInterval(MainWindow::userSettings["stoppedPollInterval"].toUInt() * 1000);
         updateTimer->stop();
     }
 }
