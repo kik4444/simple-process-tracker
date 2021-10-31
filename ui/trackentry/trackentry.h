@@ -46,6 +46,7 @@ public slots:
     void processChosen(QString processName);
 
 private slots:
+    void pollProcess();
     void updateDuration();
 
     void on_selectButton_clicked();
@@ -65,10 +66,13 @@ private:
     bool trackingIsActive = false;
     QString iconPath = ":/Assets/Icons/app-icon.svg";
 
+    QTimer *updateTimer;
+    const uint updateTimerInterval = 1000;
+    uint updateInterval = updateTimerInterval / 1000;
+
     QTimer *processPollTimer;
-    const uint processPollTimerInterval = 1000;
-    const uint delayedProcessPollTimerInterval = 10000;
-    uint updateInterval = processPollTimerInterval / 1000;
+    const uint processPollTimerInterval = 5000; //SETTING
+    const uint delayedProcessPollTimerInterval = 10000; //SETTING
 
     const uint iconSize = 35;
 };

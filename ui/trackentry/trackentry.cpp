@@ -6,10 +6,15 @@ TrackEntry::TrackEntry(QWidget *parent) : QWidget(parent), ui(new Ui::TrackEntry
 {
     ui->setupUi(this);
 
+    //Set timer for updating the duration
+    updateTimer = new QTimer(this);
+    updateTimer->setTimerType(Qt::VeryCoarseTimer);
+    connect(updateTimer, &QTimer::timeout, this, &TrackEntry::updateDuration);
+
     //Set timer for polling the process
     processPollTimer = new QTimer(this);
     processPollTimer->setTimerType(Qt::VeryCoarseTimer);
-    connect(processPollTimer, &QTimer::timeout, this, &TrackEntry::updateDuration);
+    connect(processPollTimer, &QTimer::timeout, this, &TrackEntry::pollProcess);
 
     //Set listening for clicks on the icon label
     ui->iconLabel->installEventFilter(this);
@@ -79,9 +84,15 @@ bool TrackEntry::getTrackingIsActive()
 void TrackEntry::setTimerState()
 {
     if (trackingIsActive)
-        processPollTimer->start(processPollTimerInterval);
+    {
+        //Perform check immediately on startup and set the interval later
+        processPollTimer->start();
+    }
     else
+    {
         processPollTimer->stop();
+        updateTimer->stop();
+    }
 }
 
 void TrackEntry::setData(QString processName, QString iconPath, uint processDuration, QString dateAdded, bool trackingIsActive)
@@ -100,16 +111,26 @@ void TrackEntry::setData(QString processName, QString iconPath, uint processDura
     setTimerState();
 }
 
-void TrackEntry::updateDuration()
+void TrackEntry::pollProcess()
 {
+    processPollTimer->setInterval(processPollTimerInterval);
+
     if (Platform::isProcessRunning(getProcessName()))
     {
-        processPollTimer->setInterval(processPollTimerInterval);
-        processDuration += updateInterval;
-        ui->durationButton->setText(parseProcessDuration(processDuration));
+        if (!updateTimer->isActive())
+            updateTimer->start(updateTimerInterval);
     }
     else
+    {
         processPollTimer->setInterval(delayedProcessPollTimerInterval);
+        updateTimer->stop();
+    }
+}
+
+void TrackEntry::updateDuration()
+{
+    processDuration += updateInterval;
+    ui->durationButton->setText(parseProcessDuration(processDuration));
 }
 
 void TrackEntry::on_selectButton_clicked()
