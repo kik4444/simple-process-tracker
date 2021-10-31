@@ -105,6 +105,7 @@ void TrackEntry::setTimerState()
 
 void TrackEntry::setData(QString processName, QString iconPath, uint processDuration, QString dateAdded, bool trackingIsActive, bool hidden)
 {
+    ui->hideButton->setEnabled(true);
     this->iconPath = iconPath;
     this->processDuration = processDuration;
     this->trackingIsActive = trackingIsActive;
@@ -151,6 +152,7 @@ void TrackEntry::on_selectButton_clicked()
 
 void TrackEntry::processChosen(QString processName)
 {
+    ui->hideButton->setEnabled(true);
     trackingIsActive = true;
 
     ui->lineEdit->setText(processName);
