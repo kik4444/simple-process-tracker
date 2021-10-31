@@ -29,11 +29,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent) , ui(new Ui::MainW
         trackEntry->setData(processOrder[i], settings.value("iconPath").toString(), settings.value("duration", 0).toUInt(),
             settings.value("dateAdded").toString(), settings.value("trackingIsActive", false).toBool());
 
-        connect(trackEntry, &TrackEntry::removeClearedEntries, this, &MainWindow::removeClearedEntries);
-        QListWidgetItem *listWidgetItem = new QListWidgetItem(ui->trackerListWidget);
-        ui->trackerListWidget->addItem(listWidgetItem);
-        ui->trackerListWidget->setItemWidget(listWidgetItem, trackEntry);
-        listWidgetItem->setSizeHint(QSize(trackEntrySize, trackEntrySize)); //width, height
+        configureTrackEntry(trackEntry);
 
         settings.endGroup();
     }
@@ -92,6 +88,11 @@ void MainWindow::saveProcessData()
 void MainWindow::on_actionAdd_triggered()
 {
     TrackEntry *trackEntry = new TrackEntry();
+    configureTrackEntry(trackEntry);
+}
+
+void MainWindow::configureTrackEntry(TrackEntry *trackEntry)
+{
     connect(trackEntry, &TrackEntry::removeClearedEntries, this, &MainWindow::removeClearedEntries);
     QListWidgetItem *listWidgetItem = new QListWidgetItem(ui->trackerListWidget);
     ui->trackerListWidget->addItem(listWidgetItem);

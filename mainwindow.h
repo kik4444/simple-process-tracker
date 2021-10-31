@@ -63,6 +63,8 @@ private slots:
 private:
     Ui::MainWindow *ui;
 
+    void configureTrackEntry(TrackEntry *trackEntry);
+
     QSystemTrayIcon *systemTrayIcon;
 
     const int trackEntrySize = 50;
