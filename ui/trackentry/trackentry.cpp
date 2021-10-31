@@ -81,6 +81,11 @@ bool TrackEntry::getTrackingIsActive()
     return trackingIsActive;
 }
 
+bool TrackEntry::getHidden()
+{
+    return hidden;
+}
+
 void TrackEntry::setTimerState()
 {
     if (trackingIsActive)
@@ -95,11 +100,12 @@ void TrackEntry::setTimerState()
     }
 }
 
-void TrackEntry::setData(QString processName, QString iconPath, uint processDuration, QString dateAdded, bool trackingIsActive)
+void TrackEntry::setData(QString processName, QString iconPath, uint processDuration, QString dateAdded, bool trackingIsActive, bool hidden)
 {
     this->iconPath = iconPath;
     this->processDuration = processDuration;
     this->trackingIsActive = trackingIsActive;
+    this->hidden = hidden;
 
     ui->selectButton->hide();
     ui->lineEdit->setText(processName);

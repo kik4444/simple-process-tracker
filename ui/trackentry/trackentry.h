@@ -36,8 +36,9 @@ public:
     uint getProcessDuration();
     QString getDateAdded();
     bool getTrackingIsActive();
+    bool getHidden();
 
-    void setData(QString processName, QString iconPath, uint processDuration, QString dateAdded, bool trackingIsActive);
+    void setData(QString processName, QString iconPath, uint processDuration, QString dateAdded, bool trackingIsActive, bool hidden);
 
 signals:
     void removeClearedEntries();
@@ -63,9 +64,10 @@ private:
     void setTimerState();
     bool eventFilter(QObject *object, QEvent *event);
 
+    QString iconPath = ":/Assets/Icons/app-icon.svg";
     uint processDuration = 0;
     bool trackingIsActive = false;
-    QString iconPath = ":/Assets/Icons/app-icon.svg";
+    bool hidden = false;
 
     QTimer *updateTimer;
     const uint updateTimerInterval = 1000;
