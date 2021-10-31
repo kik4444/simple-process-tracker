@@ -27,6 +27,9 @@
 //For platform-specific actions
 #include "custom/platform_specifics.h"
 
+//For saving user options
+#include <QVariantMap>
+
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
 QT_END_NAMESPACE
@@ -38,6 +41,8 @@ class MainWindow : public QMainWindow
 public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
+
+    static QVariantMap userSettings;
 
 public slots:
     void removeClearedEntries();

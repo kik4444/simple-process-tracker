@@ -71,8 +71,6 @@ private:
     uint updateInterval = updateTimerInterval / 1000;
 
     QTimer *processPollTimer;
-    const uint processPollTimerInterval = 5000; //SETTING
-    const uint delayedProcessPollTimerInterval = 10000; //SETTING
 
     const uint iconSize = 35;
 };

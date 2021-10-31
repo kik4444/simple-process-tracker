@@ -1,9 +1,18 @@
 #include "mainwindow.h"
 #include "./ui_mainwindow.h"
 
+QVariantMap MainWindow::userSettings;
+
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent) , ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+
+    //Load user settings
+    {
+        QSettings settings(QSettings::IniFormat, QSettings::UserScope, "simple-process-tracker", "config");
+        this->userSettings["runningPollInterval"] = settings.value("runningPollInterval", 5).toUInt();
+        this->userSettings["stoppedPollInterval"] = settings.value("stoppedPollInterval", 10).toUInt();
+    }
 
     //Load process data
     QSettings settings(QSettings::IniFormat, QSettings::UserScope, "simple-process-tracker", "processList");
