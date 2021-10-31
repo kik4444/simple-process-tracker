@@ -204,6 +204,8 @@ void TrackEntry::on_hideButton_clicked()
     emit saveProcessData();
     if (hidden)
         emit removeHiddenProcess(getProcessName());
+    else
+        setTimerState();
 }
 
 void TrackEntry::setHideButtonText()
