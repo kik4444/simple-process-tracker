@@ -6,9 +6,10 @@ TrackEntry::TrackEntry(QWidget *parent) : QWidget(parent), ui(new Ui::TrackEntry
 {
     ui->setupUi(this);
 
-    timer = new QTimer(this);
-    timer->setTimerType(Qt::VeryCoarseTimer);
-    connect(timer, &QTimer::timeout, this, &TrackEntry::updateDuration);
+    //Set timer for polling the process
+    processPollTimer = new QTimer(this);
+    processPollTimer->setTimerType(Qt::VeryCoarseTimer);
+    connect(processPollTimer, &QTimer::timeout, this, &TrackEntry::updateDuration);
 
     //Set listening for clicks on the icon label
     ui->iconLabel->installEventFilter(this);
@@ -78,9 +79,9 @@ bool TrackEntry::getTrackingIsActive()
 void TrackEntry::setTimerState()
 {
     if (trackingIsActive)
-        timer->start(timerInterval);
+        processPollTimer->start(processPollTimerInterval);
     else
-        timer->stop();
+        processPollTimer->stop();
 }
 
 void TrackEntry::setData(QString processName, QString iconPath, uint processDuration, QString dateAdded, bool trackingIsActive)
@@ -103,12 +104,12 @@ void TrackEntry::updateDuration()
 {
     if (Platform::isProcessRunning(getProcessName()))
     {
-        timer->setInterval(timerInterval);
+        processPollTimer->setInterval(processPollTimerInterval);
         processDuration += updateInterval;
         ui->durationButton->setText(parseProcessDuration(processDuration));
     }
     else
-        timer->setInterval(delayedTimerInterval);
+        processPollTimer->setInterval(delayedProcessPollTimerInterval);
 }
 
 void TrackEntry::on_selectButton_clicked()
