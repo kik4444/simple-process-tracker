@@ -19,6 +19,8 @@ add_executable(simple-process-tracker
     main.cpp
     resources.qrc
 
+    custom/platform_specifics.h
+
     ui/trackentry/trackentry.h
     ui/trackentry/trackentry.cpp
     ui/trackentry/trackentry.ui
@@ -27,7 +29,9 @@ add_executable(simple-process-tracker
     ui/processDialog/processdialog.cpp
     ui/processDialog/processdialog.ui
 
-    custom/platform_specifics.h
+    ui/options/options.h
+    ui/options/options.cpp
+    ui/options/options.ui
 )
 
 target_link_libraries(simple-process-tracker PRIVATE

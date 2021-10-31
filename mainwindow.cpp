@@ -121,3 +121,9 @@ void MainWindow::on_actionExit_triggered()
 {
     qApp->quit();
 }
+
+void MainWindow::on_actionOptions_triggered()
+{
+    Options *options = new Options();
+    options->show();
+}
