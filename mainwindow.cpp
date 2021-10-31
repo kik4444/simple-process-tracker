@@ -18,7 +18,10 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent) , ui(new Ui::MainW
     QSettings settings(QSettings::IniFormat, QSettings::UserScope, "simple-process-tracker", "processList");
     QMap<uint, QString> processOrder;
     foreach (QString process, settings.childGroups())
-        processOrder.insert(settings.value(process + "/position").toUInt(), process);
+    {
+        if (!settings.value(process + "/hidden").toBool())
+            processOrder.insert(settings.value(process + "/position").toUInt(), process);
+    }
 
     for (uint i = 0; i < processOrder.size(); i++)
     {
