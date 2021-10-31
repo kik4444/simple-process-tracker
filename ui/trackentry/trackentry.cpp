@@ -13,8 +13,9 @@ TrackEntry::TrackEntry(QWidget *parent) : QWidget(parent), ui(new Ui::TrackEntry
     //Set listening for clicks on the icon label
     ui->iconLabel->installEventFilter(this);
 
-    //For default icon
-    ui->iconLabel->setPixmap(QPixmap(iconPath).scaled(iconSize, iconSize, Qt::KeepAspectRatio, Qt::SmoothTransformation));
+    //Set icon
+    ui->iconLabel->setPixmap(QPixmap(iconPath));
+    ui->iconLabel->setMaximumSize(iconSize, iconSize);
 }
 
 TrackEntry::~TrackEntry()
@@ -32,7 +33,7 @@ bool TrackEntry::eventFilter(QObject *object, QEvent *event)
 
         if (!fileName.isEmpty() && !icon.isNull())
         {
-            ui->iconLabel->setPixmap(icon.scaled(iconSize, iconSize, Qt::KeepAspectRatio, Qt::SmoothTransformation));
+            ui->iconLabel->setPixmap(icon);
             iconPath = fileName;
         }
     }
@@ -90,7 +91,7 @@ void TrackEntry::setData(QString processName, QString iconPath, uint processDura
 
     ui->selectButton->hide();
     ui->lineEdit->setText(processName);
-    ui->iconLabel->setPixmap(QPixmap(iconPath).scaled(iconSize, iconSize, Qt::KeepAspectRatio, Qt::SmoothTransformation));
+    ui->iconLabel->setPixmap(QPixmap(iconPath));
     ui->durationButton->setText(parseProcessDuration(processDuration));
     ui->dateAddedLabel->setText(dateAdded);
     ui->trackingCheckBox->setChecked(trackingIsActive);
