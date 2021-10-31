@@ -60,6 +60,8 @@ private slots:
 
     void on_actionOptions_triggered();
 
+    void on_actionPoll_triggered();
+
 private:
     Ui::MainWindow *ui;
 

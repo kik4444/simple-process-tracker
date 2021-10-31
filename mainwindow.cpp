@@ -137,3 +137,8 @@ void MainWindow::on_actionOptions_triggered()
     Options *options = new Options();
     options->show();
 }
+
+void MainWindow::on_actionPoll_triggered()
+{
+    //do stuff
+}
