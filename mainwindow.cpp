@@ -99,6 +99,7 @@ void MainWindow::configureTrackEntry(TrackEntry *trackEntry)
 {
     connect(trackEntry, &TrackEntry::removeClearedEntries, this, &MainWindow::removeClearedEntries);
     connect(this, &MainWindow::forcePollProcesses, trackEntry, &TrackEntry::pollProcess);
+    connect(trackEntry, &TrackEntry::saveProcessData, this, &MainWindow::saveProcessData);
     QListWidgetItem *listWidgetItem = new QListWidgetItem(ui->trackerListWidget);
     ui->trackerListWidget->addItem(listWidgetItem);
     ui->trackerListWidget->setItemWidget(listWidgetItem, trackEntry);
