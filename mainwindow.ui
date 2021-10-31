@@ -68,6 +68,7 @@
     <bool>false</bool>
    </attribute>
    <addaction name="actionAdd"/>
+   <addaction name="actionPoll"/>
    <addaction name="actionOptions"/>
    <addaction name="actionExit"/>
   </widget>
@@ -81,7 +82,7 @@
     <string>Add</string>
    </property>
    <property name="toolTip">
-    <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Add new process to track&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+    <string>Add new process to track</string>
    </property>
   </action>
   <action name="actionExit">
@@ -103,6 +104,18 @@
    </property>
    <property name="text">
     <string>Options</string>
+   </property>
+  </action>
+  <action name="actionPoll">
+   <property name="icon">
+    <iconset resource="resources.qrc">
+     <normaloff>:/Assets/Icons/force-poll-icon.svg</normaloff>:/Assets/Icons/force-poll-icon.svg</iconset>
+   </property>
+   <property name="text">
+    <string>Poll</string>
+   </property>
+   <property name="toolTip">
+    <string>Force poll all processes right now</string>
    </property>
   </action>
  </widget>
