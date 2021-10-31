@@ -203,7 +203,9 @@ void TrackEntry::on_durationButton_clicked()
 void TrackEntry::on_hideButton_clicked()
 {
     hidden = !hidden;
-    setHideButtonText();
+    //setHideButtonText();
+    emit saveProcessData();
+    //emit auto save and emit remove this process
 }
 
 void TrackEntry::setHideButtonText()

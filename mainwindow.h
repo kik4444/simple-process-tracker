@@ -50,12 +50,12 @@ signals:
 public slots:
     void removeClearedEntries();
 
+    void saveProcessData();
+
 private slots:
     void trayIconActionOpen();
     void trayIconActivated(int activationReason);
     void trayIconActionExit();
-
-    void saveProcessData();
 
     void on_actionAdd_triggered();
 

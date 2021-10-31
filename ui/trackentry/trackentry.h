@@ -43,6 +43,8 @@ public:
 signals:
     void removeClearedEntries();
 
+    void saveProcessData();
+
 public slots:
     void processChosen(QString processName);
 
