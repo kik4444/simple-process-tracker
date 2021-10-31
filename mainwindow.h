@@ -67,12 +67,18 @@ private slots:
 
     void on_actionPoll_triggered();
 
+    void on_actionShow_hidden_triggered();
+
 private:
     Ui::MainWindow *ui;
+
+    void loadProcessData(bool showHidden = false);
 
     void configureTrackEntry(TrackEntry *trackEntry);
 
     QSystemTrayIcon *systemTrayIcon;
+
+    bool showHidden = false;
 
     const int trackEntrySize = 50;
     const int autoSaveTimerInterval = 60000;

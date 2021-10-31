@@ -22,9 +22,6 @@ TrackEntry::TrackEntry(QWidget *parent) : QWidget(parent), ui(new Ui::TrackEntry
     //Set icon
     ui->iconLabel->setPixmap(QPixmap(iconPath));
     ui->iconLabel->setMaximumSize(iconSize, iconSize);
-
-    //Set hide button text
-    setHideButtonText();
 }
 
 TrackEntry::~TrackEntry()
@@ -91,7 +88,7 @@ bool TrackEntry::getHidden()
 
 void TrackEntry::setTimerState()
 {
-    if (trackingIsActive)
+    if (trackingIsActive && !hidden)
     {
         //Perform check immediately on startup and set the interval later
         processPollTimer->start();
@@ -119,6 +116,7 @@ void TrackEntry::setData(QString processName, QString iconPath, uint processDura
     ui->trackingCheckBox->setChecked(trackingIsActive);
 
     setTimerState();
+    setHideButtonText();
 }
 
 void TrackEntry::pollProcess()
@@ -202,9 +200,10 @@ void TrackEntry::on_durationButton_clicked()
 void TrackEntry::on_hideButton_clicked()
 {
     hidden = !hidden;
-    //setHideButtonText();
+    setHideButtonText();
     emit saveProcessData();
-    emit removeHiddenProcess(getProcessName());
+    if (hidden)
+        emit removeHiddenProcess(getProcessName());
 }
 
 void TrackEntry::setHideButtonText()
