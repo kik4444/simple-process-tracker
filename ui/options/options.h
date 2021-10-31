@@ -16,6 +16,11 @@ public:
     explicit Options(QWidget *parent = nullptr);
     ~Options();
 
+private slots:
+    void on_confirmBox_rejected();
+
+    void on_confirmBox_accepted();
+
 private:
     Ui::Options *ui;
 };

@@ -10,3 +10,13 @@ Options::~Options()
 {
     delete ui;
 }
+
+void Options::on_confirmBox_rejected()
+{
+    this->~Options();
+}
+
+void Options::on_confirmBox_accepted()
+{
+
+}
