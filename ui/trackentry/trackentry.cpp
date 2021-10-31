@@ -36,7 +36,7 @@ bool TrackEntry::eventFilter(QObject *object, QEvent *event)
 {
     if (object == ui->iconLabel && event->type() == QEvent::MouseButtonPress)
     {
-        QString fileName = QFileDialog::getOpenFileName(this, "Open Image", "", "Image Files (*.svg *.svgz *.png *.jpg *.jpeg *.bmp *.tiff *.tif)");
+        QString fileName = QFileDialog::getOpenFileName(this, "Open Image", "", "Image Files (*.svg *.svgz *.png *.jpg *.jpeg *.webp *.bmp *.tiff *.tif)");
 
         QPixmap icon(fileName);
 
