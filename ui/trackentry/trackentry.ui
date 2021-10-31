@@ -32,6 +32,9 @@
      <property name="text">
       <string/>
      </property>
+     <property name="scaledContents">
+      <bool>true</bool>
+     </property>
      <property name="textInteractionFlags">
       <set>Qt::NoTextInteraction</set>
      </property>
