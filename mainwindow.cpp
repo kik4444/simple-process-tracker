@@ -52,7 +52,13 @@ void MainWindow::loadProcessData(bool showHidden)
     foreach (QString process, settings.childGroups())
     {
         if (!settings.value(process + "/hidden").toBool() || showHidden)
-            processOrder.insert(settings.value(process + "/position").toUInt(), process);
+        {
+            uint position = settings.value(process + "/position").toUInt();
+            while (processOrder.contains(position))
+                position++;
+
+            processOrder.insert(position, process);
+        }
     }
 
     for (uint i = 0; i < processOrder.size(); i++)
@@ -173,7 +179,7 @@ void MainWindow::on_actionPoll_triggered()
 
 void MainWindow::on_actionShow_hidden_triggered()
 {
-    //saveProcessData();
+    saveProcessData();
     showHidden = !showHidden;
     loadProcessData(showHidden);
 }
