@@ -94,6 +94,7 @@ void MainWindow::on_actionAdd_triggered()
 void MainWindow::configureTrackEntry(TrackEntry *trackEntry)
 {
     connect(trackEntry, &TrackEntry::removeClearedEntries, this, &MainWindow::removeClearedEntries);
+    connect(this, &MainWindow::forcePollProcesses, trackEntry, &TrackEntry::pollProcess);
     QListWidgetItem *listWidgetItem = new QListWidgetItem(ui->trackerListWidget);
     ui->trackerListWidget->addItem(listWidgetItem);
     ui->trackerListWidget->setItemWidget(listWidgetItem, trackEntry);
@@ -140,5 +141,5 @@ void MainWindow::on_actionOptions_triggered()
 
 void MainWindow::on_actionPoll_triggered()
 {
-    //do stuff
+    emit forcePollProcesses();
 }

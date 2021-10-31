@@ -115,7 +115,7 @@
     <string>Poll</string>
    </property>
    <property name="toolTip">
-    <string>Force poll all processes right now</string>
+    <string>Force check all processes right now</string>
    </property>
   </action>
  </widget>

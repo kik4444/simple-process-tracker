@@ -45,8 +45,9 @@ signals:
 public slots:
     void processChosen(QString processName);
 
-private slots:
     void pollProcess();
+
+private slots:
     void updateDuration();
 
     void on_selectButton_clicked();
