@@ -45,6 +45,8 @@ signals:
 
     void saveProcessData();
 
+    void removeHiddenProcess(QString processName);
+
 public slots:
     void processChosen(QString processName);
 

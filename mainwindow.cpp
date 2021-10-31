@@ -100,6 +100,7 @@ void MainWindow::configureTrackEntry(TrackEntry *trackEntry)
     connect(trackEntry, &TrackEntry::removeClearedEntries, this, &MainWindow::removeClearedEntries);
     connect(this, &MainWindow::forcePollProcesses, trackEntry, &TrackEntry::pollProcess);
     connect(trackEntry, &TrackEntry::saveProcessData, this, &MainWindow::saveProcessData);
+    connect(trackEntry, &TrackEntry::removeHiddenProcess, this, &MainWindow::removeHiddenProcess);
     QListWidgetItem *listWidgetItem = new QListWidgetItem(ui->trackerListWidget);
     ui->trackerListWidget->addItem(listWidgetItem);
     ui->trackerListWidget->setItemWidget(listWidgetItem, trackEntry);
@@ -114,6 +115,20 @@ void MainWindow::removeClearedEntries()
         TrackEntry *trackEntry = dynamic_cast<TrackEntry*>(ui->trackerListWidget->itemWidget(widgetItem));
         if (trackEntry->getProcessName().isEmpty())
             delete widgetItem;
+    }
+}
+
+void MainWindow::removeHiddenProcess(QString processName)
+{
+    for (uint i = 0; i < ui->trackerListWidget->count(); i++)
+    {
+        QListWidgetItem *widgetItem = ui->trackerListWidget->item(i);
+        TrackEntry *trackEntry = dynamic_cast<TrackEntry*>(ui->trackerListWidget->itemWidget(widgetItem));
+        if (QString::compare(trackEntry->getProcessName(), processName) == 0)
+        {
+            delete widgetItem;
+            break;
+        }
     }
 }
 

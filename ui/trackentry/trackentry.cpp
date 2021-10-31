@@ -190,7 +190,6 @@ void TrackEntry::on_removeButton_clicked()
     emit removeClearedEntries();
 }
 
-
 void TrackEntry::on_durationButton_clicked()
 {
     bool ok;
@@ -205,7 +204,7 @@ void TrackEntry::on_hideButton_clicked()
     hidden = !hidden;
     //setHideButtonText();
     emit saveProcessData();
-    //emit auto save and emit remove this process
+    emit removeHiddenProcess(getProcessName());
 }
 
 void TrackEntry::setHideButtonText()

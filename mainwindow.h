@@ -52,6 +52,8 @@ public slots:
 
     void saveProcessData();
 
+    void removeHiddenProcess(QString processName);
+
 private slots:
     void trayIconActionOpen();
     void trayIconActivated(int activationReason);
