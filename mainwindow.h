@@ -7,6 +7,7 @@
 //For additional components or UIs
 #include "ui/trackentry/trackentry.h"
 #include "ui/processDialog/processdialog.h"
+#include "ui/options/options.h"
 
 //For reading process list
 #include <QProcess>
@@ -51,6 +52,8 @@ private slots:
     void on_actionAdd_triggered();
 
     void on_actionExit_triggered();
+
+    void on_actionOptions_triggered();
 
 private:
     Ui::MainWindow *ui;
