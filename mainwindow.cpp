@@ -27,7 +27,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent) , ui(new Ui::MainW
         TrackEntry *trackEntry = new TrackEntry();
 
         trackEntry->setData(processOrder[i], settings.value("iconPath").toString(), settings.value("duration", 0).toUInt(),
-            settings.value("dateAdded").toString(), settings.value("trackingIsActive", false).toBool());
+            settings.value("dateAdded").toString(), settings.value("trackingIsActive", false).toBool(), settings.value("hidden", false).toBool());
 
         configureTrackEntry(trackEntry);
 
@@ -78,6 +78,7 @@ void MainWindow::saveProcessData()
             settings.setValue("duration", trackEntry->getProcessDuration());
             settings.setValue("dateAdded", trackEntry->getDateAdded());
             settings.setValue("trackingIsActive", trackEntry->getTrackingIsActive());
+            settings.setValue("hidden", trackEntry->getHidden());
             settings.setValue("position", i);
 
             settings.endGroup();
