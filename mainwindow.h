@@ -44,6 +44,9 @@ public:
 
     static QVariantMap userSettings;
 
+signals:
+    void forcePollProcesses();
+
 public slots:
     void removeClearedEntries();
 
