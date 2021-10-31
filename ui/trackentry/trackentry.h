@@ -65,10 +65,10 @@ private:
     bool trackingIsActive = false;
     QString iconPath = ":/Assets/Icons/app-icon.svg";
 
-    QTimer *timer;
-    const uint timerInterval = 1000;
-    const uint delayedTimerInterval = 10000;
-    uint updateInterval = timerInterval / 1000;
+    QTimer *processPollTimer;
+    const uint processPollTimerInterval = 1000;
+    const uint delayedProcessPollTimerInterval = 10000;
+    uint updateInterval = processPollTimerInterval / 1000;
 
     const uint iconSize = 35;
 };
