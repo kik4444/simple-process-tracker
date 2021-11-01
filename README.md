@@ -1,6 +1,6 @@
 
 # Simple Process Tracker
-A lightweight, simple Qt-based app that tracks how long certain processes have been running for.
+A simple, lightweight Qt-based app that tracks how long user-selected processes have been running on the system.
 
 # Video demonstration
 **TBA**
