@@ -208,5 +208,6 @@ void MainWindow::on_actionShow_hidden_triggered()
 
 void MainWindow::on_actionAbout_triggered()
 {
-    //Open about
+    About *about = new About();
+    about->show();
 }

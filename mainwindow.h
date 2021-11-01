@@ -24,6 +24,7 @@
 #include "ui/trackentry/trackentry.h"
 #include "ui/processDialog/processdialog.h"
 #include "ui/options/options.h"
+#include "ui/about/about.h"
 
 //For reading process list
 #include <QProcess>

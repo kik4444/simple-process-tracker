@@ -32,6 +32,10 @@ add_executable(simple-process-tracker
     ui/options/options.h
     ui/options/options.cpp
     ui/options/options.ui
+
+    ui/about/about.h
+    ui/about/about.cpp
+    ui/about/about.ui
 )
 
 target_link_libraries(simple-process-tracker PRIVATE
