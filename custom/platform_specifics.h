@@ -48,7 +48,9 @@ public:
 
         #elif defined Q_OS_MACOS
 
-        //mac stuff
+        qprocess->start("ps", QStringList() << "-eo" << "ucomm");
+        qprocess->waitForFinished();
+        processList = QString(qprocess->readAllStandardOutput()).split("\n");
 
         #elif defined Q_OS_WINDOWS
 
