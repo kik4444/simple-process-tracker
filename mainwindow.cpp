@@ -133,14 +133,17 @@ void MainWindow::removeClearedEntries()
 
 void MainWindow::removeHiddenProcess(QString processName)
 {
-    for (uint i = 0; i < ui->trackerListWidget->count(); i++)
+    if (!showHidden)
     {
-        QListWidgetItem *widgetItem = ui->trackerListWidget->item(i);
-        TrackEntry *trackEntry = dynamic_cast<TrackEntry*>(ui->trackerListWidget->itemWidget(widgetItem));
-        if (QString::compare(trackEntry->getProcessName(), processName) == 0)
+        for (uint i = 0; i < ui->trackerListWidget->count(); i++)
         {
-            delete widgetItem;
-            break;
+            QListWidgetItem *widgetItem = ui->trackerListWidget->item(i);
+            TrackEntry *trackEntry = dynamic_cast<TrackEntry*>(ui->trackerListWidget->itemWidget(widgetItem));
+            if (QString::compare(trackEntry->getProcessName(), processName) == 0)
+            {
+                delete widgetItem;
+                break;
+            }
         }
     }
 }
@@ -179,7 +182,10 @@ void MainWindow::on_actionPoll_triggered()
 
 void MainWindow::on_actionShow_hidden_triggered()
 {
-    saveProcessData();
     showHidden = !showHidden;
+    ui->actionShow_hidden->setText(showHidden ? "Hide hidden" : "Show hidden");
+    ui->actionPoll->setEnabled(!showHidden);
+
+    saveProcessData();
     loadProcessData(showHidden);
 }
