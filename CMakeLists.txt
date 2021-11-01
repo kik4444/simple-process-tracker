@@ -39,14 +39,14 @@ set(source_files
     ui/about/about.ui
 )
 
-set(additional_files "")
+set(additional_arguments "")
 
 # Set Windows icon
 if (WIN32)
-    set(additional_files "${CMAKE_CURRENT_SOURCE_DIR}/Assets/Icons/windows_icon/windows-app-icon.rc")
+    set(additional_arguments WIN32 "${CMAKE_CURRENT_SOURCE_DIR}/Assets/Icons/windows_icon/windows-app-icon.rc")
 endif()
 
-add_executable(${PROJECT_NAME} ${source_files} ${additional_files})
+add_executable(${PROJECT_NAME} ${additional_arguments} ${source_files})
 
 target_link_libraries(simple-process-tracker PRIVATE
     Qt6::Widgets
