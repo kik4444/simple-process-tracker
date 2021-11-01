@@ -116,7 +116,7 @@ void TrackEntry::setData(QString processName, QString iconPath, uint processDura
     ui->trackingCheckBox->setChecked(trackingIsActive);
 
     setTimerState();
-    setHideButtonText();
+    setHideChanges();
 }
 
 void TrackEntry::pollProcess()
@@ -200,15 +200,22 @@ void TrackEntry::on_durationButton_clicked()
 void TrackEntry::on_hideButton_clicked()
 {
     hidden = !hidden;
-    setHideButtonText();
     emit saveProcessData();
     if (hidden)
         emit removeHiddenProcess(getProcessName());
     else
         setTimerState();
+
+    setHideChanges();
 }
 
-void TrackEntry::setHideButtonText()
+void TrackEntry::setHideChanges()
 {
     ui->hideButton->setText(hidden ? "Unhide" : "Hide");
+
+    //Disable entirely if it is hidden except the unhide button
+    foreach (QWidget* widget, this->findChildren<QWidget*>())
+        widget->setEnabled(!hidden);
+
+    ui->hideButton->setEnabled(true);
 }

@@ -69,7 +69,7 @@ private:
     QString parseProcessDuration(uint processDuration);
     void setTimerState();
     bool eventFilter(QObject *object, QEvent *event);
-    void setHideButtonText();
+    void setHideChanges();
 
     QString iconPath = ":/Assets/Icons/app-icon.svg";
     uint processDuration = 0;

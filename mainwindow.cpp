@@ -61,13 +61,13 @@ void MainWindow::loadProcessData(bool showHidden)
         }
     }
 
-    for (uint i = 0; i < processOrder.size(); i++)
+    foreach (uint position, processOrder.keys())
     {
-        settings.beginGroup(processOrder[i]);
+        settings.beginGroup(processOrder[position]);
 
         TrackEntry *trackEntry = new TrackEntry();
 
-        trackEntry->setData(processOrder[i], settings.value("iconPath").toString(), settings.value("duration", 0).toUInt(),
+        trackEntry->setData(processOrder[position], settings.value("iconPath").toString(), settings.value("duration", 0).toUInt(),
             settings.value("dateAdded").toString(), settings.value("trackingIsActive", false).toBool(), settings.value("hidden", false).toBool());
 
         configureTrackEntry(trackEntry);
