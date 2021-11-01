@@ -69,7 +69,7 @@ public:
         return processList;
     }
 
-    static bool isProcessRunning(QString processName)
+    static bool isProcessRunning(QString processName, TrackEntry *thiz)
     {
         #if defined Q_OS_LINUX
 
@@ -85,7 +85,14 @@ public:
 
         #elif defined Q_OS_MACOS
 
-        //mac stuff
+        QProcess *qprocess = new QProcess(thiz);
+
+        qprocess->start("pgrep", QStringList() << processName);
+        qprocess->waitForFinished();
+        bool processIsRunning = !QString(qprocess->readAllStandardOutput()).isEmpty();
+
+        qprocess->deleteLater();
+        return processIsRunning;
 
         #elif defined Q_OS_WINDOWS
         //Credit - https://stackoverflow.com/a/57164620

@@ -139,7 +139,7 @@ void TrackEntry::pollProcess()
 {
     processPollTimer->setInterval(MainWindow::userSettings["runningPollInterval"].toUInt() * 1000);
 
-    if (Platform::isProcessRunning(getProcessName()))
+    if (Platform::isProcessRunning(getProcessName(), this))
     {
         if (!updateTimer->isActive())
             updateTimer->start(updateTimerInterval);
