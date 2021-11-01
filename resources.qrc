@@ -8,5 +8,7 @@
         <file>Assets/Icons/hide-icon.svg</file>
         <file>COPYING</file>
         <file>Assets/Icons/about-icon.svg</file>
+        <file>Assets/Icons/Qt.svg</file>
+        <file>Assets/Icons/gpl-v3-logo.svg</file>
     </qresource>
 </RCC>

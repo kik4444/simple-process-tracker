@@ -32,6 +32,9 @@ public:
     explicit About(QWidget *parent = nullptr);
     ~About();
 
+private slots:
+    void on_buttonBox_accepted();
+
 private:
     Ui::About *ui;
 };
