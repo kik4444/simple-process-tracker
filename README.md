@@ -16,5 +16,5 @@ A lightweight, simple Qt-based app that tracks how long certain processes have b
 # Mac OS X
 **TBA**
 
-# Windows 10 64-bit:
+# Windows
 **TBA**

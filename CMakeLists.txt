@@ -12,7 +12,8 @@ set(CMAKE_AUTOUIC ON)
 find_package(Qt6 COMPONENTS Widgets REQUIRED)
 find_package(Qt6 COMPONENTS Core REQUIRED)
 
-add_executable(simple-process-tracker
+set(source_files
+
     mainwindow.ui
     mainwindow.h
     mainwindow.cpp
@@ -37,6 +38,15 @@ add_executable(simple-process-tracker
     ui/about/about.cpp
     ui/about/about.ui
 )
+
+set(additional_files "")
+
+# Set Windows icon
+if (WIN32)
+    set(additional_files "${CMAKE_CURRENT_SOURCE_DIR}/Assets/Icons/windows_icon/windows-app-icon.rc")
+endif()
+
+add_executable(${PROJECT_NAME} ${source_files} ${additional_files})
 
 target_link_libraries(simple-process-tracker PRIVATE
     Qt6::Widgets
