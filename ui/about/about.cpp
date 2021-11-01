@@ -31,3 +31,24 @@ void About::on_buttonBox_accepted()
 {
     this->~About();
 }
+
+QString About::readInternalText(QString path)
+{
+    QFile text(path);
+    return text.open(QIODevice::ReadOnly) ? text.readAll() : QString();
+}
+
+void About::on_licenseButton_clicked()
+{
+    ui->textEdit->setText(readInternalText(":/Assets/about-text/about.html"));
+}
+
+void About::on_qtButton_clicked()
+{
+    ui->textEdit->setText(readInternalText(":/Assets/about-text/qt.html"));
+}
+
+void About::on_aboutButton_clicked()
+{
+    ui->textEdit->setText(readInternalText(":/Assets/about-text/gplv3.html"));
+}

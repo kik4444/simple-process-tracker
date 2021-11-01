@@ -10,5 +10,8 @@
         <file>Assets/Icons/about-icon.svg</file>
         <file>Assets/Icons/Qt.svg</file>
         <file>Assets/Icons/gpl-v3-logo.svg</file>
+        <file>Assets/about-text/about.html</file>
+        <file>Assets/about-text/gplv3.html</file>
+        <file>Assets/about-text/qt.html</file>
     </qresource>
 </RCC>
