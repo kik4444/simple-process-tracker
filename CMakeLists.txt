@@ -39,8 +39,6 @@ set(source_files
     ui/about/about.ui
 )
 
-set(additional_arguments "")
-
 # Set Windows icon
 if (WIN32)
     set(additional_arguments WIN32 "${CMAKE_CURRENT_SOURCE_DIR}/Assets/Icons/windows_icon/windows-app-icon.rc")
