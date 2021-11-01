@@ -212,9 +212,10 @@ void TrackEntry::setHideChanges()
 {
     ui->hideButton->setText(hidden ? "Unhide" : "Hide");
 
-    //Disable entirely if it is hidden except the unhide button
+    //If entry is hidden, disable it entirely except the unhide and remove buttons
     foreach (QWidget* widget, this->findChildren<QWidget*>())
         widget->setEnabled(!hidden);
 
     ui->hideButton->setEnabled(true);
+    ui->removeButton->setEnabled(true);
 }
