@@ -85,6 +85,8 @@ private slots:
 
     void on_actionShow_hidden_triggered();
 
+    void on_actionAbout_triggered();
+
 private:
     Ui::MainWindow *ui;
 

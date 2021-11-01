@@ -71,6 +71,7 @@
    <addaction name="actionPoll"/>
    <addaction name="actionShow_hidden"/>
    <addaction name="actionOptions"/>
+   <addaction name="actionAbout"/>
    <addaction name="actionExit"/>
   </widget>
   <action name="actionAdd">
@@ -129,6 +130,18 @@
    </property>
    <property name="toolTip">
     <string>Reveal or hide hidden processes</string>
+   </property>
+  </action>
+  <action name="actionAbout">
+   <property name="icon">
+    <iconset resource="resources.qrc">
+     <normaloff>:/Assets/Icons/about-icon.svg</normaloff>:/Assets/Icons/about-icon.svg</iconset>
+   </property>
+   <property name="text">
+    <string>About</string>
+   </property>
+   <property name="toolTip">
+    <string>Read the about section of Simple Process Tracker</string>
    </property>
   </action>
  </widget>

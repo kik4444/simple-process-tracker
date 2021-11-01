@@ -6,5 +6,7 @@
         <file>Assets/Icons/options-icon.svg</file>
         <file>Assets/Icons/force-poll-icon.svg</file>
         <file>Assets/Icons/hide-icon.svg</file>
+        <file>COPYING</file>
+        <file>Assets/Icons/about-icon.svg</file>
     </qresource>
 </RCC>

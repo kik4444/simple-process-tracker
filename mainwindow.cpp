@@ -205,3 +205,8 @@ void MainWindow::on_actionShow_hidden_triggered()
     saveProcessData();
     loadProcessData(showHidden);
 }
+
+void MainWindow::on_actionAbout_triggered()
+{
+    //Open about
+}
