@@ -35,8 +35,16 @@ public:
 private slots:
     void on_buttonBox_accepted();
 
+    void on_licenseButton_clicked();
+
+    void on_qtButton_clicked();
+
+    void on_aboutButton_clicked();
+
 private:
     Ui::About *ui;
+
+    QString readInternalText(QString path);
 };
 
 #endif // ABOUT_H
