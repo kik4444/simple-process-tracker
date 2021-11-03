@@ -47,6 +47,9 @@
 //For saving user options
 #include <QVariantMap>
 
+//For Mac OS X icon
+#include <QtSvg>
+
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
 QT_END_NAMESPACE
