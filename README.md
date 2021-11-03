@@ -25,6 +25,7 @@ make -j$(nproc)
 - MinGW 8.1.0 64-bit
 4. Now go to the directory `Develop and Designer Tools` and select:
 - CMake 64-bit
+- Ninja
 5. Continue with the installation and finish it. You should now have Qt and Qt Creator installed on your computer and the main Qt SDK folder should be located in `C:\Qt`.
 6. Open powershell and execute the following script which will download and compile the program in a folder on your desktop:
 ```bash
