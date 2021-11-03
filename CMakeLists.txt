@@ -11,6 +11,7 @@ set(CMAKE_AUTOUIC ON)
 
 find_package(Qt6 COMPONENTS Widgets REQUIRED)
 find_package(Qt6 COMPONENTS Core REQUIRED)
+find_package(Qt6 COMPONENTS Svg REQUIRED)
 
 set(source_files
 
@@ -39,9 +40,21 @@ set(source_files
     ui/about/about.ui
 )
 
-# Set Windows icon
+# Set Mac OS X specifics
+if (APPLE)
+
+    set(MACOSX_BUNDLE_ICON_FILE app-icon.icns)
+    set(app_icon_macos "${CMAKE_CURRENT_SOURCE_DIR}/Assets/Icons/macos_icon/app-icon.icns")
+    set_source_files_properties(${app_icon_macos} PROPERTIES MACOSX_PACKAGE_LOCATION "Resources")
+    set(additional_arguments MACOSX_BUNDLE ${app_icon_macos})
+
+endif()
+
+# Set Windows specifics
 if (WIN32)
+
     set(additional_arguments WIN32 "${CMAKE_CURRENT_SOURCE_DIR}/Assets/Icons/windows_icon/windows-app-icon.rc")
+
 endif()
 
 add_executable(${PROJECT_NAME} ${additional_arguments} ${source_files})
@@ -49,4 +62,5 @@ add_executable(${PROJECT_NAME} ${additional_arguments} ${source_files})
 target_link_libraries(simple-process-tracker PRIVATE
     Qt6::Widgets
     Qt6::Core
+    Qt6::Svg
 )
