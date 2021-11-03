@@ -31,7 +31,7 @@ mkdir build-dir && cd build-dir
 export PATH=/Users/$USER/Qt/Tools/Ninja:$PATH
 /Users/$USER/Qt/Tools/CMake/CMake.app/Contents/bin/cmake -S .. -B . -GNinja -DCMAKE_BUILD_TYPE:STRING=Release "-DCMAKE_PROJECT_INCLUDE_BEFORE:PATH=/Users/$USER/Qt/Qt Creator.app/Contents/Resources/package-manager/auto-setup.cmake" -DQT_QMAKE_EXECUTABLE:STRING=/Users/$USER/Qt/6.2.1/macos/bin/qmake -DCMAKE_PREFIX_PATH:STRING=/Users/$USER/Qt/6.2.1/macos -DCMAKE_C_COMPILER:STRING=/usr/bin/clang -DCMAKE_CXX_COMPILER:STRING=/usr/bin/clang++
 /Users/$USER/Qt/Tools/CMake/CMake.app/Contents/bin/cmake --build . --target all -- -j$(sysctl -n hw.ncpu)
-/Users/$USER/Qt/6.2.1/macos/bin/macdeployqt simple-process-tracker -dmg
+/Users/$USER/Qt/6.2.1/macos/bin/macdeployqt simple-process-tracker.app -dmg
 ```
 
 You will now have a dmg file containing the application that you can drag and drop into the applications folder in Finder.
