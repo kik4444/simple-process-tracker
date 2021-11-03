@@ -5,13 +5,13 @@ A simple, lightweight Qt-based app that tracks how long user-selected processes 
 # Build instructions:
 
 # Linux:
-1. Install the dependencies `qt6-base` and `cmake` for your distribution
+1. Install the following dependencies for your distribution: `qt6-base qt6-svg cmake`
 2. Execute the following:
 ```bash
 git clone https://github.com/kik4444/simple-process-tracker
 cd simple-process-tracker
 mkdir build-dir && cd build-dir
-cmake -DCMAKE_BUILD_TYPE=Release ../
+cmake -S .. -B . -DCMAKE_BUILD_TYPE:STRING=Release
 make -j$(nproc)
 ```
 
