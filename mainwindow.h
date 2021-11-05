@@ -47,7 +47,7 @@
 //For saving user options
 #include <QVariantMap>
 
-//For Mac OS X icon
+//For SVG icon
 #include <QtSvg>
 
 QT_BEGIN_NAMESPACE
