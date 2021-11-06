@@ -58,6 +58,7 @@ public:
         qprocess->write("for /f \"tokens=1 delims=,\" %F in ('tasklist /nh /fo csv') do @echo %~F\n\rexit\n\r");
         qprocess->waitForFinished();
         processList = QString(qprocess->readAllStandardOutput()).split("\n");
+        processList.removeAll(QString("\r"));
 
         #endif
 
