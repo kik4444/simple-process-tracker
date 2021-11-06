@@ -87,7 +87,7 @@ public:
 
         QProcess *qprocess = new QProcess(thiz);
 
-        qprocess->start("pgrep", QStringList() << processName);
+        qprocess->start("pgrep", QStringList() << "-x" << processName);
         qprocess->waitForFinished();
         bool processIsRunning = !QString(qprocess->readAllStandardOutput()).isEmpty();
 
