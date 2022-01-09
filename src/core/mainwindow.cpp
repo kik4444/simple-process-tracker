@@ -17,21 +17,22 @@
 #include "mainwindow.h"
 #include "./ui_mainwindow.h"
 
-MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent) , ui(new Ui::MainWindow)
+MainWindow::MainWindow(QWidget* parent) : QMainWindow(parent), ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
 
     ui->tableView->setItemDelegateForColumn(0, new IconDelegate());
-
     processTableViewModel->setHorizontalHeaderLabels(QStringList() << "Icon" << "Name" << "Duration" << "Date added" << "Last seen");
-
     ui->tableView->setModel(processTableViewModel);
-    processTableViewModel->setItem(0, 1, new QStandardItem(QString("test 01")));
-    processTableViewModel->setItem(1, 2, new QStandardItem(QString("test 12")));
+    //TODO remove after manually saving column widths
+    ui->tableView->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
 
-    QStandardItem *item = new QStandardItem();
-    item->setData(QIcon(":/app-icon.svg"), Qt::DecorationRole);
-    processTableViewModel->setItem(0, 0, item);
+//    processTableViewModel->setItem(0, 1, new QStandardItem(QString("test 01")));
+//    processTableViewModel->setItem(1, 2, new QStandardItem(QString("test 12")));
+
+//    QStandardItem* item = new QStandardItem();
+//    item->setData(QIcon(":/app-icon.svg"), Qt::DecorationRole);
+//    processTableViewModel->setItem(0, 0, item);
 }
 
 MainWindow::~MainWindow()
@@ -41,6 +42,10 @@ MainWindow::~MainWindow()
 
 void MainWindow::on_tableView_clicked(const QModelIndex &index)
 {
-    qDebug() << index.column();
+    qDebug() << index.column() << " " <<  index.row();
 }
 
+void MainWindow::on_actionAdd_triggered()
+{
+    qDebug() << "Add new process";
+}
