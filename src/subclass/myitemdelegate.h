@@ -25,7 +25,7 @@
 
 class MyItemDelegate : public QStyledItemDelegate
 {
-    void initStyleOption(QStyleOptionViewItem* item, const QModelIndex &index) const override
+    void initStyleOption(QStyleOptionViewItem *item, const QModelIndex &index) const override
     {
         QStyledItemDelegate::initStyleOption(item, index);
         item->decorationSize = item->rect.size();

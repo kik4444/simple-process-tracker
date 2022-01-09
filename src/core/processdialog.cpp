@@ -63,5 +63,5 @@ void ProcessDialog::on_filterLineEdit_textChanged(const QString &arg1)
 
 void ProcessDialog::on_iconBrowseButton_clicked()
 {
-    ui->iconPathLineEdit->setText(QFileDialog::getOpenFileName(this, "Open Image", "", "Image Files " + Utility::imageFormats));
+    ui->iconPathLineEdit->setText(QFileDialog::getOpenFileName(this, "Open Image", "", Utility::imageFormats));
 }
