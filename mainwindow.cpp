@@ -46,7 +46,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent) , ui(new Ui::MainW
     systemTrayIconMenu->addAction("Pause all", this, &MainWindow::trayIconActionPauseAll);
     systemTrayIconMenu->addAction("Exit", this, &MainWindow::trayIconActionExit);
 
-    connect(systemTrayIcon, &QSystemTrayIcon::activated, this, &MainWindow::trayIconActivated);
+    connect(systemTrayIcon, &QSystemTrayIcon::activated, this, &MainWindow::trayIconActionOpen);
 
     systemTrayIcon->setContextMenu(systemTrayIconMenu);
     systemTrayIcon->show();
@@ -180,12 +180,6 @@ void MainWindow::removeHiddenProcess(QString processName)
 void MainWindow::trayIconActionOpen()
 {
     this->show();
-}
-
-void MainWindow::trayIconActivated(int activationReason)
-{
-    if (activationReason == QSystemTrayIcon::Trigger)
-        systemTrayIcon->contextMenu()->popup(QCursor::pos());
 }
 
 void MainWindow::trayIconActionResumeAll()
