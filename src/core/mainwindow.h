@@ -64,7 +64,7 @@ namespace ProcessColumns
 
 namespace Utility
 {
-    const QString imageFormats = "(*.svg *.svgz *.png *.jpg *.jpeg *.webp *.bmp *.tiff *.tif)";
+    const QString imageFormats = "Image Files (*.svg *.svgz *.png *.jpg *.jpeg *.webp *.bmp *.tiff *.tif)";
 }
 
 QT_END_NAMESPACE
