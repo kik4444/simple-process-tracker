@@ -22,7 +22,7 @@ set(source_files
     core/mainwindow.h
     core/mainwindow.cpp
 
-    subclass/iconDelegate.h
+    subclass/icondelegate.h
 
 #    platform/platform.h
 )
