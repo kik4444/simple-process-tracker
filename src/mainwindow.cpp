@@ -20,6 +20,16 @@
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent) , ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+
+    QStandardItemModel* model = new QStandardItemModel();
+
+    model->setHorizontalHeaderItem(0, new QStandardItem("First column"));
+    model->setHorizontalHeaderItem(1, new QStandardItem("Second column"));
+
+    model->appendRow(new QStandardItem("1"));
+    model->appendRow(new QStandardItem("2"));
+
+    ui->tableView->setModel(model);
 }
 
 MainWindow::~MainWindow()
