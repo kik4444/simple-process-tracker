@@ -59,6 +59,11 @@ namespace ProcessColumns
     };
 }
 
+namespace Utility
+{
+    const QString imageFormats = "(*.svg *.svgz *.png *.jpg *.jpeg *.webp *.bmp *.tiff *.tif)";
+}
+
 QT_END_NAMESPACE
 
 class MainWindow : public QMainWindow
@@ -66,19 +71,20 @@ class MainWindow : public QMainWindow
     Q_OBJECT
 
 public: // Methods
-    MainWindow(QWidget* parent = nullptr);
+    MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
 private: // Methods
 
 private: // Variables
-    Ui::MainWindow* ui;
+    Ui::MainWindow *ui;
 
-    QStandardItemModel* processTableViewModel = new QStandardItemModel();
+    QStandardItemModel *processTableViewModel = new QStandardItemModel();
 
 signals:
 
 public slots:
+    void processChosen(QString processName, QString iconPath);
 
 private slots:
     void on_tableView_clicked(const QModelIndex &index);

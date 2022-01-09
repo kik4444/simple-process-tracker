@@ -22,6 +22,10 @@ set(source_files
     core/mainwindow.h
     core/mainwindow.cpp
 
+    core/processdialog.ui
+    core/processdialog.h
+    core/processdialog.cpp
+
     subclass/icondelegate.h
 
 #    platform/platform.h
