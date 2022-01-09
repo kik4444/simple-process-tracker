@@ -28,6 +28,9 @@ set(source_files
 
     subclass/icondelegate.h
 
+    core/processscanner.h
+    core/processscanner.cpp
+
 #    platform/platform.h
 )
 

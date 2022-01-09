@@ -22,6 +22,8 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
 {
     ui->setupUi(this);
 
+    ProcessScanner *processScanner = new ProcessScanner(this);
+
     ui->tableView->setItemDelegateForColumn(0, new IconDelegate());
     processTableViewModel->setHorizontalHeaderLabels(QStringList() << "Icon" << "Name" << "Duration" << "Date added" << "Last seen");
     ui->tableView->setModel(processTableViewModel);
@@ -50,7 +52,7 @@ void MainWindow::on_actionAdd_triggered()
 
 void MainWindow::processChosen(QString processName, QString iconPath)
 {
-
+    qDebug() << processName << " ==> " << iconPath;
 }
 
 void MainWindow::on_tableView_clicked(const QModelIndex &index)

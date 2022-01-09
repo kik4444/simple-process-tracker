@@ -22,7 +22,7 @@ ProcessDialog::ProcessDialog(QWidget *parent) : QDialog(parent), ui(new Ui::Proc
 {
     ui->setupUi(this);
 
-//    processList = Platform::getProcessList(this);
+    processList = ProcessScanner::getProcessList(this);
     ui->listWidget->addItems(processList);
 }
 
@@ -38,7 +38,7 @@ void ProcessDialog::on_buttonBox_rejected()
 
 void ProcessDialog::on_listWidget_itemActivated(QListWidgetItem *item)
 {
-    emit processChosen(item->text().remove("\n").remove("\r").trimmed(), QString());
+    emit processChosen(item->text().remove("\n").remove("\r").trimmed(), ui->iconPathLineEdit->text());
     this->~ProcessDialog();
 }
 
