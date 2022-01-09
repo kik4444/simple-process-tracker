@@ -77,6 +77,8 @@ public slots:
 private slots:
     void trayIconActionOpen();
     void trayIconActivated(int activationReason);
+    void trayIconActionResumeAll();
+    void trayIconActionPauseAll();
     void trayIconActionExit();
 
     void on_actionAdd_triggered();

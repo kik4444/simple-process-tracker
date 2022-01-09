@@ -42,6 +42,8 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent) , ui(new Ui::MainW
 
     QMenu *systemTrayIconMenu = new QMenu();
     systemTrayIconMenu->addAction("Open", this, &MainWindow::trayIconActionOpen);
+    systemTrayIconMenu->addAction("Resume all", this, &MainWindow::trayIconActionResumeAll);
+    systemTrayIconMenu->addAction("Pause all", this, &MainWindow::trayIconActionPauseAll);
     systemTrayIconMenu->addAction("Exit", this, &MainWindow::trayIconActionExit);
 
     connect(systemTrayIcon, &QSystemTrayIcon::activated, this, &MainWindow::trayIconActivated);
@@ -184,6 +186,18 @@ void MainWindow::trayIconActivated(int activationReason)
 {
     if (activationReason == QSystemTrayIcon::Trigger)
         systemTrayIcon->contextMenu()->popup(QCursor::pos());
+}
+
+void MainWindow::trayIconActionResumeAll()
+{
+    // TODO
+    qDebug() << "Resume all";
+}
+
+void MainWindow::trayIconActionPauseAll()
+{
+    // TODO
+    qDebug() << "Pause all";
 }
 
 void MainWindow::trayIconActionExit()
