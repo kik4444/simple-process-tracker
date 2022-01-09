@@ -15,11 +15,12 @@ find_package(Qt6 COMPONENTS Svg REQUIRED)
 
 set(source_files
 
-    mainwindow.ui
-    mainwindow.h
-    mainwindow.cpp
     main.cpp
     resources.qrc
+
+    core/mainwindow.ui
+    core/mainwindow.h
+    core/mainwindow.cpp
 
     subclass/iconDelegate.h
 

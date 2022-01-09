@@ -14,7 +14,7 @@
  *    along with Simple Process Tracker.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-#include "mainwindow.h"
+#include "core/mainwindow.h"
 
 #include <QApplication>
 
