@@ -32,14 +32,7 @@
      <number>0</number>
     </property>
     <item>
-     <widget class="QListWidget" name="trackerListWidget">
-      <property name="dragEnabled">
-       <bool>true</bool>
-      </property>
-      <property name="dragDropMode">
-       <enum>QAbstractItemView::InternalMove</enum>
-      </property>
-     </widget>
+     <widget class="QTableView" name="tableView"/>
     </item>
    </layout>
   </widget>
@@ -49,11 +42,10 @@
      <x>0</x>
      <y>0</y>
      <width>1280</width>
-     <height>27</height>
+     <height>19</height>
     </rect>
    </property>
   </widget>
-  <widget class="QStatusBar" name="statusbar"/>
   <widget class="QToolBar" name="toolBar">
    <property name="windowTitle">
     <string>toolBar</string>
@@ -74,6 +66,7 @@
    <addaction name="actionAbout"/>
    <addaction name="actionExit"/>
   </widget>
+  <widget class="QStatusBar" name="statusbar"/>
   <action name="actionAdd">
    <property name="icon">
     <iconset>
