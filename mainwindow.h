@@ -69,6 +69,8 @@ signals:
 
     void ResumeOrPauseAllProcesses(int arg1);
 
+    void updateProcessLastSeenIfRunning();
+
 public slots:
     void removeClearedEntries();
 
@@ -102,6 +104,8 @@ private:
     void configureTrackEntry(TrackEntry *trackEntry);
 
     void saveWindowSize();
+
+    void quitProgram();
 
     QSystemTrayIcon *systemTrayIcon;
 

@@ -144,6 +144,7 @@ void MainWindow::configureTrackEntry(TrackEntry *trackEntry)
     connect(trackEntry, &TrackEntry::saveProcessData, this, &MainWindow::saveProcessData);
     connect(trackEntry, &TrackEntry::removeHiddenProcess, this, &MainWindow::removeHiddenProcess);
     connect(this, &MainWindow::ResumeOrPauseAllProcesses, trackEntry, &TrackEntry::on_trackingCheckBox_stateChanged);
+    connect(this, &MainWindow::updateProcessLastSeenIfRunning, trackEntry, &TrackEntry::updateProcessLastSeenIfRunning);
 
     QListWidgetItem *listWidgetItem = new QListWidgetItem(ui->trackerListWidget);
     ui->trackerListWidget->addItem(listWidgetItem);
@@ -196,11 +197,17 @@ void MainWindow::trayIconActionPauseAll()
 
 void MainWindow::trayIconActionExit()
 {
-    qApp->quit();
+    quitProgram();
 }
 
 void MainWindow::on_actionExit_triggered()
 {
+    quitProgram();
+}
+
+void MainWindow::quitProgram()
+{
+    emit updateProcessLastSeenIfRunning();
     qApp->quit();
 }
 
