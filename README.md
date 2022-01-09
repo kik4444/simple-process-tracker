@@ -23,7 +23,8 @@ make -j$(nproc)
 4. Now go to the directory `Develop and Designer Tools` and select:
 - CMake
 - Ninja
-5. Execute the following from a terminal:
+5. Continue with the installation and finish it.
+6. Execute the following from a terminal:
 ```bash
 git clone https://github.com/kik4444/simple-process-tracker
 cd simple-process-tracker
