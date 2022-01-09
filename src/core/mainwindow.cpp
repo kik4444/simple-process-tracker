@@ -24,7 +24,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
 
     ProcessScanner *processScanner = new ProcessScanner(this);
 
-    ui->tableView->setItemDelegateForColumn(0, new IconDelegate());
+    ui->tableView->setItemDelegate(new MyItemDelegate());
     processTableViewModel->setHorizontalHeaderLabels(QStringList() << "Icon" << "Name" << "Duration" << "Date added" << "Last seen");
     ui->tableView->setModel(processTableViewModel);
     //TODO remove after manually saving column widths

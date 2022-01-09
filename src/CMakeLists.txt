@@ -26,7 +26,7 @@ set(source_files
     core/processdialog.h
     core/processdialog.cpp
 
-    subclass/icondelegate.h
+    subclass/myitemdelegate.h
 
     core/processscanner.h
     core/processscanner.cpp

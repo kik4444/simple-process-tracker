@@ -21,7 +21,7 @@
 #include <QtDebug>
 
 // For icons in the table view
-#include "../subclass/icondelegate.h"
+#include "../subclass/myitemdelegate.h"
 
 // For showing list of processes
 #include "processdialog.h"

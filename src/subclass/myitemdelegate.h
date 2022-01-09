@@ -18,19 +18,19 @@
  * and: https://stackoverflow.com/questions/2597534/is-there-a-way-to-display-icons-in-qlistview-without-text
  */
 
-#ifndef ICONDELEGATE_H
-#define ICONDELEGATE_H
+#ifndef MYITEMDELEGATE_H
+#define MYITEMDELEGATE_H
 
 #include <QStyledItemDelegate>
 
-class IconDelegate : public QStyledItemDelegate
+class MyItemDelegate : public QStyledItemDelegate
 {
     void initStyleOption(QStyleOptionViewItem* item, const QModelIndex &index) const override
     {
         QStyledItemDelegate::initStyleOption(item, index);
         item->decorationSize = item->rect.size();
-//        option->features &= ~QStyleOptionViewItem::HasDisplay;
+        item->displayAlignment = Qt::AlignCenter;
     }
 };
 
-#endif // ICONDELEGATE_H
+#endif // MYITEMDELEGATE_H
