@@ -178,6 +178,7 @@ void TrackEntry::processChosen(QString processName)
 
 void TrackEntry::on_trackingCheckBox_stateChanged(int arg1)
 {
+    ui->trackingCheckBox->setChecked(arg1);
     trackingIsActive = (bool)arg1;
     setTimerState();
 }

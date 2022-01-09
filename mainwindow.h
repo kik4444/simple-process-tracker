@@ -67,6 +67,8 @@ public:
 signals:
     void forcePollProcesses();
 
+    void ResumeOrPauseAllProcesses(int arg1);
+
 public slots:
     void removeClearedEntries();
 
