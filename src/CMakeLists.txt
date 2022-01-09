@@ -21,23 +21,7 @@ set(source_files
     main.cpp
     resources.qrc
 
-    custom/platform_specifics.h
-
-    ui/trackentry/trackentry.h
-    ui/trackentry/trackentry.cpp
-    ui/trackentry/trackentry.ui
-
-    ui/processDialog/processdialog.h
-    ui/processDialog/processdialog.cpp
-    ui/processDialog/processdialog.ui
-
-    ui/options/options.h
-    ui/options/options.cpp
-    ui/options/options.ui
-
-    ui/about/about.h
-    ui/about/about.cpp
-    ui/about/about.ui
+#    platform/platform.h
 )
 
 # Set Mac OS X specifics

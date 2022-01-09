@@ -14,8 +14,8 @@
  *    along with Simple Process Tracker.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef PLATFORM_SPECIFICS_H
-#define PLATFORM_SPECIFICS_H
+#ifndef PLATFORM_H
+#define PLATFORM_H
 #include "../mainwindow.h"
 
 //For checking if process is running on Linux
@@ -127,4 +127,4 @@ public:
     }
 };
 
-#endif // PLATFORM_SPECIFICS_H
+#endif // PLATFORM_H

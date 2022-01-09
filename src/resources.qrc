@@ -1,0 +1,13 @@
+<RCC>
+    <qresource prefix="/">
+        <file>../Assets/Icons/app-icon.svg</file>
+        <file>../Assets/Icons/add-icon.svg</file>
+        <file>../Assets/Icons/exit-icon.svg</file>
+        <file>../Assets/Icons/options-icon.svg</file>
+        <file>../Assets/Icons/force-poll-icon.svg</file>
+        <file>../Assets/Icons/hide-icon.svg</file>
+        <file>../Assets/Icons/about-icon.svg</file>
+        <file>../Assets/Icons/Qt.svg</file>
+        <file>../Assets/Icons/gpl-v3-logo.svg</file>
+    </qresource>
+</RCC>

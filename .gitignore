@@ -1,4 +1,4 @@
-CMakeLists.txt.user
+src/CMakeLists.txt.user
 TOKEN
 todo.txt
 mac_exclusion
