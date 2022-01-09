@@ -142,10 +142,16 @@ void TrackEntry::pollProcess()
     if (Platform::isProcessRunning(getProcessName(), this))
     {
         if (!updateTimer->isActive())
+        {
             updateTimer->start(updateTimerInterval);
+            ui->lastSeenLabel->setText("Last seen");
+        }
     }
     else
     {
+        if (updateTimer->isActive())
+            ui->lastSeenLabel->setText(QDateTime::currentDateTime().toString("yyyy/MM/dd hh:mm:ss"));
+
         processPollTimer->setInterval(MainWindow::userSettings["stoppedPollInterval"].toUInt() * 1000);
         updateTimer->stop();
     }
