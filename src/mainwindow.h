@@ -20,24 +20,25 @@
 #include <QMainWindow>
 #include <QtDebug>
 
-//For reading process list
+// For reading process list
 #include <QProcess>
 
-//For saving / loading processes
+// For saving / loading processes
 #include <QSettings>
-//For running in the background
+
+// For running in the background
 #include <QSystemTrayIcon>
 
-//For recording date added
+// For recording date added
 #include <QDateTime>
 
-//For platform-specific actions
+// For platform-specific APIs
 //#include "platform/platform.h"
 
-//For saving user options
+// For saving user options
 #include <QVariantMap>
 
-//For SVG icons
+// For SVG icons
 #include <QtSvg>
 
 QT_BEGIN_NAMESPACE
@@ -48,17 +49,21 @@ class MainWindow : public QMainWindow
 {
     Q_OBJECT
 
-public:
+public: // Methods
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
+
+private: // Methods
+
+private: // Variables
+    Ui::MainWindow *ui;
+
+    QStandardItemModel* processTableViewModel = new QStandardItemModel(2, 5);
 
 signals:
 
 public slots:
 
 private slots:
-
-private:
-    Ui::MainWindow *ui;
 };
 #endif // MAINWINDOW_H

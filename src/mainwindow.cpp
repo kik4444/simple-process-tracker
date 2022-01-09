@@ -21,9 +21,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent) , ui(new Ui::MainW
 {
     ui->setupUi(this);
 
-    QStandardItemModel* model = new QStandardItemModel(2, 5);
-
-    model->setHorizontalHeaderLabels(QStringList() << "Icon" << "Name" << "Duration" << "Date added" << "Last seen");
+    processTableViewModel->setHorizontalHeaderLabels(QStringList() << "Icon" << "Name" << "Duration" << "Date added" << "Last seen");
 
 //    for (int row = 0; row < model->rowCount(); ++row) {
 //        for (int column = 0; column < model->columnCount(); ++column) {
@@ -32,11 +30,9 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent) , ui(new Ui::MainW
 //        }
 //    }
 
-    ui->tableView->setModel(model);
-    model->setItem(0, 1, new QStandardItem(QString("test 01")));
-    model->setItem(1, 2, new QStandardItem(QString("test 12")));
-
-    ui->tableView->setColumnHidden(0, true);
+    ui->tableView->setModel(processTableViewModel);
+    processTableViewModel->setItem(0, 1, new QStandardItem(QString("test 01")));
+    processTableViewModel->setItem(1, 2, new QStandardItem(QString("test 12")));
 }
 
 MainWindow::~MainWindow()
