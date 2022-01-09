@@ -84,6 +84,7 @@
    <addaction name="actionOptions"/>
    <addaction name="actionAbout"/>
    <addaction name="actionExit"/>
+   <addaction name="actionDebug"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
   <action name="actionAdd">
@@ -154,6 +155,11 @@
    </property>
    <property name="toolTip">
     <string>Read the about section of Simple Process Tracker</string>
+   </property>
+  </action>
+  <action name="actionDebug">
+   <property name="text">
+    <string>Debug</string>
    </property>
   </action>
  </widget>

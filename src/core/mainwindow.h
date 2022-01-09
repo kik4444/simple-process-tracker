@@ -92,5 +92,6 @@ public slots:
 private slots:
     void on_tableView_clicked(const QModelIndex &index);
     void on_actionAdd_triggered();
+    void on_actionDebug_triggered();
 };
 #endif // MAINWINDOW_H
