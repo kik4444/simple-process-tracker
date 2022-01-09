@@ -23,6 +23,12 @@
 // For icons in the table view
 #include "../subclass/icondelegate.h"
 
+// For showing list of processes
+#include "processdialog.h"
+
+// For scanning for processes
+#include "processscanner.h"
+
 // For reading process list
 #include <QProcess>
 
@@ -34,9 +40,6 @@
 
 // For recording date added
 #include <QDateTime>
-
-// For platform-specific APIs
-//#include "platform/platform.h"
 
 // For saving user options
 #include <QVariantMap>
