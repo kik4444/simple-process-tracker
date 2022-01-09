@@ -21,6 +21,8 @@ set(source_files
     main.cpp
     resources.qrc
 
+    subclass/iconDelegate.h
+
 #    platform/platform.h
 )
 

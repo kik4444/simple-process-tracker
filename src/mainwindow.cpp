@@ -21,6 +21,8 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent) , ui(new Ui::MainW
 {
     ui->setupUi(this);
 
+    ui->tableView->setItemDelegateForColumn(0, new IconDelegate());
+
     processTableViewModel->setHorizontalHeaderLabels(QStringList() << "Icon" << "Name" << "Duration" << "Date added" << "Last seen");
 
     ui->tableView->setModel(processTableViewModel);
@@ -28,7 +30,6 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent) , ui(new Ui::MainW
     processTableViewModel->setItem(1, 2, new QStandardItem(QString("test 12")));
 
     QStandardItem *item = new QStandardItem();
-//    item->setIcon(QIcon(":/app-icon.svg"));
     item->setData(QIcon(":/app-icon.svg"), Qt::DecorationRole);
     processTableViewModel->setItem(0, 0, item);
 }
@@ -37,3 +38,9 @@ MainWindow::~MainWindow()
 {
     delete ui;
 }
+
+void MainWindow::on_tableView_clicked(const QModelIndex &index)
+{
+    qDebug() << index.column();
+}
+
