@@ -51,10 +51,11 @@ public:
     QString getIconPath();
     uint getProcessDuration();
     QString getDateAdded();
+    QString getLastSeen();
     bool getTrackingIsActive();
     bool getHidden();
 
-    void setData(QString processName, QString iconPath, uint processDuration, QString dateAdded, bool trackingIsActive, bool hidden);
+    void setData(QString processName, QString iconPath, uint processDuration, QString dateAdded, QString lastSeen, bool trackingIsActive, bool hidden);
 
 signals:
     void removeClearedEntries();

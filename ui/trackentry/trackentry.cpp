@@ -92,6 +92,11 @@ QString TrackEntry::getDateAdded()
     return ui->dateAddedLabel->text();
 }
 
+QString TrackEntry::getLastSeen()
+{
+    return ui->lastSeenLabel->text();
+}
+
 bool TrackEntry::getTrackingIsActive()
 {
     return trackingIsActive;
@@ -116,7 +121,7 @@ void TrackEntry::setTimerState()
     }
 }
 
-void TrackEntry::setData(QString processName, QString iconPath, uint processDuration, QString dateAdded, bool trackingIsActive, bool hidden)
+void TrackEntry::setData(QString processName, QString iconPath, uint processDuration, QString dateAdded, QString lastSeen, bool trackingIsActive, bool hidden)
 {
     ui->hideButton->setEnabled(true);
     this->iconPath = iconPath;
@@ -129,6 +134,7 @@ void TrackEntry::setData(QString processName, QString iconPath, uint processDura
     ui->iconLabel->setPixmap(QPixmap(iconPath));
     ui->durationButton->setText(parseProcessDuration(processDuration));
     ui->dateAddedLabel->setText(dateAdded);
+    ui->lastSeenLabel->setText(lastSeen);
     ui->trackingCheckBox->setChecked(trackingIsActive);
 
     setTimerState();

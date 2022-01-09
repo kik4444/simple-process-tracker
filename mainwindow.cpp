@@ -90,7 +90,8 @@ void MainWindow::loadProcessData(bool showHidden)
         TrackEntry *trackEntry = new TrackEntry();
 
         trackEntry->setData(processOrder[position], settings.value("iconPath").toString(), settings.value("duration", 0).toUInt(),
-            settings.value("dateAdded").toString(), settings.value("trackingIsActive", false).toBool(), settings.value("hidden", false).toBool());
+            settings.value("dateAdded").toString(), settings.value("lastSeen").toString(),
+            settings.value("trackingIsActive", false).toBool(), settings.value("hidden", false).toBool());
 
         configureTrackEntry(trackEntry);
 
@@ -115,6 +116,7 @@ void MainWindow::saveProcessData()
             settings.setValue("iconPath", trackEntry->getIconPath());
             settings.setValue("duration", trackEntry->getProcessDuration());
             settings.setValue("dateAdded", trackEntry->getDateAdded());
+            settings.setValue("lastSeen", trackEntry->getLastSeen());
             settings.setValue("trackingIsActive", trackEntry->getTrackingIsActive());
             settings.setValue("hidden", trackEntry->getHidden());
             settings.setValue("position", i);
