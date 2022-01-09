@@ -33,8 +33,8 @@
     </property>
     <item>
      <widget class="QTableView" name="tableView">
-      <property name="dragEnabled">
-       <bool>false</bool>
+      <property name="editTriggers">
+       <set>QAbstractItemView::NoEditTriggers</set>
       </property>
       <property name="sortingEnabled">
        <bool>true</bool>

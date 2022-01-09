@@ -21,15 +21,22 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent) , ui(new Ui::MainW
 {
     ui->setupUi(this);
 
-    QStandardItemModel* model = new QStandardItemModel();
+    QStandardItemModel* model = new QStandardItemModel(2, 5);
 
-    model->setHorizontalHeaderItem(0, new QStandardItem("First column"));
-    model->setHorizontalHeaderItem(1, new QStandardItem("Second column"));
+    model->setHorizontalHeaderLabels(QStringList() << "Icon" << "Name" << "Duration" << "Date added" << "Last seen");
 
-    model->appendRow(new QStandardItem("1"));
-    model->appendRow(new QStandardItem("2"));
+//    for (int row = 0; row < model->rowCount(); ++row) {
+//        for (int column = 0; column < model->columnCount(); ++column) {
+//            QStandardItem *item = new QStandardItem(QString("row %0, column %1").arg(row).arg(column));
+//            model->setItem(row, column, item);
+//        }
+//    }
 
     ui->tableView->setModel(model);
+    model->setItem(0, 1, new QStandardItem(QString("test 01")));
+    model->setItem(1, 2, new QStandardItem(QString("test 12")));
+
+    ui->tableView->setColumnHidden(0, true);
 }
 
 MainWindow::~MainWindow()
