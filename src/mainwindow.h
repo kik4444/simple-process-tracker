@@ -20,6 +20,9 @@
 #include <QMainWindow>
 #include <QtDebug>
 
+// For icons in the table view
+#include "subclass/iconDelegate.h"
+
 // For reading process list
 #include <QProcess>
 
@@ -65,5 +68,6 @@ signals:
 public slots:
 
 private slots:
+    void on_tableView_clicked(const QModelIndex &index);
 };
 #endif // MAINWINDOW_H
