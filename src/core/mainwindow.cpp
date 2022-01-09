@@ -29,18 +29,19 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     ui->tableView->setModel(processTableViewModel);
     //TODO remove after manually saving column widths
     ui->tableView->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
-
-//    processTableViewModel->setItem(0, 1, new QStandardItem(QString("test 01")));
-//    processTableViewModel->setItem(1, 2, new QStandardItem(QString("test 12")));
-
-//    QStandardItem *item = new QStandardItem();
-//    item->setData(QIcon(":/app-icon.svg"), Qt::DecorationRole);
-//    processTableViewModel->setItem(0, 0, item);
 }
 
 MainWindow::~MainWindow()
 {
     delete ui;
+}
+
+void MainWindow::on_actionDebug_triggered()
+{
+    for (int row = 0; row < processTableViewModel->rowCount(); row++)
+    {
+        qDebug() << processTableViewModel->item(row, ProcessColumns::Name)->text();
+    }
 }
 
 void MainWindow::on_actionAdd_triggered()
@@ -52,10 +53,16 @@ void MainWindow::on_actionAdd_triggered()
 
 void MainWindow::processChosen(QString processName, QString iconPath)
 {
-    qDebug() << processName << " ==> " << iconPath;
+    int newestRow = processTableViewModel->rowCount();
+    processTableViewModel->setItem(newestRow, ProcessColumns::Icon, new QStandardItem(QIcon(iconPath.isEmpty() ? ":/app-icon.svg" : iconPath), ""));
+    processTableViewModel->setItem(newestRow, ProcessColumns::Name, new QStandardItem(processName));
+    processTableViewModel->setItem(newestRow, ProcessColumns::Duration, new QStandardItem("00:00:00"));
+    processTableViewModel->setItem(newestRow, ProcessColumns::DateAdded, new QStandardItem("Yesterday"));
+    processTableViewModel->setItem(newestRow, ProcessColumns::LastSeen, new QStandardItem("Today"));
 }
 
 void MainWindow::on_tableView_clicked(const QModelIndex &index)
 {
     qDebug() << index.column() << " " <<  index.row();
 }
+
