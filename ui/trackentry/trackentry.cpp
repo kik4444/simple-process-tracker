@@ -207,7 +207,9 @@ void TrackEntry::on_removeButton_clicked()
 void TrackEntry::on_durationButton_clicked()
 {
     bool ok;
-    QString durationInput = QInputDialog::getText(this, "Custom duration", "Set custom duration", QLineEdit::Normal, "00:00:00", &ok);
+    QString durationInput = QInputDialog::getText(this, "Custom duration", "Set custom duration",
+        QLineEdit::Normal, parseProcessDuration(getProcessDuration()), &ok);
+
     QStringList splitDuration = durationInput.split(":");
     if (ok && splitDuration.size() == 3)
         processDuration = splitDuration[0].toUInt() * 3600 + splitDuration[1].toUInt() * 60 + splitDuration[2].toUInt();
