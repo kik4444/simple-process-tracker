@@ -14,31 +14,15 @@
  *    along with Simple Process Tracker.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef OPTIONS_H
-#define OPTIONS_H
+#include "mainwindow.h"
+#include "./ui_mainwindow.h"
 
-#include <QWidget>
-#include "../../mainwindow.h"
-
-namespace Ui {
-class Options;
+MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent) , ui(new Ui::MainWindow)
+{
+    ui->setupUi(this);
 }
 
-class Options : public QWidget
+MainWindow::~MainWindow()
 {
-    Q_OBJECT
-
-public:
-    explicit Options(QWidget *parent = nullptr);
-    ~Options();
-
-private slots:
-    void on_confirmBox_rejected();
-
-    void on_confirmBox_accepted();
-
-private:
-    Ui::Options *ui;
-};
-
-#endif // OPTIONS_H
+    delete ui;
+}

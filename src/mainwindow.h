@@ -14,41 +14,51 @@
  *    along with Simple Process Tracker.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-#include "about.h"
-#include "ui_about.h"
+#ifndef MAINWINDOW_H
+#define MAINWINDOW_H
 
-About::About(QWidget *parent) : QWidget(parent), ui(new Ui::About)
-{
-    ui->setupUi(this);
-}
+#include <QMainWindow>
+#include <QtDebug>
 
-About::~About()
-{
-    delete ui;
-}
+//For reading process list
+#include <QProcess>
 
-void About::on_buttonBox_accepted()
-{
-    this->~About();
-}
+//For saving / loading processes
+#include <QSettings>
+//For running in the background
+#include <QSystemTrayIcon>
 
-QString About::readInternalText(QString path)
-{
-    QFile text(path);
-    return text.open(QIODevice::ReadOnly) ? text.readAll() : QString();
-}
+//For recording date added
+#include <QDateTime>
 
-void About::on_licenseButton_clicked()
-{
-    ui->textEdit->setText(readInternalText(":/Assets/about-text/about.html"));
-}
+//For platform-specific actions
+//#include "platform/platform.h"
 
-void About::on_qtButton_clicked()
-{
-    ui->textEdit->setText(readInternalText(":/Assets/about-text/qt.html"));
-}
+//For saving user options
+#include <QVariantMap>
 
-void About::on_aboutButton_clicked()
+//For SVG icons
+#include <QtSvg>
+
+QT_BEGIN_NAMESPACE
+namespace Ui { class MainWindow; }
+QT_END_NAMESPACE
+
+class MainWindow : public QMainWindow
 {
-    ui->textEdit->setText(readInternalText(":/Assets/about-text/gplv3.html"));
-}
+    Q_OBJECT
+
+public:
+    MainWindow(QWidget *parent = nullptr);
+    ~MainWindow();
+
+signals:
+
+public slots:
+
+private slots:
+
+private:
+    Ui::MainWindow *ui;
+};
+#endif // MAINWINDOW_H
