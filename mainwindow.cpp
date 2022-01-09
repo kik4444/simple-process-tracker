@@ -143,6 +143,8 @@ void MainWindow::configureTrackEntry(TrackEntry *trackEntry)
     connect(this, &MainWindow::forcePollProcesses, trackEntry, &TrackEntry::pollProcess);
     connect(trackEntry, &TrackEntry::saveProcessData, this, &MainWindow::saveProcessData);
     connect(trackEntry, &TrackEntry::removeHiddenProcess, this, &MainWindow::removeHiddenProcess);
+    connect(this, &MainWindow::ResumeOrPauseAllProcesses, trackEntry, &TrackEntry::on_trackingCheckBox_stateChanged);
+
     QListWidgetItem *listWidgetItem = new QListWidgetItem(ui->trackerListWidget);
     ui->trackerListWidget->addItem(listWidgetItem);
     ui->trackerListWidget->setItemWidget(listWidgetItem, trackEntry);
@@ -184,14 +186,12 @@ void MainWindow::trayIconActionOpen()
 
 void MainWindow::trayIconActionResumeAll()
 {
-    // TODO
-    qDebug() << "Resume all";
+    emit ResumeOrPauseAllProcesses(1);
 }
 
 void MainWindow::trayIconActionPauseAll()
 {
-    // TODO
-    qDebug() << "Pause all";
+    emit ResumeOrPauseAllProcesses(0);
 }
 
 void MainWindow::trayIconActionExit()

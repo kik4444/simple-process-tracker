@@ -68,12 +68,12 @@ public slots:
 
     void pollProcess();
 
+    void on_trackingCheckBox_stateChanged(int arg1);
+
 private slots:
     void updateDuration();
 
     void on_selectButton_clicked();
-
-    void on_trackingCheckBox_stateChanged(int arg1);
 
     void on_removeButton_clicked();
 
