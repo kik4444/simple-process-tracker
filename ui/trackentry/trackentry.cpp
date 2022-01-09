@@ -150,7 +150,7 @@ void TrackEntry::pollProcess()
     else
     {
         if (updateTimer->isActive())
-            ui->lastSeenLabel->setText(QDateTime::currentDateTime().toString("yyyy/MM/dd hh:mm:ss"));
+            setLastSeenNow();
 
         processPollTimer->setInterval(MainWindow::userSettings["stoppedPollInterval"].toUInt() * 1000);
         updateTimer->stop();
@@ -243,4 +243,15 @@ void TrackEntry::setHideChanges()
 
     ui->hideButton->setEnabled(true);
     ui->removeButton->setEnabled(true);
+}
+
+void TrackEntry::updateProcessLastSeenIfRunning()
+{
+    if (updateTimer->isActive())
+        setLastSeenNow();
+}
+
+void TrackEntry::setLastSeenNow()
+{
+    ui->lastSeenLabel->setText(QDateTime::currentDateTime().toString("yyyy/MM/dd hh:mm:ss"));
 }

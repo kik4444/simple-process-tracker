@@ -70,6 +70,8 @@ public slots:
 
     void on_trackingCheckBox_stateChanged(int arg1);
 
+    void updateProcessLastSeenIfRunning();
+
 private slots:
     void updateDuration();
 
@@ -83,9 +85,14 @@ private slots:
 
 private:
     QString parseProcessDuration(uint processDuration);
+
     void setTimerState();
+
     bool eventFilter(QObject *object, QEvent *event);
+
     void setHideChanges();
+
+    void setLastSeenNow();
 
     QString iconPath = ":/Assets/Icons/app-icon.svg";
     uint processDuration = 0;
