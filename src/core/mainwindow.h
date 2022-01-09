@@ -46,6 +46,19 @@
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
+
+namespace ProcessColumns
+{
+    enum ProcessColumns
+    {
+        Icon = 0,
+        Name = 1,
+        Duration = 2,
+        DateAdded = 3,
+        LastSeen = 4
+    };
+}
+
 QT_END_NAMESPACE
 
 class MainWindow : public QMainWindow
@@ -53,15 +66,15 @@ class MainWindow : public QMainWindow
     Q_OBJECT
 
 public: // Methods
-    MainWindow(QWidget *parent = nullptr);
+    MainWindow(QWidget* parent = nullptr);
     ~MainWindow();
 
 private: // Methods
 
 private: // Variables
-    Ui::MainWindow *ui;
+    Ui::MainWindow* ui;
 
-    QStandardItemModel* processTableViewModel = new QStandardItemModel(2, 5);
+    QStandardItemModel* processTableViewModel = new QStandardItemModel();
 
 signals:
 
@@ -69,5 +82,6 @@ public slots:
 
 private slots:
     void on_tableView_clicked(const QModelIndex &index);
+    void on_actionAdd_triggered();
 };
 #endif // MAINWINDOW_H
