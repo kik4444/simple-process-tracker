@@ -98,6 +98,8 @@ private:
 
     void configureTrackEntry(TrackEntry *trackEntry);
 
+    void saveWindowSize();
+
     QSystemTrayIcon *systemTrayIcon;
 
     bool showHidden = false;
