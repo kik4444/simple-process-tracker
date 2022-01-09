@@ -1,13 +1,13 @@
 <RCC>
     <qresource prefix="/">
-        <file>../Assets/Icons/app-icon.svg</file>
-        <file>../Assets/Icons/add-icon.svg</file>
-        <file>../Assets/Icons/exit-icon.svg</file>
-        <file>../Assets/Icons/options-icon.svg</file>
-        <file>../Assets/Icons/force-poll-icon.svg</file>
-        <file>../Assets/Icons/hide-icon.svg</file>
-        <file>../Assets/Icons/about-icon.svg</file>
-        <file>../Assets/Icons/Qt.svg</file>
-        <file>../Assets/Icons/gpl-v3-logo.svg</file>
+        <file alias="app-icon.svg">../Assets/Icons/app-icon.svg</file>
+        <file alias="add-icon.svg">../Assets/Icons/add-icon.svg</file>
+        <file alias="exit-icon.svg">../Assets/Icons/exit-icon.svg</file>
+        <file alias="options-icon.svg">../Assets/Icons/options-icon.svg</file>
+        <file alias="force-poll-icon.svg">../Assets/Icons/force-poll-icon.svg</file>
+        <file alias="hide-icon.svg">../Assets/Icons/hide-icon.svg</file>
+        <file alias="about-icon.svg">../Assets/Icons/about-icon.svg</file>
+        <file alias="Qt.svg">../Assets/Icons/Qt.svg</file>
+        <file alias="gpl-v3-logo.svg">../Assets/Icons/gpl-v3-logo.svg</file>
     </qresource>
 </RCC>

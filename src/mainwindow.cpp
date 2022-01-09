@@ -23,16 +23,14 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent) , ui(new Ui::MainW
 
     processTableViewModel->setHorizontalHeaderLabels(QStringList() << "Icon" << "Name" << "Duration" << "Date added" << "Last seen");
 
-//    for (int row = 0; row < model->rowCount(); ++row) {
-//        for (int column = 0; column < model->columnCount(); ++column) {
-//            QStandardItem *item = new QStandardItem(QString("row %0, column %1").arg(row).arg(column));
-//            model->setItem(row, column, item);
-//        }
-//    }
-
     ui->tableView->setModel(processTableViewModel);
     processTableViewModel->setItem(0, 1, new QStandardItem(QString("test 01")));
     processTableViewModel->setItem(1, 2, new QStandardItem(QString("test 12")));
+
+    QStandardItem *item = new QStandardItem();
+//    item->setIcon(QIcon(":/app-icon.svg"));
+    item->setData(QIcon(":/app-icon.svg"), Qt::DecorationRole);
+    processTableViewModel->setItem(0, 0, item);
 }
 
 MainWindow::~MainWindow()
