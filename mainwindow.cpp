@@ -26,8 +26,11 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent) , ui(new Ui::MainW
     //Load user settings
     {
         QSettings settings(QSettings::IniFormat, QSettings::UserScope, "simple-process-tracker", "config");
+
         this->userSettings["runningPollInterval"] = settings.value("runningPollInterval", 5).toUInt();
         this->userSettings["stoppedPollInterval"] = settings.value("stoppedPollInterval", 10).toUInt();
+
+        this->resize(settings.value("windowWidth", 1280).toUInt(), settings.value("windowHeight", 720).toUInt());
     }
 
     //Load process data
@@ -56,6 +59,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent) , ui(new Ui::MainW
 MainWindow::~MainWindow()
 {
     saveProcessData();
+    saveWindowSize();
     delete ui;
 }
 
@@ -116,6 +120,13 @@ void MainWindow::saveProcessData()
             settings.endGroup();
         }
     }
+}
+
+void MainWindow::saveWindowSize()
+{
+    QSettings settings(QSettings::IniFormat, QSettings::UserScope, "simple-process-tracker", "config");
+    settings.setValue("windowWidth", this->width());
+    settings.setValue("windowHeight", this->height());
 }
 
 void MainWindow::on_actionAdd_triggered()
