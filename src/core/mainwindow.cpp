@@ -16,8 +16,9 @@
 
 #include "mainwindow.h"
 #include "./ui_mainwindow.h"
+#include "processdialog.h"
 
-MainWindow::MainWindow(QWidget* parent) : QMainWindow(parent), ui(new Ui::MainWindow)
+MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
 
@@ -30,7 +31,7 @@ MainWindow::MainWindow(QWidget* parent) : QMainWindow(parent), ui(new Ui::MainWi
 //    processTableViewModel->setItem(0, 1, new QStandardItem(QString("test 01")));
 //    processTableViewModel->setItem(1, 2, new QStandardItem(QString("test 12")));
 
-//    QStandardItem* item = new QStandardItem();
+//    QStandardItem *item = new QStandardItem();
 //    item->setData(QIcon(":/app-icon.svg"), Qt::DecorationRole);
 //    processTableViewModel->setItem(0, 0, item);
 }
@@ -40,12 +41,19 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
+void MainWindow::on_actionAdd_triggered()
+{
+    ProcessDialog *processDialog = new ProcessDialog();
+    connect(processDialog, &ProcessDialog::processChosen, this, &MainWindow::processChosen);
+    processDialog->exec();
+}
+
+void MainWindow::processChosen(QString processName, QString iconPath)
+{
+
+}
+
 void MainWindow::on_tableView_clicked(const QModelIndex &index)
 {
     qDebug() << index.column() << " " <<  index.row();
-}
-
-void MainWindow::on_actionAdd_triggered()
-{
-    qDebug() << "Add new process";
 }
