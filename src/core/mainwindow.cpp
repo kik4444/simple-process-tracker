@@ -65,6 +65,7 @@ void MainWindow::pollProcesses()
 
 void MainWindow::foundRunningProcess(QString processName)
 {
+    qDebug() << "Found" << processName;
     runningProcesses.append(processName);
 }
 
@@ -112,8 +113,6 @@ void MainWindow::newProcessAdded(QString processName, QString iconPath)
 
 void MainWindow::on_tableView_doubleClicked(const QModelIndex &index)
 {
-    qDebug() << index.column() << " " <<  index.row();
-
     switch (index.column())
     {
         case ProcessColumns::Tracking:
@@ -132,6 +131,22 @@ void MainWindow::on_tableView_doubleClicked(const QModelIndex &index)
 
             if (!fileName.isEmpty() && !icon.isNull())
                 processTableViewModel->setItem(index.row(), ProcessColumns::Icon, new QStandardItem(icon, ""));
+
+            break;
+        }
+
+        case ProcessColumns::Name:
+        {
+            QMessageBox confirmDialog(this);
+            confirmDialog.setWindowTitle("Confirm removal");
+            confirmDialog.setText(QString("Are you sure you wish to remove %1?").arg(processTableViewModel->item(index.row(), ProcessColumns::Name)->text()));
+            confirmDialog.setIcon(QMessageBox::Question);
+            confirmDialog.setStandardButtons(QMessageBox::Yes | QMessageBox::No);
+            confirmDialog.setDefaultButton(QMessageBox::No);
+            int answer = confirmDialog.exec();
+
+            if (answer == QMessageBox::Yes)
+                processTableViewModel->removeRow(index.row());
 
             break;
         }
