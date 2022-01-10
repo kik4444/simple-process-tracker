@@ -33,7 +33,7 @@ public:
     ~ProcessDialog();
 
 signals:
-    void processChosen(QString processName, QString iconPath);
+    void newProcessAdded(QString processName, QString iconPath);
 
 private slots:
     void on_buttonBox_rejected();

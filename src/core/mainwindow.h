@@ -78,13 +78,16 @@ private: // Variables
 
     MyStandardItemModel *processTableViewModel = new MyStandardItemModel();
 
-    QMap<QString, qint64> processDurations;
+    QMap<QString, quint64> processDurations;
+
+    const QString processIsActiveSymbol = "▶";
+    const QString processIsPausedSymbol = "⏸";
 
 signals:
     void checkRunningProcesses(QMap<QString, int> processList);
 
 public slots:
-    void processChosen(QString processName, QString iconPath);
+    void newProcessAdded(QString processName, QString iconPath);
     void foundRunningProcess(QString processName, int row);
 
 private slots:

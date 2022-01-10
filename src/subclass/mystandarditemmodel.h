@@ -27,7 +27,7 @@ namespace ProcessColumns
 {
     enum ProcessColumns
     {
-        State = 0,
+        Tracking = 0,
         Icon = 1,
         Name = 2,
         Notes = 3,
