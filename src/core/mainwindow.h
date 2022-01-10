@@ -82,12 +82,15 @@ private: // Methods
     QIcon getIcon(QString processName, QString iconPath);
 
     void loadProcessData();
+    void loadWindowData();
     void saveWindowData();
 
 private: // Variables
     Ui::MainWindow *ui;
 
     MyStandardItemModel *processTableViewModel = new MyStandardItemModel();
+
+    QTimer *processPollTimer, *runningProcessDurationsUpdateTimer, *processDataAutoSaveTimer;
 
     QMap<QString, quint64> processDurations;
     QStringList runningProcesses;
