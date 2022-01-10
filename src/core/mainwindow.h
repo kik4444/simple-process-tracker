@@ -79,8 +79,10 @@ private: // Methods
     void updateRunningProcessDurations();
 
     void createProcessInTable(QString activeSymbol, QIcon icon, QString processName, QString notes, quint64 duration, QString lastSeen, QString dateAdded);
+    QIcon getIcon(QString processName, QString iconPath);
 
     void loadProcessData();
+    void saveWindowData();
 
 private: // Variables
     Ui::MainWindow *ui;
@@ -89,11 +91,13 @@ private: // Variables
 
     QMap<QString, quint64> processDurations;
     QStringList runningProcesses;
+    QMap<QString, QString> processIcons;
 
     const QString processIsActiveSymbol = "▶";
     const QString processIsPausedSymbol = "⏸";
 //    const QMap<bool, QString> processTrackingSymbol = {{true, "▶"}, {false, "⏸"}};
 
+    const uint processAutoSaveInterval = 60000;
     //TODO replace me with user-defined
     const uint processPollInterval = 5000;
 
@@ -106,6 +110,8 @@ public slots:
     void foundStoppedProcesses(QMap<QString, int> stoppedProcesses);
 
 private slots:
+    void saveProcessData();
+
     void on_actionAdd_triggered();
     void on_actionDebug_triggered();
     void on_tableView_doubleClicked(const QModelIndex &index);
