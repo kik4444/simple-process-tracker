@@ -23,8 +23,8 @@ Double-click the "Notes" cell to start writing in it. You can write anything in 
 ### Set custom running duration
 Double-click the "Duration" cell and an input dialog will appear. Write your custom duration in hh:mm:ss format. E.g. 1 hour, 32 minutes and 42 seconds is 01:32:42. Click "Ok" and the processes' duration will start counting up from that.
 
-### Hide / unhide processes
-**TODO**
+### Hide / show columns
+Right-click on the horizontal header (where it says "Tracking", "Icon", etc.) and a context menu will popup where you can hide or show columns.
 
 ### Manually poll processes
 Click the "Poll" button on the main window button to force check processes. This is useful if you've set the poll interval to be very infrequent in the options window and wish to initiate a poll immediately.
