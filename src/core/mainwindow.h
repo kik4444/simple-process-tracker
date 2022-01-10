@@ -32,6 +32,9 @@
 // For scanning for processes
 #include "processscanner.h"
 
+// For parsing durations
+#include "parser.h"
+
 // For reading process list
 #include <QProcess>
 

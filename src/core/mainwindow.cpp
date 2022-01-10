@@ -75,8 +75,7 @@ void MainWindow::processChosen(QString processName, QString iconPath)
 void MainWindow::foundRunningProcess(QString processName, int row)
 {
     processDurations[processName]++;
-    QString newDuration = QString::number(processDurations[processName]);
-    processTableViewModel->setItem(row, ProcessColumns::Duration, new QStandardItem(newDuration));
+    processTableViewModel->setItem(row, ProcessColumns::Duration, new QStandardItem(Parser::parseDurationToString(processDurations[processName])));
 }
 
 void MainWindow::on_tableView_doubleClicked(const QModelIndex &index)

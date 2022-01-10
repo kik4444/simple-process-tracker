@@ -26,11 +26,13 @@ set(source_files
     core/processdialog.h
     core/processdialog.cpp
 
-    subclass/myitemdelegate.h
-    subclass/mystandarditemmodel.h
-
     core/processscanner.h
     core/processscanner.cpp
+
+    core/parser.h
+
+    subclass/myitemdelegate.h
+    subclass/mystandarditemmodel.h
 
 #    platform/platform.h
 )
