@@ -44,6 +44,11 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     runningProcessDurationsUpdateTimer->setTimerType(Qt::VeryCoarseTimer);
     connect(runningProcessDurationsUpdateTimer, &QTimer::timeout, this, &MainWindow::updateRunningProcessDurations);
     runningProcessDurationsUpdateTimer->start(1000);
+
+    QTimer *processDataAutoSaveTimer = new QTimer(this);
+    processDataAutoSaveTimer->setTimerType(Qt::VeryCoarseTimer);
+    connect(processDataAutoSaveTimer, &QTimer::timeout, this, &MainWindow::saveProcessData);
+    processDataAutoSaveTimer->start(processAutoSaveInterval);
 }
 
 MainWindow::~MainWindow()
@@ -67,7 +72,7 @@ void MainWindow::loadProcessData()
 
         createProcessInTable(
             settings.value("tracking", true).toBool() ? processIsActiveSymbol : processIsPausedSymbol,
-            QIcon(settings.value("iconPath").toString()),
+            getIcon(processName, settings.value("iconPath").toString()),
             processName,
             settings.value("notes").toString(),
             processDurations[processName],
@@ -78,13 +83,19 @@ void MainWindow::loadProcessData()
     }
 }
 
+QIcon MainWindow::getIcon(QString processName, QString iconPath)
+{
+    processIcons[processName] = iconPath.isEmpty() ? ":/app-icon.svg" : iconPath;
+    return QIcon(processIcons[processName]);
+}
+
 void MainWindow::createProcessInTable(QString activeSymbol, QIcon icon, QString processName, QString notes, quint64 duration, QString lastSeen, QString dateAdded)
 {
     processDurations.insert(processName, duration);
 
     int newestRow = processTableViewModel->rowCount();
     processTableViewModel->setItem(newestRow, ProcessColumns::Tracking, new QStandardItem(activeSymbol));
-    processTableViewModel->setItem(newestRow, ProcessColumns::Icon, new QStandardItem(QIcon(icon), ""));
+    processTableViewModel->setItem(newestRow, ProcessColumns::Icon, new QStandardItem(icon, ""));
     processTableViewModel->setItem(newestRow, ProcessColumns::Name, new QStandardItem(processName));
     processTableViewModel->setItem(newestRow, ProcessColumns::Notes, new QStandardItem(notes));
     processTableViewModel->setItem(newestRow, ProcessColumns::Duration, new QStandardItem(Parser::parseDurationToString(duration)));
@@ -92,9 +103,33 @@ void MainWindow::createProcessInTable(QString activeSymbol, QIcon icon, QString 
     processTableViewModel->setItem(newestRow, ProcessColumns::DateAdded, new QStandardItem(dateAdded));
 }
 
-void MainWindow::on_actionDebug_triggered()
+void MainWindow::saveProcessData()
+{
+    quicksettings("processList");
+    for (int row = 0; row < processTableViewModel->rowCount(); row++)
+    {
+        QString processName = processTableViewModel->item(row, ProcessColumns::Name)->text();
+        settings.beginGroup(processName);
+
+        settings.setValue("tracking", processTableViewModel->item(row, ProcessColumns::Tracking)->text() == processIsActiveSymbol);
+        settings.setValue("iconPath", processIcons[processName]);
+        settings.setValue("notes", processTableViewModel->item(row, ProcessColumns::Notes)->text());
+        settings.setValue("duration", processDurations[processName]);
+        settings.setValue("lastSeen", processTableViewModel->item(row, ProcessColumns::LastSeen)->text());
+        settings.setValue("dateAdded", processTableViewModel->item(row, ProcessColumns::DateAdded)->text());
+
+        settings.endGroup();
+    }
+}
+
+void MainWindow::saveWindowData()
 {
 
+}
+
+void MainWindow::on_actionDebug_triggered()
+{
+    saveProcessData();
 }
 
 void MainWindow::pollProcesses()
@@ -142,7 +177,7 @@ void MainWindow::updateRunningProcessDurations()
 
 void MainWindow::newProcessAdded(QString processName, QString iconPath)
 {
-    createProcessInTable(processIsActiveSymbol, QIcon(iconPath.isEmpty() ? ":/app-icon.svg" : iconPath), processName,
+    createProcessInTable(processIsActiveSymbol, getIcon(processName, iconPath), processName,
         QString::number(processTableViewModel->rowCount() + 1), 0, "Now", QDateTime::currentDateTime().toString("yyyy/MM/dd hh:mm:ss"));
 }
 
