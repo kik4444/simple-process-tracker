@@ -72,6 +72,7 @@ public: // Methods
     ~MainWindow();
 
 private: // Methods
+    void updateRunningProcessDurations();
 
 private: // Variables
     Ui::MainWindow *ui;
@@ -79,6 +80,7 @@ private: // Variables
     MyStandardItemModel *processTableViewModel = new MyStandardItemModel();
 
     QMap<QString, quint64> processDurations;
+    QStringList runningProcesses;
 
     const QString processIsActiveSymbol = "▶";
     const QString processIsPausedSymbol = "⏸";
