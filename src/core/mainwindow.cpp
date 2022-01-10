@@ -63,10 +63,6 @@ void MainWindow::processChosen(QString processName, QString iconPath)
     //TODO State entry with running/paused icon
     processTableViewModel->setItem(newestRow, ProcessColumns::Icon, new QStandardItem(QIcon(iconPath.isEmpty() ? ":/app-icon.svg" : iconPath), ""));
     processTableViewModel->setItem(newestRow, ProcessColumns::Name, new QStandardItem(processName));
-//    QStandardItem *item = new QStandardItem(processName);
-//    item->setFlags(item->flags() & ~Qt::ItemIsEditable);
-//    processTableViewModel->setItem(newestRow, ProcessColumns::Name, item);
-
     processTableViewModel->setItem(newestRow, ProcessColumns::Notes, new QStandardItem(QString::number(newestRow + 1)));
     processTableViewModel->setItem(newestRow, ProcessColumns::Duration, new QStandardItem("00:00:00"));
     processTableViewModel->setItem(newestRow, ProcessColumns::DateAdded,
@@ -81,4 +77,10 @@ void MainWindow::foundRunningProcess(QString processName, int row)
     processDurations[processName]++;
     QString newDuration = QString::number(processDurations[processName]);
     processTableViewModel->setItem(row, ProcessColumns::Duration, new QStandardItem(newDuration));
+}
+
+void MainWindow::on_tableView_doubleClicked(const QModelIndex &index)
+{
+    qDebug() << index.column() << " " <<  index.row();
+    return;
 }
