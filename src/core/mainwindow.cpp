@@ -296,6 +296,15 @@ void MainWindow::tableHorizontalHeaderCustomContextMenuRequested(const QPoint &p
         QAction *action = new QAction(processTableViewModel->horizontalHeaderItem(column)->text(), this);
         action->setCheckable(true);
         action->setChecked(!ui->tableView->isColumnHidden(column));
+
+        connect(action, &QAction::triggered, this, [=](bool checked)
+        {
+            if (!checked)
+                ui->tableView->hideColumn(column);
+            else
+                ui->tableView->showColumn(column);
+        });
+
         menu->addAction(action);
     }
 
