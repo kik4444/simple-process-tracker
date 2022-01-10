@@ -29,6 +29,8 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     ui->tableView->setItemDelegate(new MyItemDelegate());
     processTableViewModel->setHorizontalHeaderLabels(QStringList() << "Tracking" << "Icon" << "Name" << "Notes" << "Duration" << "Last seen" << "Date added");
     ui->tableView->setModel(processTableViewModel);
+    ui->tableView->horizontalHeader()->setContextMenuPolicy(Qt::CustomContextMenu);
+    connect(ui->tableView->horizontalHeader(), &QHeaderView::customContextMenuRequested, this, &MainWindow::tableHorizontalHeaderCustomHeaderMenuRequested);
 
     loadProcessData();
     loadWindowData();
@@ -284,6 +286,15 @@ void MainWindow::on_tableView_doubleClicked(const QModelIndex &index)
             break;
         }
     }
+}
+
+void MainWindow::tableHorizontalHeaderCustomHeaderMenuRequested(const QPoint &pos)
+{
+    QMenu *menu=new QMenu(this);
+    menu->addAction(new QAction("Header Action 1", this));
+    menu->addAction(new QAction("Header Action 2", this));
+    menu->addAction(new QAction("Header Action 3", this));
+    menu->popup(ui->tableView->horizontalHeader()->viewport()->mapToGlobal(pos));
 }
 
 void MainWindow::on_actionAdd_triggered()
