@@ -53,6 +53,9 @@
 // For SVG icons
 #include <QtSvg>
 
+// For quick access to QSettings
+#define quicksettings(location) QSettings settings(QSettings::IniFormat, QSettings::UserScope, "simple-process-tracker", location)
+
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
 
@@ -74,6 +77,10 @@ public: // Methods
 private: // Methods
     void pollProcesses();
     void updateRunningProcessDurations();
+
+    void createProcessInTable(QString activeSymbol, QIcon icon, QString processName, QString notes, quint64 duration, QString lastSeen, QString dateAdded);
+
+    void loadProcessData();
 
 private: // Variables
     Ui::MainWindow *ui;
