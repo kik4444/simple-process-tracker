@@ -30,7 +30,10 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     processTableViewModel->setHorizontalHeaderLabels(QStringList() << "Tracking" << "Icon" << "Name" << "Notes" << "Duration" << "Last seen" << "Date added");
     ui->tableView->setModel(processTableViewModel);
     //TODO remove after manually saving column widths
-    ui->tableView->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
+//    ui->tableView->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
+
+    loadProcessData();
+    pollProcesses();
 
     QTimer *processPollTimer = new QTimer(this);
     processPollTimer->setTimerType(Qt::VeryCoarseTimer);
@@ -46,6 +49,43 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
 MainWindow::~MainWindow()
 {
     delete ui;
+}
+
+void MainWindow::loadProcessData()
+{
+    quicksettings("processList");
+    foreach (QString processName, settings.childGroups())
+    {
+        settings.beginGroup(processName);
+
+        processDurations.insert(processName, settings.value("duration", 0).toULongLong());
+
+        createProcessInTable(
+            settings.value("tracking", true).toBool() ? processIsActiveSymbol : processIsPausedSymbol,
+            QIcon(settings.value("iconPath").toString()),
+            processName,
+            settings.value("notes").toString(),
+            processDurations[processName],
+            settings.value("lastSeen").toString(),
+            settings.value("dateAdded").toString());
+
+        settings.endGroup();
+    }
+}
+
+void MainWindow::createProcessInTable(QString activeSymbol, QIcon icon, QString processName, QString notes, quint64 duration, QString lastSeen, QString dateAdded)
+{
+    processDurations.insert(processName, duration);
+
+    int newestRow = processTableViewModel->rowCount();
+    processTableViewModel->setItem(newestRow, ProcessColumns::Tracking, new QStandardItem(activeSymbol));
+    processTableViewModel->setItem(newestRow, ProcessColumns::Icon, new QStandardItem(QIcon(icon), ""));
+    processTableViewModel->setItem(newestRow, ProcessColumns::Name, new QStandardItem(processName));
+    processTableViewModel->setItem(newestRow, ProcessColumns::Notes, new QStandardItem(notes));
+    processTableViewModel->setItem(newestRow, ProcessColumns::Duration, new QStandardItem(Parser::parseDurationToString(duration)));
+    processTableViewModel->setItem(newestRow, ProcessColumns::LastSeen, new QStandardItem(lastSeen));
+    processTableViewModel->setItem(newestRow, ProcessColumns::DateAdded, new QStandardItem(dateAdded));
+
 }
 
 void MainWindow::on_actionDebug_triggered()
@@ -90,17 +130,8 @@ void MainWindow::updateRunningProcessDurations()
 
 void MainWindow::newProcessAdded(QString processName, QString iconPath)
 {
-    int newestRow = processTableViewModel->rowCount();
-    processTableViewModel->setItem(newestRow, ProcessColumns::Tracking, new QStandardItem(processIsActiveSymbol));
-    processTableViewModel->setItem(newestRow, ProcessColumns::Icon, new QStandardItem(QIcon(iconPath.isEmpty() ? ":/app-icon.svg" : iconPath), ""));
-    processTableViewModel->setItem(newestRow, ProcessColumns::Name, new QStandardItem(processName));
-    processTableViewModel->setItem(newestRow, ProcessColumns::Notes, new QStandardItem(QString::number(newestRow + 1)));
-    processTableViewModel->setItem(newestRow, ProcessColumns::Duration, new QStandardItem("00:00:00"));
-    processTableViewModel->setItem(newestRow, ProcessColumns::LastSeen, new QStandardItem("Now"));
-    processTableViewModel->setItem(newestRow, ProcessColumns::DateAdded,
-        new QStandardItem(QDateTime::currentDateTime().toString("yyyy/MM/dd hh:mm:ss")));
-
-    processDurations.insert(processName, 0);
+    createProcessInTable(processIsActiveSymbol, QIcon(iconPath.isEmpty() ? ":/app-icon.svg" : iconPath), processName,
+        QString::number(processTableViewModel->rowCount() + 1), 0, "Now", QDateTime::currentDateTime().toString("yyyy/MM/dd hh:mm:ss"));
 }
 
 void MainWindow::on_tableView_doubleClicked(const QModelIndex &index)
