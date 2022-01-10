@@ -29,6 +29,10 @@ set(source_files
     core/processscanner.h
     core/processscanner.cpp
 
+    core/about.ui
+    core/about.h
+    core/about.cpp
+
     core/parser.h
 
     core/options.ui

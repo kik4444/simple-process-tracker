@@ -85,7 +85,7 @@
    <addaction name="actionPoll"/>
    <addaction name="actionStretch"/>
    <addaction name="actionOptions"/>
-   <addaction name="actionAbout"/>
+   <addaction name="actionHelp"/>
    <addaction name="actionExit"/>
    <addaction name="actionDebug"/>
   </widget>
@@ -136,13 +136,13 @@
     <string>Force check all processes right now</string>
    </property>
   </action>
-  <action name="actionAbout">
+  <action name="actionHelp">
    <property name="icon">
     <iconset resource="../resources.qrc">
      <normaloff>:/about-icon.svg</normaloff>:/about-icon.svg</iconset>
    </property>
    <property name="text">
-    <string>About</string>
+    <string>Help</string>
    </property>
    <property name="toolTip">
     <string>Read the about section of Simple Process Tracker</string>

@@ -310,6 +310,12 @@ void MainWindow::on_actionOptions_triggered()
     options->show();
 }
 
+void MainWindow::on_actionHelp_triggered()
+{
+    About *about = new About();
+    about->show();
+}
+
 void MainWindow::on_actionExit_triggered()
 {
     qApp->quit();

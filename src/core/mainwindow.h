@@ -38,6 +38,9 @@
 // For parsing durations
 #include "parser.h"
 
+// For opening the help section
+#include "about.h"
+
 // For reading process list
 #include <QProcess>
 
@@ -135,5 +138,6 @@ private slots:
     void systemTrayIconActionResumeAll();
     void systemTrayIconActionPauseAll();
     void systemTrayIconActionExit();
+    void on_actionHelp_triggered();
 };
 #endif // MAINWINDOW_H
