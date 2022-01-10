@@ -53,7 +53,7 @@ QStringList ProcessScanner::getProcessList(ProcessDialog *thiz)
     return processList;
 }
 
-void ProcessScanner::checkRunningProcesses(QMap<QString, int> processList)
+void ProcessScanner::checkRunningProcesses(QStringList processList)
 {
     #if defined Q_OS_LINUX
 
@@ -67,16 +67,18 @@ void ProcessScanner::checkRunningProcesses(QMap<QString, int> processList)
         {
             QString currentProcessName = QString(file.readAll()).remove("\n");
 
-            foreach (QString processName, processList.keys())
+            for (int i = 0; i < processList.size(); i++)
             {
-                if (QString::compare(currentProcessName, processName) == 0)
+                if (QString::compare(currentProcessName, processList[i]) == 0)
                 {
-                    emit foundRunningProcess(processName, processList[processName]);
-                    processList.remove(processName);
+                    emit foundRunningProcess(currentProcessName);
+                    processList.removeAt(i);
                 }
             }
         }
     }
+
+    emit foundStoppedProcesses(processList);
 
     #elif defined Q_OS_MACOS
 

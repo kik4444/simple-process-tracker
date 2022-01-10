@@ -85,12 +85,16 @@ private: // Variables
     const QString processIsActiveSymbol = "▶";
     const QString processIsPausedSymbol = "⏸";
 
+    //TODO replace me with user-defined
+    const uint processPollInterval = 5000;
+
 signals:
-    void checkRunningProcesses(QMap<QString, int> processList);
+    void checkRunningProcesses(QStringList processList);
 
 public slots:
     void newProcessAdded(QString processName, QString iconPath);
-    void foundRunningProcess(QString processName, int row);
+    void foundRunningProcess(QString processName);
+    void foundStoppedProcesses(QStringList stoppedProcesses);
 
 private slots:
     void on_actionAdd_triggered();
