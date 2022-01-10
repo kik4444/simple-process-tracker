@@ -54,11 +54,13 @@ namespace ProcessColumns
 {
     enum ProcessColumns
     {
-        Icon = 0,
-        Name = 1,
-        Duration = 2,
-        DateAdded = 3,
-        LastSeen = 4
+        State = 0,
+        Icon = 1,
+        Name = 2,
+        Notes = 3,
+        Duration = 4,
+        DateAdded = 5,
+        LastSeen = 6
     };
 }
 
@@ -82,7 +84,7 @@ private: // Methods
 private: // Variables
     Ui::MainWindow *ui;
 
-    QStandardItemModel *processTableViewModel = new QStandardItemModel();
+    MyStandardItemModel *processTableViewModel = new MyStandardItemModel();
 
     QMap<QString, qint64> processDurations;
 
@@ -94,7 +96,6 @@ public slots:
     void foundRunningProcess(QString processName, int row);
 
 private slots:
-    void on_tableView_clicked(const QModelIndex &index);
     void on_actionAdd_triggered();
     void on_actionDebug_triggered();
 };
