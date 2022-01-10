@@ -57,8 +57,11 @@ void MainWindow::processChosen(QString processName, QString iconPath)
     processTableViewModel->setItem(newestRow, ProcessColumns::Icon, new QStandardItem(QIcon(iconPath.isEmpty() ? ":/app-icon.svg" : iconPath), ""));
     processTableViewModel->setItem(newestRow, ProcessColumns::Name, new QStandardItem(processName));
     processTableViewModel->setItem(newestRow, ProcessColumns::Duration, new QStandardItem("00:00:00"));
-    processTableViewModel->setItem(newestRow, ProcessColumns::DateAdded, new QStandardItem("Yesterday"));
+    processTableViewModel->setItem(newestRow, ProcessColumns::DateAdded,
+        new QStandardItem(QDateTime::currentDateTime().toString("yyyy/MM/dd hh:mm:ss")));
     processTableViewModel->setItem(newestRow, ProcessColumns::LastSeen, new QStandardItem("Today"));
+
+    processDurations.insert(processName, 0);
 }
 
 void MainWindow::on_tableView_clicked(const QModelIndex &index)

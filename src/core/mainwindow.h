@@ -84,6 +84,8 @@ private: // Variables
 
     QStandardItemModel *processTableViewModel = new QStandardItemModel();
 
+    QMap<QString, qint64> processDurations;
+
 signals:
 
 public slots:
