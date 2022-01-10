@@ -77,6 +77,11 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
+void MainWindow::on_actionDebug_triggered()
+{
+
+}
+
 void MainWindow::loadProcessData()
 {
     quicksettings("processList");
@@ -143,7 +148,6 @@ void MainWindow::loadWindowData()
     quicksettings("config");
     this->resize(settings.value("windowWidth", 1280).toUInt(), settings.value("windowHeight", 720).toUInt());
     ui->tableView->horizontalHeader()->restoreState(settings.value("tableHorizontalHeader", "").toByteArray());
-//    ui->tableView->verticalHeader()->restoreState(settings.value("tableVerticalHeader", "").toByteArray());
 }
 
 void MainWindow::saveWindowData()
@@ -152,12 +156,6 @@ void MainWindow::saveWindowData()
     settings.setValue("windowWidth", this->width());
     settings.setValue("windowHeight", this->height());
     settings.setValue("tableHorizontalHeader", ui->tableView->horizontalHeader()->saveState());
-//    settings.setValue("tableVerticalHeader", ui->tableView->verticalHeader()->saveState());
-}
-
-void MainWindow::on_actionDebug_triggered()
-{
-
 }
 
 void MainWindow::pollProcesses()
@@ -289,6 +287,11 @@ void MainWindow::on_actionAdd_triggered()
 void MainWindow::on_actionPoll_triggered()
 {
     pollProcesses();
+}
+
+void MainWindow::on_actionStretch_triggered()
+{
+    ui->tableView->horizontalHeader()->resizeSections(QHeaderView::Stretch);
 }
 
 void MainWindow::on_actionExit_triggered()

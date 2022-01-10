@@ -9,5 +9,6 @@
         <file alias="about-icon.svg">../Assets/Icons/about-icon.svg</file>
         <file alias="Qt.svg">../Assets/Icons/Qt.svg</file>
         <file alias="gpl-v3-logo.svg">../Assets/Icons/gpl-v3-logo.svg</file>
+        <file alias="resize-icon.svg">../Assets/Icons/resize-icon.svg</file>
     </qresource>
 </RCC>
