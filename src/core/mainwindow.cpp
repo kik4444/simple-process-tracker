@@ -88,13 +88,6 @@ void MainWindow::updateRunningProcessDurations()
     }
 }
 
-void MainWindow::on_actionAdd_triggered()
-{
-    ProcessDialog *processDialog = new ProcessDialog();
-    connect(processDialog, &ProcessDialog::newProcessAdded, this, &MainWindow::newProcessAdded);
-    processDialog->exec();
-}
-
 void MainWindow::newProcessAdded(QString processName, QString iconPath)
 {
     int newestRow = processTableViewModel->rowCount();
@@ -162,4 +155,21 @@ void MainWindow::on_tableView_doubleClicked(const QModelIndex &index)
             break;
         }
     }
+}
+
+void MainWindow::on_actionAdd_triggered()
+{
+    ProcessDialog *processDialog = new ProcessDialog();
+    connect(processDialog, &ProcessDialog::newProcessAdded, this, &MainWindow::newProcessAdded);
+    processDialog->exec();
+}
+
+void MainWindow::on_actionPoll_triggered()
+{
+    pollProcesses();
+}
+
+void MainWindow::on_actionExit_triggered()
+{
+    qApp->quit();
 }
