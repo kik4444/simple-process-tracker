@@ -30,6 +30,11 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     ui->tableView->setModel(processTableViewModel);
     //TODO remove after manually saving column widths
     ui->tableView->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
+
+    QTimer *runningProcessDurationsUpdateTimer = new QTimer(this);
+    runningProcessDurationsUpdateTimer->setTimerType(Qt::VeryCoarseTimer);
+    connect(runningProcessDurationsUpdateTimer, &QTimer::timeout, this, &MainWindow::updateRunningProcessDurations);
+    runningProcessDurationsUpdateTimer->start(1000);
 }
 
 MainWindow::~MainWindow()
@@ -55,6 +60,20 @@ void MainWindow::on_actionAdd_triggered()
     ProcessDialog *processDialog = new ProcessDialog();
     connect(processDialog, &ProcessDialog::newProcessAdded, this, &MainWindow::newProcessAdded);
     processDialog->exec();
+}
+
+void MainWindow::updateRunningProcessDurations()
+{
+    for (int row = 0; row < processTableViewModel->rowCount(); row++)
+    {
+        QString processName = processTableViewModel->item(row, ProcessColumns::Name)->text();
+        if (QString::compare(processTableViewModel->item(row, ProcessColumns::Tracking)->text(), processIsActiveSymbol) == 0
+            && runningProcesses.contains(processName))
+        {
+            processDurations[processName]++;
+            processTableViewModel->setItem(row, ProcessColumns::Duration, new QStandardItem(Parser::parseDurationToString(processDurations[processName])));
+        }
+    }
 }
 
 void MainWindow::newProcessAdded(QString processName, QString iconPath)
