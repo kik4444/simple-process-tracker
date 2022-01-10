@@ -30,7 +30,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     processTableViewModel->setHorizontalHeaderLabels(QStringList() << "Tracking" << "Icon" << "Name" << "Notes" << "Duration" << "Last seen" << "Date added");
     ui->tableView->setModel(processTableViewModel);
     ui->tableView->horizontalHeader()->setContextMenuPolicy(Qt::CustomContextMenu);
-    connect(ui->tableView->horizontalHeader(), &QHeaderView::customContextMenuRequested, this, &MainWindow::tableHorizontalHeaderCustomHeaderMenuRequested);
+    connect(ui->tableView->horizontalHeader(), &QHeaderView::customContextMenuRequested, this, &MainWindow::tableHorizontalHeaderCustomContextMenuRequested);
 
     loadProcessData();
     loadWindowData();
@@ -288,12 +288,17 @@ void MainWindow::on_tableView_doubleClicked(const QModelIndex &index)
     }
 }
 
-void MainWindow::tableHorizontalHeaderCustomHeaderMenuRequested(const QPoint &pos)
+void MainWindow::tableHorizontalHeaderCustomContextMenuRequested(const QPoint &pos)
 {
-    QMenu *menu=new QMenu(this);
-    menu->addAction(new QAction("Header Action 1", this));
-    menu->addAction(new QAction("Header Action 2", this));
-    menu->addAction(new QAction("Header Action 3", this));
+    QMenu *menu = new QMenu(this);
+    for (int column = 0; column < processTableViewModel->columnCount(); column++)
+    {
+        QAction *action = new QAction(processTableViewModel->horizontalHeaderItem(column)->text(), this);
+        action->setCheckable(true);
+        action->setChecked(!ui->tableView->isColumnHidden(column));
+        menu->addAction(action);
+    }
+
     menu->popup(ui->tableView->horizontalHeader()->viewport()->mapToGlobal(pos));
 }
 
