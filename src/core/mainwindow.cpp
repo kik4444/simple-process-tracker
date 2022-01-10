@@ -34,6 +34,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     loadWindowData();
     pollProcesses();
 
+    // Background timers
     processPollTimer = new QTimer(this);
     processPollTimer->setTimerType(Qt::VeryCoarseTimer);
     connect(processPollTimer, &QTimer::timeout, this, &MainWindow::pollProcesses);
@@ -48,15 +49,29 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     processDataAutoSaveTimer->setTimerType(Qt::VeryCoarseTimer);
     connect(processDataAutoSaveTimer, &QTimer::timeout, this, &MainWindow::saveProcessData);
     processDataAutoSaveTimer->start(processAutoSaveInterval);
+
+    // Create system tray icon
+    QSystemTrayIcon *systemTrayIcon = new QSystemTrayIcon(this);
+    systemTrayIcon->setIcon(QIcon(":/app-icon.svg"));
+
+    QMenu *systemTrayIconMenu = new QMenu();
+    systemTrayIconMenu->addAction("Open", this, &MainWindow::systemTrayIconActionOpen);
+    systemTrayIconMenu->addAction("Resume all", this, &MainWindow::systemTrayIconActionResumeAll);
+    systemTrayIconMenu->addAction("Pause all", this, &MainWindow::systemTrayIconActionPauseAll);
+    systemTrayIconMenu->addAction("Exit", this, &MainWindow::systemTrayIconActionExit);
+
+    connect(systemTrayIcon, &QSystemTrayIcon::activated, this, &MainWindow::systemTrayIconActionOpen);
+
+    systemTrayIcon->setContextMenu(systemTrayIconMenu);
+    systemTrayIcon->show();
 }
 
 MainWindow::~MainWindow()
 {
-    //TODO
     processPollTimer->stop();
     runningProcessDurationsUpdateTimer->stop();
     processDataAutoSaveTimer->stop();
-    //Update last seen time for running processes
+    updateLastSeenForRunningProcesses();
     saveProcessData();
     saveWindowData();
     delete ui;
@@ -127,7 +142,8 @@ void MainWindow::loadWindowData()
 {
     quicksettings("config");
     this->resize(settings.value("windowWidth", 1280).toUInt(), settings.value("windowHeight", 720).toUInt());
-    ui->tableView->horizontalHeader()->restoreState(settings.value("tableHeader", "").toByteArray());
+    ui->tableView->horizontalHeader()->restoreState(settings.value("tableHorizontalHeader", "").toByteArray());
+//    ui->tableView->verticalHeader()->restoreState(settings.value("tableVerticalHeader", "").toByteArray());
 }
 
 void MainWindow::saveWindowData()
@@ -135,7 +151,8 @@ void MainWindow::saveWindowData()
     quicksettings("config");
     settings.setValue("windowWidth", this->width());
     settings.setValue("windowHeight", this->height());
-    settings.setValue("tableHeader", ui->tableView->horizontalHeader()->saveState());
+    settings.setValue("tableHorizontalHeader", ui->tableView->horizontalHeader()->saveState());
+//    settings.setValue("tableVerticalHeader", ui->tableView->verticalHeader()->saveState());
 }
 
 void MainWindow::on_actionDebug_triggered()
@@ -191,6 +208,16 @@ void MainWindow::newProcessAdded(QString processName, QString iconPath)
     createProcessInTable(processIsActiveSymbol, getIcon(processName, iconPath), processName,
         QString::number(processTableViewModel->rowCount() + 1), 0, "Now", QDateTime::currentDateTime().toString("yyyy/MM/dd hh:mm:ss"));
 }
+
+void MainWindow::updateLastSeenForRunningProcesses()
+{
+    for (int row = 0; row < processTableViewModel->rowCount(); row++)
+        if (runningProcesses.contains(processTableViewModel->item(row, ProcessColumns::Name)->text()))
+            processTableViewModel->setItem(row, ProcessColumns::LastSeen,
+                new QStandardItem(QDateTime::currentDateTime().toString("yyyy/MM/dd hh:mm:ss")));
+}
+
+/*---------------------------------------------------- User input ----------------------------------------------------*/
 
 void MainWindow::on_tableView_doubleClicked(const QModelIndex &index)
 {
@@ -265,6 +292,28 @@ void MainWindow::on_actionPoll_triggered()
 }
 
 void MainWindow::on_actionExit_triggered()
+{
+    qApp->quit();
+}
+
+void MainWindow::systemTrayIconActionOpen()
+{
+    this->show();
+}
+
+void MainWindow::systemTrayIconActionResumeAll()
+{
+    for (int row = 0; row < processTableViewModel->rowCount(); row++)
+        processTableViewModel->setItem(row, ProcessColumns::Tracking, new QStandardItem(processIsActiveSymbol));
+}
+
+void MainWindow::systemTrayIconActionPauseAll()
+{
+    for (int row = 0; row < processTableViewModel->rowCount(); row++)
+        processTableViewModel->setItem(row, ProcessColumns::Tracking, new QStandardItem(processIsPausedSymbol));
+}
+
+void MainWindow::systemTrayIconActionExit()
 {
     qApp->quit();
 }
