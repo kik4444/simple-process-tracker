@@ -147,6 +147,7 @@ void MainWindow::loadWindowData()
 {
     quicksettings("config");
     this->resize(settings.value("windowWidth", 1280).toUInt(), settings.value("windowHeight", 720).toUInt());
+    processPollInterval = settings.value("processPollInterval", processPollInterval).toUInt();
     ui->tableView->horizontalHeader()->restoreState(settings.value("tableHorizontalHeader", "").toByteArray());
 }
 
@@ -155,6 +156,7 @@ void MainWindow::saveWindowData()
     quicksettings("config");
     settings.setValue("windowWidth", this->width());
     settings.setValue("windowHeight", this->height());
+    settings.setValue("processPollInterval", processPollInterval);
     settings.setValue("tableHorizontalHeader", ui->tableView->horizontalHeader()->saveState());
 }
 
