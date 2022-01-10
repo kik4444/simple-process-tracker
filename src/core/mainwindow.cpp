@@ -26,7 +26,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     connect(processScanner, &ProcessScanner::foundRunningProcess, this, &MainWindow::foundRunningProcess);
 
     ui->tableView->setItemDelegate(new MyItemDelegate());
-    processTableViewModel->setHorizontalHeaderLabels(QStringList() << "Icon" << "Name" << "Duration" << "Date added" << "Last seen");
+    processTableViewModel->setHorizontalHeaderLabels(QStringList() << "State" << "Icon" << "Name" << "Notes" << "Duration" << "Date added" << "Last seen");
     ui->tableView->setModel(processTableViewModel);
     //TODO remove after manually saving column widths
     ui->tableView->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
@@ -60,8 +60,14 @@ void MainWindow::on_actionAdd_triggered()
 void MainWindow::processChosen(QString processName, QString iconPath)
 {
     int newestRow = processTableViewModel->rowCount();
+    //TODO State entry with running/paused icon
     processTableViewModel->setItem(newestRow, ProcessColumns::Icon, new QStandardItem(QIcon(iconPath.isEmpty() ? ":/app-icon.svg" : iconPath), ""));
     processTableViewModel->setItem(newestRow, ProcessColumns::Name, new QStandardItem(processName));
+//    QStandardItem *item = new QStandardItem(processName);
+//    item->setFlags(item->flags() & ~Qt::ItemIsEditable);
+//    processTableViewModel->setItem(newestRow, ProcessColumns::Name, item);
+
+    processTableViewModel->setItem(newestRow, ProcessColumns::Notes, new QStandardItem(QString::number(newestRow + 1)));
     processTableViewModel->setItem(newestRow, ProcessColumns::Duration, new QStandardItem("00:00:00"));
     processTableViewModel->setItem(newestRow, ProcessColumns::DateAdded,
         new QStandardItem(QDateTime::currentDateTime().toString("yyyy/MM/dd hh:mm:ss")));
@@ -72,13 +78,7 @@ void MainWindow::processChosen(QString processName, QString iconPath)
 
 void MainWindow::foundRunningProcess(QString processName, int row)
 {
-    QString newDuration = QString::number(processDurations[processName] + 1);
+    processDurations[processName]++;
+    QString newDuration = QString::number(processDurations[processName]);
     processTableViewModel->setItem(row, ProcessColumns::Duration, new QStandardItem(newDuration));
 }
-
-void MainWindow::on_tableView_clicked(const QModelIndex &index)
-{
-    qDebug() << index.column() << " " <<  index.row();
-    // Use switch for different actions
-}
-

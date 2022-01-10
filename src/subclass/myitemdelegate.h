@@ -22,6 +22,7 @@
 #define MYITEMDELEGATE_H
 
 #include <QStyledItemDelegate>
+#include <QStandardItemModel>
 
 class MyItemDelegate : public QStyledItemDelegate
 {
@@ -30,6 +31,14 @@ class MyItemDelegate : public QStyledItemDelegate
         QStyledItemDelegate::initStyleOption(item, index);
         item->decorationSize = item->rect.size();
         item->displayAlignment = Qt::AlignCenter;
+    }
+};
+
+class MyStandardItemModel : public QStandardItemModel
+{
+    Qt::ItemFlags flags(const QModelIndex &index) const override
+    {
+        return (QStandardItemModel::flags(index)) & ~Qt::ItemIsEditable;
     }
 };
 
