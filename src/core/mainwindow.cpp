@@ -65,7 +65,6 @@ void MainWindow::pollProcesses()
 
 void MainWindow::foundRunningProcess(QString processName)
 {
-    qDebug() << "Found" << processName;
     runningProcesses.append(processName);
 }
 
@@ -147,6 +146,18 @@ void MainWindow::on_tableView_doubleClicked(const QModelIndex &index)
 
             if (answer == QMessageBox::Yes)
                 processTableViewModel->removeRow(index.row());
+
+            break;
+        }
+
+        case ProcessColumns::Duration:
+        {
+            bool ok;
+            QString displayDuration = processTableViewModel->item(index.row(), ProcessColumns::Duration)->text();
+            QString durationInput = QInputDialog::getText(this, "Custom duration", "Set custom duration", QLineEdit::Normal, displayDuration, &ok);
+
+            if (ok)
+                processDurations[processTableViewModel->item(index.row(), ProcessColumns::Name)->text()] = Parser::parseStringToDuration(durationInput);
 
             break;
         }
