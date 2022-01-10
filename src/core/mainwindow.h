@@ -91,7 +91,7 @@ signals:
 
 public slots:
     void processChosen(QString processName, QString iconPath);
-    void foundProcess(QString processName, int row);
+    void foundRunningProcess(QString processName, int row);
 
 private slots:
     void on_tableView_clicked(const QModelIndex &index);

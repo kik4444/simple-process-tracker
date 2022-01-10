@@ -43,7 +43,7 @@ public:
     static QStringList getProcessList(ProcessDialog *thiz);
 
 signals:
-    void foundProcess(QString processName, int row);
+    void foundRunningProcess(QString processName, int row);
 
 public slots:
     void checkRunningProcesses(QMap<QString, int> processList);
