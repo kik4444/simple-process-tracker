@@ -38,7 +38,7 @@ void ProcessDialog::on_buttonBox_rejected()
 
 void ProcessDialog::on_listWidget_itemActivated(QListWidgetItem *item)
 {
-    emit processChosen(item->text().remove("\n").remove("\r").trimmed(), ui->iconPathLineEdit->text());
+    emit newProcessAdded(item->text().remove("\n").remove("\r").trimmed(), ui->iconPathLineEdit->text());
     this->~ProcessDialog();
 }
 
