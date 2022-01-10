@@ -26,7 +26,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     connect(processScanner, &ProcessScanner::foundRunningProcess, this, &MainWindow::foundRunningProcess);
 
     ui->tableView->setItemDelegate(new MyItemDelegate());
-    processTableViewModel->setHorizontalHeaderLabels(QStringList() << "Tracking" << "Icon" << "Name" << "Notes" << "Duration" << "Date added" << "Last seen");
+    processTableViewModel->setHorizontalHeaderLabels(QStringList() << "Tracking" << "Icon" << "Name" << "Notes" << "Duration" << "Last seen" << "Date added");
     ui->tableView->setModel(processTableViewModel);
     //TODO remove after manually saving column widths
     ui->tableView->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
@@ -65,9 +65,9 @@ void MainWindow::newProcessAdded(QString processName, QString iconPath)
     processTableViewModel->setItem(newestRow, ProcessColumns::Name, new QStandardItem(processName));
     processTableViewModel->setItem(newestRow, ProcessColumns::Notes, new QStandardItem(QString::number(newestRow + 1)));
     processTableViewModel->setItem(newestRow, ProcessColumns::Duration, new QStandardItem("00:00:00"));
+    processTableViewModel->setItem(newestRow, ProcessColumns::LastSeen, new QStandardItem("Now"));
     processTableViewModel->setItem(newestRow, ProcessColumns::DateAdded,
         new QStandardItem(QDateTime::currentDateTime().toString("yyyy/MM/dd hh:mm:ss")));
-    processTableViewModel->setItem(newestRow, ProcessColumns::LastSeen, new QStandardItem("Now"));
 
     processDurations.insert(processName, 0);
 }
