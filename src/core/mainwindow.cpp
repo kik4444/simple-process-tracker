@@ -24,6 +24,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     ProcessScanner *processScanner = new ProcessScanner();
     connect(this, &MainWindow::checkRunningProcesses, processScanner, &ProcessScanner::checkRunningProcesses);
     connect(processScanner, &ProcessScanner::foundRunningProcess, this, &MainWindow::foundRunningProcess);
+    connect(processScanner, &ProcessScanner::foundStoppedProcesses, this, &MainWindow::foundStoppedProcesses);
 
     ui->tableView->setItemDelegate(new MyItemDelegate());
     processTableViewModel->setHorizontalHeaderLabels(QStringList() << "Tracking" << "Icon" << "Name" << "Notes" << "Duration" << "Last seen" << "Date added");
@@ -44,15 +45,14 @@ MainWindow::~MainWindow()
 
 void MainWindow::on_actionDebug_triggered()
 {
-    QMap<QString, int> processList;
+    QStringList processList;
 
     for (int row = 0; row < processTableViewModel->rowCount(); row++)
     {
-        processList.insert(processTableViewModel->item(row, ProcessColumns::Name)->text(), row);
+        processList.append(processTableViewModel->item(row, ProcessColumns::Name)->text());
     }
 
     emit checkRunningProcesses(processList);
-
 }
 
 void MainWindow::on_actionAdd_triggered()
@@ -91,10 +91,15 @@ void MainWindow::newProcessAdded(QString processName, QString iconPath)
     processDurations.insert(processName, 0);
 }
 
-void MainWindow::foundRunningProcess(QString processName, int row)
+void MainWindow::foundRunningProcess(QString processName)
 {
-    processDurations[processName]++;
-    processTableViewModel->setItem(row, ProcessColumns::Duration, new QStandardItem(Parser::parseDurationToString(processDurations[processName])));
+    runningProcesses.append(processName);
+}
+
+void MainWindow::foundStoppedProcesses(QStringList stoppedProcesses)
+{
+    foreach (QString ProcessName, stoppedProcesses)
+        runningProcesses.removeAll(ProcessName);
 }
 
 void MainWindow::on_tableView_doubleClicked(const QModelIndex &index)
