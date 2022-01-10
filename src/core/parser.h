@@ -36,7 +36,10 @@ public:
     static quint64 parseStringToDuration(QString durationInput)
     {
         QStringList splitDuration = durationInput.split(":");
-        return splitDuration[0].toULongLong() * 3600 + splitDuration[1].toULongLong() * 60 + splitDuration[2].toULongLong();
+        if (splitDuration.size() == 3)
+            return splitDuration[0].toULongLong() * 3600 + splitDuration[1].toULongLong() * 60 + splitDuration[2].toULongLong();
+        else
+            return 0;
     }
 };
 
