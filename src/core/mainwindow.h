@@ -85,6 +85,8 @@ private: // Methods
     void loadWindowData();
     void saveWindowData();
 
+    void updateLastSeenForRunningProcesses();
+
 private: // Variables
     Ui::MainWindow *ui;
 
@@ -98,10 +100,9 @@ private: // Variables
 
     const QString processIsActiveSymbol = "▶";
     const QString processIsPausedSymbol = "⏸";
-//    const QMap<bool, QString> processTrackingSymbol = {{true, "▶"}, {false, "⏸"}};
 
     const uint processAutoSaveInterval = 60000;
-    //TODO replace me with user-defined
+    //TODO replace me with user-defined interval
     const uint processPollInterval = 5000;
 
 signals:
@@ -114,6 +115,11 @@ public slots:
 
 private slots:
     void saveProcessData();
+
+    void systemTrayIconActionOpen();
+    void systemTrayIconActionResumeAll();
+    void systemTrayIconActionPauseAll();
+    void systemTrayIconActionExit();
 
     void on_actionAdd_triggered();
     void on_actionDebug_triggered();
