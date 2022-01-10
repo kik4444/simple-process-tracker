@@ -31,6 +31,10 @@ set(source_files
 
     core/parser.h
 
+    core/options.ui
+    core/options.h
+    core/options.cpp
+
     subclass/myitemdelegate.h
     subclass/mystandarditemmodel.h
 

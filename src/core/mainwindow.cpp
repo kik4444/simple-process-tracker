@@ -215,6 +215,13 @@ void MainWindow::updateLastSeenForRunningProcesses()
                 new QStandardItem(QDateTime::currentDateTime().toString("yyyy/MM/dd hh:mm:ss")));
 }
 
+void MainWindow::userOptionsChosen(uint processPollInterval)
+{
+    uint pollInterval = processPollInterval * 1000;
+    this->processPollInterval = pollInterval;
+    processPollTimer->setInterval(pollInterval);
+}
+
 /*---------------------------------------------------- User input ----------------------------------------------------*/
 
 void MainWindow::on_tableView_doubleClicked(const QModelIndex &index)
@@ -292,6 +299,13 @@ void MainWindow::on_actionPoll_triggered()
 void MainWindow::on_actionStretch_triggered()
 {
     ui->tableView->horizontalHeader()->resizeSections(QHeaderView::Stretch);
+}
+
+void MainWindow::on_actionOptions_triggered()
+{
+    Options *options = new Options(nullptr, processPollInterval / 1000);
+    connect(options, &Options::userOptionsChosen, this, &MainWindow::userOptionsChosen);
+    options->show();
 }
 
 void MainWindow::on_actionExit_triggered()
