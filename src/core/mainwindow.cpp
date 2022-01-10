@@ -32,6 +32,11 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     //TODO remove after manually saving column widths
     ui->tableView->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
 
+    QTimer *processPollTimer = new QTimer(this);
+    processPollTimer->setTimerType(Qt::VeryCoarseTimer);
+    connect(processPollTimer, &QTimer::timeout, this, &MainWindow::pollProcesses);
+    processPollTimer->start(processPollInterval);
+
     QTimer *runningProcessDurationsUpdateTimer = new QTimer(this);
     runningProcessDurationsUpdateTimer->setTimerType(Qt::VeryCoarseTimer);
     connect(runningProcessDurationsUpdateTimer, &QTimer::timeout, this, &MainWindow::updateRunningProcessDurations);
@@ -45,21 +50,28 @@ MainWindow::~MainWindow()
 
 void MainWindow::on_actionDebug_triggered()
 {
+
+}
+
+void MainWindow::pollProcesses()
+{
     QStringList processList;
 
     for (int row = 0; row < processTableViewModel->rowCount(); row++)
-    {
         processList.append(processTableViewModel->item(row, ProcessColumns::Name)->text());
-    }
 
     emit checkRunningProcesses(processList);
 }
 
-void MainWindow::on_actionAdd_triggered()
+void MainWindow::foundRunningProcess(QString processName)
 {
-    ProcessDialog *processDialog = new ProcessDialog();
-    connect(processDialog, &ProcessDialog::newProcessAdded, this, &MainWindow::newProcessAdded);
-    processDialog->exec();
+    runningProcesses.append(processName);
+}
+
+void MainWindow::foundStoppedProcesses(QStringList stoppedProcesses)
+{
+    foreach (QString ProcessName, stoppedProcesses)
+        runningProcesses.removeAll(ProcessName);
 }
 
 void MainWindow::updateRunningProcessDurations()
@@ -74,6 +86,13 @@ void MainWindow::updateRunningProcessDurations()
             processTableViewModel->setItem(row, ProcessColumns::Duration, new QStandardItem(Parser::parseDurationToString(processDurations[processName])));
         }
     }
+}
+
+void MainWindow::on_actionAdd_triggered()
+{
+    ProcessDialog *processDialog = new ProcessDialog();
+    connect(processDialog, &ProcessDialog::newProcessAdded, this, &MainWindow::newProcessAdded);
+    processDialog->exec();
 }
 
 void MainWindow::newProcessAdded(QString processName, QString iconPath)
@@ -91,19 +110,24 @@ void MainWindow::newProcessAdded(QString processName, QString iconPath)
     processDurations.insert(processName, 0);
 }
 
-void MainWindow::foundRunningProcess(QString processName)
-{
-    runningProcesses.append(processName);
-}
-
-void MainWindow::foundStoppedProcesses(QStringList stoppedProcesses)
-{
-    foreach (QString ProcessName, stoppedProcesses)
-        runningProcesses.removeAll(ProcessName);
-}
-
 void MainWindow::on_tableView_doubleClicked(const QModelIndex &index)
 {
     qDebug() << index.column() << " " <<  index.row();
-    return;
+
+    switch (index.column())
+    {
+        case ProcessColumns::Tracking:
+        {
+            QString processState = processTableViewModel->item(index.row(), ProcessColumns::Tracking)->text();
+            processTableViewModel->setItem(index.row(), ProcessColumns::Tracking,
+                new QStandardItem(processState == processIsActiveSymbol ? processIsPausedSymbol : processIsActiveSymbol));
+            break;
+        }
+
+        case ProcessColumns::Icon:
+        {
+            //TODO open image dialog
+            break;
+        }
+    }
 }

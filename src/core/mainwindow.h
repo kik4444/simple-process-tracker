@@ -72,6 +72,7 @@ public: // Methods
     ~MainWindow();
 
 private: // Methods
+    void pollProcesses();
     void updateRunningProcessDurations();
 
 private: // Variables
@@ -84,6 +85,7 @@ private: // Variables
 
     const QString processIsActiveSymbol = "▶";
     const QString processIsPausedSymbol = "⏸";
+//    const QMap<bool, QString> processTrackingSymbol = {{true, "▶"}, {false, "⏸"}};
 
     //TODO replace me with user-defined
     const uint processPollInterval = 5000;
