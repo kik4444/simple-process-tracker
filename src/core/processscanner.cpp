@@ -59,6 +59,9 @@ void ProcessScanner::checkRunningProcesses(QMap<QString, int> processList)
 
     foreach (QString pid, QDir("/proc").entryList(QDir::Dirs | QDir::NoDotAndDotDot, QDir::Name))
     {
+        if (processList.isEmpty())
+            break;
+
         QFile file("/proc/" + pid + "/comm");
         if (file.open(QIODevice::ReadOnly))
         {
@@ -68,7 +71,7 @@ void ProcessScanner::checkRunningProcesses(QMap<QString, int> processList)
             {
                 if (QString::compare(currentProcessName, processName) == 0)
                 {
-                    emit foundProcess(processName, processList[processName]);
+                    emit foundRunningProcess(processName, processList[processName]);
                     processList.remove(processName);
                 }
             }

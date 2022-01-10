@@ -23,7 +23,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
 
     ProcessScanner *processScanner = new ProcessScanner();
     connect(this, &MainWindow::checkRunningProcesses, processScanner, &ProcessScanner::checkRunningProcesses);
-    connect(processScanner, &ProcessScanner::foundProcess, this, &MainWindow::foundProcess);
+    connect(processScanner, &ProcessScanner::foundRunningProcess, this, &MainWindow::foundRunningProcess);
 
     ui->tableView->setItemDelegate(new MyItemDelegate());
     processTableViewModel->setHorizontalHeaderLabels(QStringList() << "Icon" << "Name" << "Duration" << "Date added" << "Last seen");
@@ -42,7 +42,9 @@ void MainWindow::on_actionDebug_triggered()
     QMap<QString, int> processList;
 
     for (int row = 0; row < processTableViewModel->rowCount(); row++)
+    {
         processList.insert(processTableViewModel->item(row, ProcessColumns::Name)->text(), row);
+    }
 
     emit checkRunningProcesses(processList);
 
@@ -68,9 +70,10 @@ void MainWindow::processChosen(QString processName, QString iconPath)
     processDurations.insert(processName, 0);
 }
 
-void MainWindow::foundProcess(QString processName, int row)
+void MainWindow::foundRunningProcess(QString processName, int row)
 {
-    qDebug() << processName << row;
+    QString newDuration = QString::number(processDurations[processName] + 1);
+    processTableViewModel->setItem(row, ProcessColumns::Duration, new QStandardItem(newDuration));
 }
 
 void MainWindow::on_tableView_clicked(const QModelIndex &index)
