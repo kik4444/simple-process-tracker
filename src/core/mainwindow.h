@@ -98,12 +98,12 @@ private: // Variables
     const uint processPollInterval = 5000;
 
 signals:
-    void checkRunningProcesses(QStringList processList);
+    void checkRunningProcesses(QMap<QString, int> processList);
 
 public slots:
     void newProcessAdded(QString processName, QString iconPath);
     void foundRunningProcess(QString processName);
-    void foundStoppedProcesses(QStringList stoppedProcesses);
+    void foundStoppedProcesses(QMap<QString, int> stoppedProcesses);
 
 private slots:
     void on_actionAdd_triggered();
