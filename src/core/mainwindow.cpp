@@ -29,23 +29,22 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     ui->tableView->setItemDelegate(new MyItemDelegate());
     processTableViewModel->setHorizontalHeaderLabels(QStringList() << "Tracking" << "Icon" << "Name" << "Notes" << "Duration" << "Last seen" << "Date added");
     ui->tableView->setModel(processTableViewModel);
-    //TODO remove after manually saving column widths
-    ui->tableView->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
 
     loadProcessData();
+    loadWindowData();
     pollProcesses();
 
-    QTimer *processPollTimer = new QTimer(this);
+    processPollTimer = new QTimer(this);
     processPollTimer->setTimerType(Qt::VeryCoarseTimer);
     connect(processPollTimer, &QTimer::timeout, this, &MainWindow::pollProcesses);
     processPollTimer->start(processPollInterval);
 
-    QTimer *runningProcessDurationsUpdateTimer = new QTimer(this);
+    runningProcessDurationsUpdateTimer = new QTimer(this);
     runningProcessDurationsUpdateTimer->setTimerType(Qt::VeryCoarseTimer);
     connect(runningProcessDurationsUpdateTimer, &QTimer::timeout, this, &MainWindow::updateRunningProcessDurations);
     runningProcessDurationsUpdateTimer->start(1000);
 
-    QTimer *processDataAutoSaveTimer = new QTimer(this);
+    processDataAutoSaveTimer = new QTimer(this);
     processDataAutoSaveTimer->setTimerType(Qt::VeryCoarseTimer);
     connect(processDataAutoSaveTimer, &QTimer::timeout, this, &MainWindow::saveProcessData);
     processDataAutoSaveTimer->start(processAutoSaveInterval);
@@ -54,10 +53,12 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
 MainWindow::~MainWindow()
 {
     //TODO
-    //Stop timers
+    processPollTimer->stop();
+    runningProcessDurationsUpdateTimer->stop();
+    processDataAutoSaveTimer->stop();
     //Update last seen time for running processes
-    //save process data
-    //save window dimensions and horizontalHeader
+    saveProcessData();
+    saveWindowData();
     delete ui;
 }
 
@@ -122,14 +123,24 @@ void MainWindow::saveProcessData()
     }
 }
 
+void MainWindow::loadWindowData()
+{
+    quicksettings("config");
+    this->resize(settings.value("windowWidth", 1280).toUInt(), settings.value("windowHeight", 720).toUInt());
+    ui->tableView->horizontalHeader()->restoreState(settings.value("tableHeader", "").toByteArray());
+}
+
 void MainWindow::saveWindowData()
 {
-
+    quicksettings("config");
+    settings.setValue("windowWidth", this->width());
+    settings.setValue("windowHeight", this->height());
+    settings.setValue("tableHeader", ui->tableView->horizontalHeader()->saveState());
 }
 
 void MainWindow::on_actionDebug_triggered()
 {
-    saveProcessData();
+
 }
 
 void MainWindow::pollProcesses()
@@ -183,6 +194,8 @@ void MainWindow::newProcessAdded(QString processName, QString iconPath)
 
 void MainWindow::on_tableView_doubleClicked(const QModelIndex &index)
 {
+    QString processName = processTableViewModel->item(index.row(), ProcessColumns::Name)->text();
+
     switch (index.column())
     {
         case ProcessColumns::Tracking:
@@ -209,14 +222,18 @@ void MainWindow::on_tableView_doubleClicked(const QModelIndex &index)
         {
             QMessageBox confirmDialog(this);
             confirmDialog.setWindowTitle("Confirm removal");
-            confirmDialog.setText(QString("Are you sure you wish to remove %1?").arg(processTableViewModel->item(index.row(), ProcessColumns::Name)->text()));
+            confirmDialog.setText(QString("Remove %1? This action is irreversible!").arg(processName));
             confirmDialog.setIcon(QMessageBox::Question);
             confirmDialog.setStandardButtons(QMessageBox::Yes | QMessageBox::No);
             confirmDialog.setDefaultButton(QMessageBox::No);
             int answer = confirmDialog.exec();
 
             if (answer == QMessageBox::Yes)
+            {
                 processTableViewModel->removeRow(index.row());
+                quicksettings("processList");
+                settings.remove(processName);
+            }
 
             break;
         }
@@ -228,7 +245,7 @@ void MainWindow::on_tableView_doubleClicked(const QModelIndex &index)
             QString durationInput = QInputDialog::getText(this, "Custom duration", "Set custom duration", QLineEdit::Normal, displayDuration, &ok);
 
             if (ok)
-                processDurations[processTableViewModel->item(index.row(), ProcessColumns::Name)->text()] = Parser::parseStringToDuration(durationInput);
+                processDurations[processName] = Parser::parseStringToDuration(durationInput);
 
             break;
         }
