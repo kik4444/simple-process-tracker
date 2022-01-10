@@ -80,7 +80,6 @@
    </attribute>
    <addaction name="actionAdd"/>
    <addaction name="actionPoll"/>
-   <addaction name="actionShow_hidden"/>
    <addaction name="actionOptions"/>
    <addaction name="actionAbout"/>
    <addaction name="actionExit"/>
@@ -131,18 +130,6 @@
    </property>
    <property name="toolTip">
     <string>Force check all processes right now</string>
-   </property>
-  </action>
-  <action name="actionShow_hidden">
-   <property name="icon">
-    <iconset resource="../resources.qrc">
-     <normaloff>:/hide-icon.svg</normaloff>:/hide-icon.svg</iconset>
-   </property>
-   <property name="text">
-    <string>Show hidden</string>
-   </property>
-   <property name="toolTip">
-    <string>Reveal or hide hidden processes</string>
    </property>
   </action>
   <action name="actionAbout">

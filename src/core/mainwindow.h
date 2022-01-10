@@ -102,5 +102,7 @@ private slots:
     void on_actionAdd_triggered();
     void on_actionDebug_triggered();
     void on_tableView_doubleClicked(const QModelIndex &index);
+    void on_actionPoll_triggered();
+    void on_actionExit_triggered();
 };
 #endif // MAINWINDOW_H
