@@ -121,12 +121,18 @@ void MainWindow::on_tableView_doubleClicked(const QModelIndex &index)
             QString processState = processTableViewModel->item(index.row(), ProcessColumns::Tracking)->text();
             processTableViewModel->setItem(index.row(), ProcessColumns::Tracking,
                 new QStandardItem(processState == processIsActiveSymbol ? processIsPausedSymbol : processIsActiveSymbol));
+
             break;
         }
 
         case ProcessColumns::Icon:
         {
-            //TODO open image dialog
+            QString fileName = QFileDialog::getOpenFileName(this, "Open Image", "", Utility::imageFormats);
+            QPixmap icon(fileName);
+
+            if (!fileName.isEmpty() && !icon.isNull())
+                processTableViewModel->setItem(index.row(), ProcessColumns::Icon, new QStandardItem(icon, ""));
+
             break;
         }
     }
