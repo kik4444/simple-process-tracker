@@ -32,8 +32,8 @@ namespace ProcessColumns
         Name = 2,
         Notes = 3,
         Duration = 4,
-        DateAdded = 5,
-        LastSeen = 6
+        LastSeen = 5,
+        DateAdded = 6
     };
 }
 
