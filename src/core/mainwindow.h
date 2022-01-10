@@ -32,6 +32,9 @@
 // For scanning for processes
 #include "processscanner.h"
 
+// For user options
+#include "options.h"
+
 // For parsing durations
 #include "parser.h"
 
@@ -98,12 +101,12 @@ private: // Variables
     QStringList runningProcesses;
     QMap<QString, QString> processIcons;
 
+    uint processPollInterval = 5000;
+
     const QString processIsActiveSymbol = "▶";
     const QString processIsPausedSymbol = "⏸";
 
     const uint processAutoSaveInterval = 60000;
-    //TODO replace me with user-defined interval
-    const uint processPollInterval = 5000;
 
 signals:
     void checkRunningProcesses(QMap<QString, int> processList);
@@ -112,6 +115,8 @@ public slots:
     void newProcessAdded(QString processName, QString iconPath);
     void foundRunningProcess(QString processName);
     void foundStoppedProcesses(QMap<QString, int> stoppedProcesses);
+
+    void userOptionsChosen(uint processPollInterval);
 
 private slots:
     void on_actionDebug_triggered();
@@ -123,6 +128,7 @@ private slots:
     void on_actionAdd_triggered();
     void on_actionPoll_triggered();
     void on_actionStretch_triggered();
+    void on_actionOptions_triggered();
     void on_actionExit_triggered();
 
     void systemTrayIconActionOpen();
