@@ -20,8 +20,11 @@
 #include <QMainWindow>
 #include <QtDebug>
 
-// For icons in the table view
+// For icons in the table view and centered text
 #include "../subclass/myitemdelegate.h"
+
+// For setting specific columns as read-only or read-write
+#include "../subclass/mystandarditemmodel.h"
 
 // For showing list of processes
 #include "processdialog.h"
@@ -49,20 +52,6 @@
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
-
-namespace ProcessColumns
-{
-    enum ProcessColumns
-    {
-        State = 0,
-        Icon = 1,
-        Name = 2,
-        Notes = 3,
-        Duration = 4,
-        DateAdded = 5,
-        LastSeen = 6
-    };
-}
 
 namespace Utility
 {
@@ -98,5 +87,6 @@ public slots:
 private slots:
     void on_actionAdd_triggered();
     void on_actionDebug_triggered();
+    void on_tableView_doubleClicked(const QModelIndex &index);
 };
 #endif // MAINWINDOW_H

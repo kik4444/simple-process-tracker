@@ -14,23 +14,39 @@
  *    along with Simple Process Tracker.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-/* Credit: https://stackoverflow.com/questions/63177587/pyqt-tableview-align-icons-to-center
- * and: https://stackoverflow.com/questions/2597534/is-there-a-way-to-display-icons-in-qlistview-without-text
- */
+// Credit: https://forum.qt.io/topic/20786/solved-how-can-i-make-a-particular-column-as-non-editable-in-qtableview/7
 
-#ifndef MYITEMDELEGATE_H
-#define MYITEMDELEGATE_H
+#ifndef MYSTANDARDITEMMODEL_H
+#define MYSTANDARDITEMMODEL_H
 
-#include <QStyledItemDelegate>
+#include <QStandardItemModel>
 
-class MyItemDelegate : public QStyledItemDelegate
+QT_BEGIN_NAMESPACE
+
+namespace ProcessColumns
 {
-    void initStyleOption(QStyleOptionViewItem *item, const QModelIndex &index) const override
+    enum ProcessColumns
     {
-        QStyledItemDelegate::initStyleOption(item, index);
-        item->decorationSize = item->rect.size();
-        item->displayAlignment = Qt::AlignCenter;
+        State = 0,
+        Icon = 1,
+        Name = 2,
+        Notes = 3,
+        Duration = 4,
+        DateAdded = 5,
+        LastSeen = 6
+    };
+}
+
+QT_END_NAMESPACE
+
+class MyStandardItemModel : public QStandardItemModel
+{
+
+    Qt::ItemFlags flags(const QModelIndex &index) const override
+    {
+        Qt::ItemFlags itemFlags = QStandardItemModel::flags(index);
+        return index.column() == ProcessColumns::Notes ? itemFlags : itemFlags & ~Qt::ItemIsEditable;
     }
 };
 
-#endif // MYITEMDELEGATE_H
+#endif // MYSTANDARDITEMMODEL_H
