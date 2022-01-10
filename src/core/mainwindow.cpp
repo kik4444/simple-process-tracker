@@ -30,7 +30,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     processTableViewModel->setHorizontalHeaderLabels(QStringList() << "Tracking" << "Icon" << "Name" << "Notes" << "Duration" << "Last seen" << "Date added");
     ui->tableView->setModel(processTableViewModel);
     //TODO remove after manually saving column widths
-//    ui->tableView->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
+    ui->tableView->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
 
     loadProcessData();
     pollProcesses();
@@ -48,6 +48,11 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
 
 MainWindow::~MainWindow()
 {
+    //TODO
+    //Stop timers
+    //Update last seen time for running processes
+    //save process data
+    //save window dimensions and horizontalHeader
     delete ui;
 }
 
@@ -85,7 +90,6 @@ void MainWindow::createProcessInTable(QString activeSymbol, QIcon icon, QString 
     processTableViewModel->setItem(newestRow, ProcessColumns::Duration, new QStandardItem(Parser::parseDurationToString(duration)));
     processTableViewModel->setItem(newestRow, ProcessColumns::LastSeen, new QStandardItem(lastSeen));
     processTableViewModel->setItem(newestRow, ProcessColumns::DateAdded, new QStandardItem(dateAdded));
-
 }
 
 void MainWindow::on_actionDebug_triggered()
@@ -95,10 +99,10 @@ void MainWindow::on_actionDebug_triggered()
 
 void MainWindow::pollProcesses()
 {
-    QStringList processList;
+    QMap<QString, int> processList;
 
     for (int row = 0; row < processTableViewModel->rowCount(); row++)
-        processList.append(processTableViewModel->item(row, ProcessColumns::Name)->text());
+        processList.insert(processTableViewModel->item(row, ProcessColumns::Name)->text(), row);
 
     emit checkRunningProcesses(processList);
 }
@@ -108,10 +112,17 @@ void MainWindow::foundRunningProcess(QString processName)
     runningProcesses.append(processName);
 }
 
-void MainWindow::foundStoppedProcesses(QStringList stoppedProcesses)
+void MainWindow::foundStoppedProcesses(QMap<QString, int> stoppedProcesses)
 {
-    foreach (QString ProcessName, stoppedProcesses)
-        runningProcesses.removeAll(ProcessName);
+    foreach (QString processName, stoppedProcesses.keys())
+    {
+        if (runningProcesses.contains(processName))
+        {
+            runningProcesses.removeAll(processName);
+            processTableViewModel->setItem(stoppedProcesses[processName], ProcessColumns::LastSeen,
+                new QStandardItem(QDateTime::currentDateTime().toString("yyyy/MM/dd hh:mm:ss")));
+        }
+    }
 }
 
 void MainWindow::updateRunningProcessDurations()
@@ -124,6 +135,7 @@ void MainWindow::updateRunningProcessDurations()
         {
             processDurations[processName]++;
             processTableViewModel->setItem(row, ProcessColumns::Duration, new QStandardItem(Parser::parseDurationToString(processDurations[processName])));
+            processTableViewModel->setItem(row, ProcessColumns::LastSeen, new QStandardItem("Now"));
         }
     }
 }
