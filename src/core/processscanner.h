@@ -33,14 +33,20 @@
 
 #endif
 
-class ProcessScanner
+class ProcessScanner : public QWidget
 {
+    Q_OBJECT
+
 public:
-    ProcessScanner(QMainWindow *thiz);
+    ProcessScanner();
 
     static QStringList getProcessList(ProcessDialog *thiz);
 
-    void checkRunningProcesses(QStringList processList);
+signals:
+    void foundProcess(QString processName, int row);
+
+public slots:
+    void checkRunningProcesses(QMap<QString, int> processList);
 };
 
 #endif // PROCESSSCANNER_H

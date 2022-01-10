@@ -16,7 +16,7 @@
 
 #include "processscanner.h"
 
-ProcessScanner::ProcessScanner(QMainWindow *thiz) {}
+ProcessScanner::ProcessScanner() {}
 
 QStringList ProcessScanner::getProcessList(ProcessDialog *thiz)
 {
@@ -53,7 +53,31 @@ QStringList ProcessScanner::getProcessList(ProcessDialog *thiz)
     return processList;
 }
 
-void ProcessScanner::checkRunningProcesses(QStringList processList)
+void ProcessScanner::checkRunningProcesses(QMap<QString, int> processList)
 {
+    #if defined Q_OS_LINUX
 
+    foreach (QString pid, QDir("/proc").entryList(QDir::Dirs | QDir::NoDotAndDotDot, QDir::Name))
+    {
+        QFile file("/proc/" + pid + "/comm");
+        if (file.open(QIODevice::ReadOnly))
+        {
+            QString currentProcessName = QString(file.readAll()).remove("\n");
+
+            foreach (QString processName, processList.keys())
+            {
+                if (QString::compare(currentProcessName, processName) == 0)
+                {
+                    emit foundProcess(processName, processList[processName]);
+                    processList.remove(processName);
+                }
+            }
+        }
+    }
+
+    #elif defined Q_OS_MACOS
+
+    #elif defined Q_OS_WINDOWS
+
+    #endif
 }
