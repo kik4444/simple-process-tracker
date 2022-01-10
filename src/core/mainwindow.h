@@ -87,9 +87,11 @@ private: // Variables
     QMap<QString, qint64> processDurations;
 
 signals:
+    void checkRunningProcesses(QMap<QString, int> processList);
 
 public slots:
     void processChosen(QString processName, QString iconPath);
+    void foundProcess(QString processName, int row);
 
 private slots:
     void on_tableView_clicked(const QModelIndex &index);

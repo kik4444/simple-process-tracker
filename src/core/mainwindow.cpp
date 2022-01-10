@@ -16,13 +16,14 @@
 
 #include "mainwindow.h"
 #include "./ui_mainwindow.h"
-#include "processdialog.h"
 
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
 
-    ProcessScanner *processScanner = new ProcessScanner(this);
+    ProcessScanner *processScanner = new ProcessScanner();
+    connect(this, &MainWindow::checkRunningProcesses, processScanner, &ProcessScanner::checkRunningProcesses);
+    connect(processScanner, &ProcessScanner::foundProcess, this, &MainWindow::foundProcess);
 
     ui->tableView->setItemDelegate(new MyItemDelegate());
     processTableViewModel->setHorizontalHeaderLabels(QStringList() << "Icon" << "Name" << "Duration" << "Date added" << "Last seen");
@@ -38,10 +39,13 @@ MainWindow::~MainWindow()
 
 void MainWindow::on_actionDebug_triggered()
 {
+    QMap<QString, int> processList;
+
     for (int row = 0; row < processTableViewModel->rowCount(); row++)
-    {
-        qDebug() << processTableViewModel->item(row, ProcessColumns::Name)->text();
-    }
+        processList.insert(processTableViewModel->item(row, ProcessColumns::Name)->text(), row);
+
+    emit checkRunningProcesses(processList);
+
 }
 
 void MainWindow::on_actionAdd_triggered()
@@ -64,8 +68,14 @@ void MainWindow::processChosen(QString processName, QString iconPath)
     processDurations.insert(processName, 0);
 }
 
+void MainWindow::foundProcess(QString processName, int row)
+{
+    qDebug() << processName << row;
+}
+
 void MainWindow::on_tableView_clicked(const QModelIndex &index)
 {
     qDebug() << index.column() << " " <<  index.row();
+    // Use switch for different actions
 }
 
