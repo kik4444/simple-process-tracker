@@ -26,11 +26,19 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     connect(processScanner, &ProcessScanner::foundRunningProcess, this, &MainWindow::foundRunningProcess);
     connect(processScanner, &ProcessScanner::foundStoppedProcesses, this, &MainWindow::foundStoppedProcesses);
 
+    // Setup table
     ui->tableView->setItemDelegate(new MyItemDelegate());
     processTableViewModel->setHorizontalHeaderLabels(QStringList() << "Tracking" << "Icon" << "Name" << "Notes" << "Duration" << "Last seen" << "Date added");
     ui->tableView->setModel(processTableViewModel);
+
+    // Setup horizontal header
     ui->tableView->horizontalHeader()->setContextMenuPolicy(Qt::CustomContextMenu);
     connect(ui->tableView->horizontalHeader(), &QHeaderView::customContextMenuRequested, this, &MainWindow::tableHorizontalHeaderCustomContextMenuRequested);
+
+    // Setup vertical header
+    ui->tableView->verticalHeader()->setSectionResizeMode(QHeaderView::Fixed);
+    ui->tableView->verticalHeader()->setContextMenuPolicy(Qt::CustomContextMenu);
+    connect(ui->tableView->verticalHeader(), &QHeaderView::customContextMenuRequested, this, &MainWindow::tableVerticalHeaderCustomContextMenuRequested);
 
     loadProcessData();
     loadWindowData();
@@ -309,6 +317,29 @@ void MainWindow::tableHorizontalHeaderCustomContextMenuRequested(const QPoint &p
     }
 
     menu->popup(ui->tableView->horizontalHeader()->viewport()->mapToGlobal(pos));
+}
+
+void MainWindow::tableVerticalHeaderCustomContextMenuRequested(const QPoint &pos)
+{
+    QMenu *menu = new QMenu(this);
+    for (int row = 0; row < processTableViewModel->rowCount(); row++)
+    {
+        QAction *action = new QAction(processTableViewModel->item(row, ProcessColumns::Name)->text(), this);
+        action->setCheckable(true);
+        action->setChecked(!ui->tableView->isRowHidden(row));
+
+        connect(action, &QAction::triggered, this, [=](bool checked)
+        {
+            if (!checked)
+                ui->tableView->hideRow(row);
+            else
+                ui->tableView->showRow(row);
+        });
+
+        menu->addAction(action);
+    }
+
+    menu->popup(ui->tableView->verticalHeader()->viewport()->mapToGlobal(pos));
 }
 
 void MainWindow::on_actionAdd_triggered()
