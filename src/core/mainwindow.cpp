@@ -394,6 +394,17 @@ void MainWindow::on_actionPoll_triggered()
     pollProcesses();
 }
 
+void MainWindow::on_actionInvert_hidden_triggered()
+{
+    for (int row = 0; row < processTableViewModel->rowCount(); row++)
+    {
+        if (ui->tableView->isRowHidden(row))
+            ui->tableView->showRow(row);
+        else
+            ui->tableView->hideRow(row);
+    }
+}
+
 void MainWindow::on_actionStretch_triggered()
 {
     ui->tableView->horizontalHeader()->resizeSections(QHeaderView::Stretch);
