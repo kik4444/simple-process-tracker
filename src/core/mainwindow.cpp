@@ -274,7 +274,11 @@ void MainWindow::removeSelectedRows(QList<QModelIndex> selectedRows)
     {
         quicksettings("processList");
         foreach(QModelIndex index, selectedRows)
-            settings.remove(processTableViewModel->item(index.row(), ProcessColumns::Name)->text());
+        {
+            QString currentProcessName = processTableViewModel->item(index.row(), ProcessColumns::Name)->text();
+            settings.remove(currentProcessName);
+            runningProcesses.removeAll(currentProcessName);
+        }
 
         QModelIndexList indexes = selectedRows;
         while (!indexes.isEmpty())
