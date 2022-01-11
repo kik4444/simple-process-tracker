@@ -252,6 +252,17 @@ void MainWindow::userOptionsChosen(uint processPollInterval)
     processPollTimer->setInterval(pollInterval);
 }
 
+int MainWindow::getConfirmDialogAnswer(QString title, QString text)
+{
+    QMessageBox confirmDialog(this);
+    confirmDialog.setWindowTitle(title);
+    confirmDialog.setText(text);
+    confirmDialog.setIcon(QMessageBox::Question);
+    confirmDialog.setStandardButtons(QMessageBox::Yes | QMessageBox::No);
+    confirmDialog.setDefaultButton(QMessageBox::No);
+    return confirmDialog.exec();
+}
+
 /*---------------------------------------------------- User input ----------------------------------------------------*/
 
 void MainWindow::on_tableView_doubleClicked(const QModelIndex &index)
@@ -284,13 +295,7 @@ void MainWindow::on_tableView_doubleClicked(const QModelIndex &index)
 
         case ProcessColumns::Name:
         {
-            QMessageBox confirmDialog(this);
-            confirmDialog.setWindowTitle("Confirm removal");
-            confirmDialog.setText(QString("Remove %1? This action is irreversible!").arg(processName));
-            confirmDialog.setIcon(QMessageBox::Question);
-            confirmDialog.setStandardButtons(QMessageBox::Yes | QMessageBox::No);
-            confirmDialog.setDefaultButton(QMessageBox::No);
-            int answer = confirmDialog.exec();
+            int answer = getConfirmDialogAnswer("Confirm removal", QString("Remove %1? This action is irreversible!").arg(processName));
 
             if (answer == QMessageBox::Yes)
             {
@@ -326,7 +331,6 @@ void MainWindow::tableCellCustomContextMenuRequested(const QPoint &pos)
         actionNames.append({"Change icon", ProcessColumns::Icon});
         actionNames.append({"Change duration", ProcessColumns::Duration});
     }
-    actionNames.append({"Remove", ProcessColumns::Name});
 
     QMenu *menu = new QMenu(this);
 
@@ -342,7 +346,25 @@ void MainWindow::tableCellCustomContextMenuRequested(const QPoint &pos)
         menu->addAction(action);
     }
 
-    QAction *action = new QAction("Hide", this);
+    QAction *action = new QAction("Remove", this);
+    connect(action, &QAction::triggered, this, [=](){
+        int answer = getConfirmDialogAnswer("Confirm removal", "Remove multiple processes? This action is irreversible!");
+        if (answer == QMessageBox::Yes)
+        {
+            QModelIndexList indexes = selectedRows;
+            quicksettings("processList");
+            while (!indexes.isEmpty())
+            {
+                settings.remove(processTableViewModel->item(indexes.last().row(), ProcessColumns::Name)->text());
+                processTableViewModel->removeRows(indexes.last().row(), 1);
+                indexes.removeLast();
+            }
+        }
+    });
+
+    menu->addAction(action);
+
+    action = new QAction("Hide", this);
     foreach (QModelIndex index, selectedRows)
         connect(action, &QAction::triggered, this, [=](){ui->tableView->hideRow(index.row());});
 
