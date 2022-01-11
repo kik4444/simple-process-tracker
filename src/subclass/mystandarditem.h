@@ -32,9 +32,9 @@ public:
 
     bool operator < (const QStandardItem &other) const
     {
-        if (text().toUInt() && other.text().toUInt())
+        if (text().toULongLong() && other.text().toULongLong())
         {
-            return text().toUInt() < other.text().toUInt();
+            return text().toULongLong() < other.text().toULongLong();
         }
         else if (text().contains(":") && other.text().contains(":"))
         {
