@@ -272,11 +272,13 @@ void MainWindow::removeSelectedRows(QList<QModelIndex> selectedRows)
 
     if (answer == QMessageBox::Yes)
     {
-        QModelIndexList indexes = selectedRows;
         quicksettings("processList");
+        foreach(QModelIndex index, selectedRows)
+            settings.remove(processTableViewModel->item(index.row(), ProcessColumns::Name)->text());
+
+        QModelIndexList indexes = selectedRows;
         while (!indexes.isEmpty())
         {
-            settings.remove(processName);
             processTableViewModel->removeRows(indexes.last().row(), 1);
             indexes.removeLast();
         }
