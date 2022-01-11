@@ -136,6 +136,7 @@ private slots:
 
     void on_actionAdd_triggered();
     void on_actionPoll_triggered();
+    void on_actionInvert_hidden_triggered();
     void on_actionStretch_triggered();
     void on_actionOptions_triggered();
     void on_actionExit_triggered();
