@@ -96,7 +96,7 @@ private: // Methods
 
     int getConfirmDialogAnswer(QString title, QString text);
 
-    void updateLastSeenIfRunningAndRemove(QString processName, int row);
+    void updateLastSeenIfRunningAndRemoveFromRunning(QString processName, int row);
     void updateLastSeenForRunningProcesses();
 
 private: // Variables
