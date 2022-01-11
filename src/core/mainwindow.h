@@ -128,6 +128,7 @@ private slots:
 
     void on_tableView_doubleClicked(const QModelIndex &index);
 
+    void tableCellCustomContextMenuRequested(const QPoint &pos);
     void tableHorizontalHeaderCustomContextMenuRequested(const QPoint &pos);
     void tableVerticalHeaderCustomContextMenuRequested(const QPoint &pos);
 

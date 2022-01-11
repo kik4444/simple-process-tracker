@@ -31,6 +31,10 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     processTableViewModel->setHorizontalHeaderLabels(QStringList() << "Tracking" << "Icon" << "Name" << "Notes" << "Duration" << "Last seen" << "Date added");
     ui->tableView->setModel(processTableViewModel);
 
+    // Setup cell context menu
+    ui->tableView->setContextMenuPolicy(Qt::CustomContextMenu);
+    connect(ui->tableView, &QTableView::customContextMenuRequested, this, &MainWindow::tableCellCustomContextMenuRequested);
+
     // Setup horizontal header
     ui->tableView->horizontalHeader()->setContextMenuPolicy(Qt::CustomContextMenu);
     connect(ui->tableView->horizontalHeader(), &QHeaderView::customContextMenuRequested, this, &MainWindow::tableHorizontalHeaderCustomContextMenuRequested);
@@ -294,6 +298,33 @@ void MainWindow::on_tableView_doubleClicked(const QModelIndex &index)
             break;
         }
     }
+}
+
+void MainWindow::tableCellCustomContextMenuRequested(const QPoint &pos)
+{
+    QModelIndex selectedCell = ui->tableView->indexAt(pos);
+
+    QList<QPair<QString, ProcessColumns::ProcessColumns>> actionNames = {
+        {"Resume/Pause", ProcessColumns::Tracking},
+        {"Change icon", ProcessColumns::Icon},
+        {"Change duration", ProcessColumns::Duration},
+        {"Remove", ProcessColumns::Name}
+    };
+
+    QMenu *menu = new QMenu(this);
+    foreach (auto actionName, actionNames)
+    {
+        QAction *action = new QAction(actionName.first, this);
+        connect(action, &QAction::triggered, this, [=](){on_tableView_doubleClicked(
+            processTableViewModel->indexFromItem(processTableViewModel->item(selectedCell.row(), actionName.second)));});
+        menu->addAction(action);
+    }
+
+    QAction *action = new QAction("Hide", this);
+    connect(action, &QAction::triggered, this, [=](){ui->tableView->hideRow(selectedCell.row());});
+    menu->addAction(action);
+
+    menu->popup(ui->tableView->viewport()->mapToGlobal(pos));
 }
 
 void MainWindow::tableHorizontalHeaderCustomContextMenuRequested(const QPoint &pos)
