@@ -41,7 +41,6 @@ QT_END_NAMESPACE
 
 class MyStandardItemModel : public QStandardItemModel
 {
-
     Qt::ItemFlags flags(const QModelIndex &index) const override
     {
         Qt::ItemFlags itemFlags = QStandardItemModel::flags(index);

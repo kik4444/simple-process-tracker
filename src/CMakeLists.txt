@@ -41,6 +41,7 @@ set(source_files
 
     subclass/myitemdelegate.h
     subclass/mystandarditemmodel.h
+    subclass/mystandarditem.h
 
 #    platform/platform.h
 )

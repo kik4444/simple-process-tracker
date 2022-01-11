@@ -131,13 +131,13 @@ void MainWindow::createProcessInTable(QString activeSymbol, QIcon icon, QString 
     processDurations.insert(processName, duration);
 
     int newestRow = processTableViewModel->rowCount();
-    processTableViewModel->setItem(newestRow, ProcessColumns::Tracking, new QStandardItem(activeSymbol));
-    processTableViewModel->setItem(newestRow, ProcessColumns::Icon, new QStandardItem(icon, ""));
-    processTableViewModel->setItem(newestRow, ProcessColumns::Name, new QStandardItem(processName));
-    processTableViewModel->setItem(newestRow, ProcessColumns::Notes, new QStandardItem(notes));
-    processTableViewModel->setItem(newestRow, ProcessColumns::Duration, new QStandardItem(Parser::parseDurationToString(duration)));
-    processTableViewModel->setItem(newestRow, ProcessColumns::LastSeen, new QStandardItem(lastSeen));
-    processTableViewModel->setItem(newestRow, ProcessColumns::DateAdded, new QStandardItem(dateAdded));
+    processTableViewModel->setItem(newestRow, ProcessColumns::Tracking, new MyStandardItem(activeSymbol));
+    processTableViewModel->setItem(newestRow, ProcessColumns::Icon, new MyStandardItem(icon, ""));
+    processTableViewModel->setItem(newestRow, ProcessColumns::Name, new MyStandardItem(processName));
+    processTableViewModel->setItem(newestRow, ProcessColumns::Notes, new MyStandardItem(notes));
+    processTableViewModel->setItem(newestRow, ProcessColumns::Duration, new MyStandardItem(Parser::parseDurationToString(duration)));
+    processTableViewModel->setItem(newestRow, ProcessColumns::LastSeen, new MyStandardItem(lastSeen));
+    processTableViewModel->setItem(newestRow, ProcessColumns::DateAdded, new MyStandardItem(dateAdded));
 }
 
 void MainWindow::saveProcessData()
@@ -208,8 +208,8 @@ void MainWindow::updateRunningProcessDurations()
         if (runningProcesses.contains(processName))
         {
             processDurations[processName]++;
-            processTableViewModel->setItem(row, ProcessColumns::Duration, new QStandardItem(Parser::parseDurationToString(processDurations[processName])));
-            processTableViewModel->setItem(row, ProcessColumns::LastSeen, new QStandardItem("Now"));
+            processTableViewModel->setItem(row, ProcessColumns::Duration, new MyStandardItem(Parser::parseDurationToString(processDurations[processName])));
+            processTableViewModel->setItem(row, ProcessColumns::LastSeen, new MyStandardItem("Now"));
         }
     }
 }
@@ -235,7 +235,7 @@ void MainWindow::updateLastSeenIfRunningAndRemove(QString processName, int row)
     {
         runningProcesses.removeAll(processName);
         processTableViewModel->setItem(row, ProcessColumns::LastSeen,
-            new QStandardItem(QDateTime::currentDateTime().toString("yyyy/MM/dd hh:mm:ss")));
+            new MyStandardItem(QDateTime::currentDateTime().toString("yyyy/MM/dd hh:mm:ss")));
     }
 }
 
@@ -266,7 +266,7 @@ void MainWindow::on_tableView_doubleClicked(const QModelIndex &index)
 
             QString processState = processTableViewModel->item(index.row(), ProcessColumns::Tracking)->text();
             processTableViewModel->setItem(index.row(), ProcessColumns::Tracking,
-                new QStandardItem(processState == processIsActiveSymbol ? processIsPausedSymbol : processIsActiveSymbol));
+                new MyStandardItem(processState == processIsActiveSymbol ? processIsPausedSymbol : processIsActiveSymbol));
 
             break;
         }
@@ -277,7 +277,7 @@ void MainWindow::on_tableView_doubleClicked(const QModelIndex &index)
             QPixmap icon(fileName);
 
             if (!fileName.isEmpty() && !icon.isNull())
-                processTableViewModel->setItem(index.row(), ProcessColumns::Icon, new QStandardItem(icon, ""));
+                processTableViewModel->setItem(index.row(), ProcessColumns::Icon, new MyStandardItem(icon, ""));
 
             break;
         }
@@ -445,13 +445,13 @@ void MainWindow::systemTrayIconActionOpen()
 void MainWindow::systemTrayIconActionResumeAll()
 {
     for (int row = 0; row < processTableViewModel->rowCount(); row++)
-        processTableViewModel->setItem(row, ProcessColumns::Tracking, new QStandardItem(processIsActiveSymbol));
+        processTableViewModel->setItem(row, ProcessColumns::Tracking, new MyStandardItem(processIsActiveSymbol));
 }
 
 void MainWindow::systemTrayIconActionPauseAll()
 {
     for (int row = 0; row < processTableViewModel->rowCount(); row++)
-        processTableViewModel->setItem(row, ProcessColumns::Tracking, new QStandardItem(processIsPausedSymbol));
+        processTableViewModel->setItem(row, ProcessColumns::Tracking, new MyStandardItem(processIsPausedSymbol));
 }
 
 void MainWindow::systemTrayIconActionShowAll()
