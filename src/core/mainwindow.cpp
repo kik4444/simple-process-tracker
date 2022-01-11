@@ -318,28 +318,34 @@ void MainWindow::on_tableView_doubleClicked(const QModelIndex &index)
 
 void MainWindow::tableCellCustomContextMenuRequested(const QPoint &pos)
 {
-    QModelIndex selectedCell = ui->tableView->indexAt(pos);
-    if (selectedCell.row() < 0 || selectedCell.column() < 0)
-        return;
+    QList<QModelIndex> selectedRows = ui->tableView->selectionModel()->selectedRows();
 
-    QList<QPair<QString, ProcessColumns::ProcessColumns>> actionNames = {
-        {"Resume/Pause", ProcessColumns::Tracking},
-        {"Change icon", ProcessColumns::Icon},
-        {"Change duration", ProcessColumns::Duration},
-        {"Remove", ProcessColumns::Name}
-    };
+    QList<QPair<QString, ProcessColumns::ProcessColumns>> actionNames = {{"Resume / Pause", ProcessColumns::Tracking}};
+    if (selectedRows.size() == 1)
+    {
+        actionNames.append({"Change icon", ProcessColumns::Icon});
+        actionNames.append({"Change duration", ProcessColumns::Duration});
+    }
+    actionNames.append({"Remove", ProcessColumns::Name});
 
     QMenu *menu = new QMenu(this);
+
+    //If multiple rows are selected, one action is displayed which is connected to all the selected rows
     foreach (auto actionName, actionNames)
     {
         QAction *action = new QAction(actionName.first, this);
-        connect(action, &QAction::triggered, this, [=](){on_tableView_doubleClicked(
-            processTableViewModel->indexFromItem(processTableViewModel->item(selectedCell.row(), actionName.second)));});
+
+        foreach (QModelIndex index, selectedRows)
+            connect(action, &QAction::triggered, this, [=](){on_tableView_doubleClicked(
+                processTableViewModel->indexFromItem(processTableViewModel->item(index.row(), actionName.second)));});
+
         menu->addAction(action);
     }
 
     QAction *action = new QAction("Hide", this);
-    connect(action, &QAction::triggered, this, [=](){ui->tableView->hideRow(selectedCell.row());});
+    foreach (QModelIndex index, selectedRows)
+        connect(action, &QAction::triggered, this, [=](){ui->tableView->hideRow(index.row());});
+
     menu->addAction(action);
 
     menu->popup(ui->tableView->viewport()->mapToGlobal(pos));
