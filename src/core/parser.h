@@ -37,7 +37,13 @@ public:
     {
         QStringList splitDuration = durationInput.split(":");
         if (splitDuration.size() == 3)
+        {
+            foreach (QString timeElement, splitDuration)
+                if (!timeElement.toULongLong())
+                    return 0;
+
             return splitDuration[0].toULongLong() * 3600 + splitDuration[1].toULongLong() * 60 + splitDuration[2].toULongLong();
+        }
         else
             return 0;
     }

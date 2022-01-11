@@ -26,6 +26,9 @@
 // For setting specific columns as read-only or read-write
 #include "../subclass/mystandarditemmodel.h"
 
+// For proper duration sorting
+#include "../subclass/mystandarditem.h"
+
 // For showing list of processes
 #include "processdialog.h"
 
