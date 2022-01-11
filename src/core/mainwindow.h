@@ -99,6 +99,8 @@ private: // Variables
 
     MyStandardItemModel *processTableViewModel = new MyStandardItemModel();
 
+    QSystemTrayIcon *systemTrayIcon;
+
     QTimer *processPollTimer, *runningProcessDurationsUpdateTimer, *processDataAutoSaveTimer;
 
     QMap<QString, quint64> processDurations;

@@ -65,7 +65,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     processDataAutoSaveTimer->start(processAutoSaveInterval);
 
     // Create system tray icon
-    QSystemTrayIcon *systemTrayIcon = new QSystemTrayIcon(this);
+    systemTrayIcon = new QSystemTrayIcon(this);
     systemTrayIcon->setIcon(QIcon(":/app-icon.svg"));
 
     QMenu *systemTrayIconMenu = new QMenu();
@@ -216,6 +216,15 @@ void MainWindow::updateRunningProcessDurations()
 
 void MainWindow::newProcessAdded(QString processName, QString iconPath)
 {
+    for (int row = 0; row < processTableViewModel->rowCount(); row++)
+    {
+        if (processTableViewModel->item(row, ProcessColumns::Name)->text() == processName)
+        {
+            systemTrayIcon->showMessage("Error", processName + " is already added", QSystemTrayIcon::Warning, 3000);
+            return;
+        }
+    }
+
     createProcessInTable(processIsActiveSymbol, getIcon(processName, iconPath), processName,
         QString::number(processTableViewModel->rowCount() + 1), 0, "Now", QDateTime::currentDateTime().toString("yyyy/MM/dd hh:mm:ss"));
 }
