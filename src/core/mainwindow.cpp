@@ -263,6 +263,26 @@ int MainWindow::getConfirmDialogAnswer(QString title, QString text)
     return confirmDialog.exec();
 }
 
+void MainWindow::removeSelectedRows(QList<QModelIndex> selectedRows)
+{
+    QString processName = processTableViewModel->item(selectedRows.first().row(), ProcessColumns::Name)->text();
+
+    int answer = getConfirmDialogAnswer("Confirm removal", QString("Remove %1? This action is irreversible!")
+        .arg(selectedRows.size() == 1 ? processName : "multiple processes"));
+
+    if (answer == QMessageBox::Yes)
+    {
+        QModelIndexList indexes = selectedRows;
+        quicksettings("processList");
+        while (!indexes.isEmpty())
+        {
+            settings.remove(processName);
+            processTableViewModel->removeRows(indexes.last().row(), 1);
+            indexes.removeLast();
+        }
+    }
+}
+
 /*---------------------------------------------------- User input ----------------------------------------------------*/
 
 void MainWindow::on_tableView_doubleClicked(const QModelIndex &index)
@@ -295,14 +315,7 @@ void MainWindow::on_tableView_doubleClicked(const QModelIndex &index)
 
         case ProcessColumns::Name:
         {
-            int answer = getConfirmDialogAnswer("Confirm removal", QString("Remove %1? This action is irreversible!").arg(processName));
-
-            if (answer == QMessageBox::Yes)
-            {
-                processTableViewModel->removeRow(index.row());
-                quicksettings("processList");
-                settings.remove(processName);
-            }
+            removeSelectedRows(QList<QModelIndex>() << index);
 
             break;
         }
@@ -347,23 +360,7 @@ void MainWindow::tableCellCustomContextMenuRequested(const QPoint &pos)
     }
 
     QAction *action = new QAction("Remove", this);
-    connect(action, &QAction::triggered, this, [=](){
-        QString processName = processTableViewModel->item(selectedRows.first().row(), ProcessColumns::Name)->text();
-        int answer = getConfirmDialogAnswer("Confirm removal", QString("Remove %1? This action is irreversible!")
-            .arg(selectedRows.size() == 1 ? processName : "multiple processes"));
-
-        if (answer == QMessageBox::Yes)
-        {
-            QModelIndexList indexes = selectedRows;
-            quicksettings("processList");
-            while (!indexes.isEmpty())
-            {
-                settings.remove(processName);
-                processTableViewModel->removeRows(indexes.last().row(), 1);
-                indexes.removeLast();
-            }
-        }
-    });
+    connect(action, &QAction::triggered, this, [=](){removeSelectedRows(selectedRows);});
 
     menu->addAction(action);
 
