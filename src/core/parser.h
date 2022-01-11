@@ -26,8 +26,9 @@ public:
     {
         quint64 minutes = duration / 60;
         quint64 hours = minutes / 60;
-//        quint64 days = hours / 24;
-        return QStringLiteral("%1").arg(hours, 2, 10, QLatin1Char('0')) + ":"
+        quint64 days = hours / 24;
+        return QStringLiteral("%1").arg(days, 2, 10, QLatin1Char('0')) + ":"
+            + QStringLiteral("%1").arg(hours % 24, 2, 10, QLatin1Char('0')) + ":"
             + QStringLiteral("%1").arg(minutes % 60, 2, 10, QLatin1Char('0')) + ":"
             + QStringLiteral("%1").arg(duration % 60, 2, 10, QLatin1Char('0'));
 
@@ -36,13 +37,18 @@ public:
     static quint64 parseStringToDuration(QString durationInput)
     {
         QStringList splitDuration = durationInput.split(":");
-        if (splitDuration.size() == 3)
+        if (splitDuration.size() == 4)
         {
             foreach (QString timeElement, splitDuration)
-                if (!timeElement.toULongLong())
+            {
+                bool ok;
+                Q_UNUSED(!timeElement.toULongLong(&ok));
+                if (!ok)
                     return 0;
+            }
 
-            return splitDuration[0].toULongLong() * 3600 + splitDuration[1].toULongLong() * 60 + splitDuration[2].toULongLong();
+            return splitDuration[0].toULongLong() * 86400 + splitDuration[1].toULongLong() * 3600
+                + splitDuration[2].toULongLong() * 60 + splitDuration[3].toULongLong();
         }
         else
             return 0;
