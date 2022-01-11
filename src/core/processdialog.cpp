@@ -44,7 +44,8 @@ void ProcessDialog::on_listWidget_itemActivated(QListWidgetItem *item)
 
 void ProcessDialog::on_buttonBox_accepted()
 {
-    on_listWidget_itemActivated(ui->listWidget->currentItem());
+    if (ui->listWidget->currentItem() != nullptr)
+        on_listWidget_itemActivated(ui->listWidget->currentItem());
 }
 
 void ProcessDialog::on_filterLineEdit_textChanged(const QString &arg1)
