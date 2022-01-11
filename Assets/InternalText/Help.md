@@ -26,6 +26,9 @@ Double-click the "Duration" cell and an input dialog will appear. Write your cus
 ### Hide / show columns
 Right-click on the horizontal header (where it says "Tracking", "Icon", etc.) and a context menu will popup where you can hide or show columns.
 
+### Hide / show rows
+Right-click on the vertical header on the left with the numbers and a context menu will popup where you can hide or show rows. Alternatively you can right-click a process to show most available actions for it.
+
 ### Manually poll processes
 Click the "Poll" button on the main window button to force check processes. This is useful if you've set the poll interval to be very infrequent in the options window and wish to initiate a poll immediately.
 
