@@ -94,6 +94,8 @@ private: // Methods
     void loadWindowData();
     void saveWindowData();
 
+    int getConfirmDialogAnswer(QString title, QString text);
+
     void updateLastSeenIfRunningAndRemove(QString processName, int row);
     void updateLastSeenForRunningProcesses();
 
