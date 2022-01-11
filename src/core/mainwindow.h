@@ -99,6 +99,8 @@ private: // Methods
     void updateLastSeenIfRunningAndRemoveFromRunning(QString processName, int row);
     void updateLastSeenForRunningProcesses();
 
+    void removeSelectedRows(QList<QModelIndex> selectedRows);
+
 private: // Variables
     Ui::MainWindow *ui;
 
