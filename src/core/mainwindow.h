@@ -109,6 +109,7 @@ private: // Variables
     const QString processIsActiveSymbol = "▶";
     const QString processIsPausedSymbol = "⏸";
 
+    const uint processSecondIncrementInterval = 1000;
     const uint processAutoSaveInterval = 60000;
 
 signals:

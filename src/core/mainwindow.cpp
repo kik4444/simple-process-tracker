@@ -57,7 +57,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     runningProcessDurationsUpdateTimer = new QTimer(this);
     runningProcessDurationsUpdateTimer->setTimerType(Qt::VeryCoarseTimer);
     connect(runningProcessDurationsUpdateTimer, &QTimer::timeout, this, &MainWindow::updateRunningProcessDurations);
-    runningProcessDurationsUpdateTimer->start(1000);
+    runningProcessDurationsUpdateTimer->start(processSecondIncrementInterval);
 
     processDataAutoSaveTimer = new QTimer(this);
     processDataAutoSaveTimer->setTimerType(Qt::VeryCoarseTimer);
@@ -181,7 +181,8 @@ void MainWindow::pollProcesses()
     QMap<QString, int> processList;
 
     for (int row = 0; row < processTableViewModel->rowCount(); row++)
-        processList.insert(processTableViewModel->item(row, ProcessColumns::Name)->text(), row);
+        if (processTableViewModel->item(row, ProcessColumns::Tracking)->text() == processIsActiveSymbol)
+            processList.insert(processTableViewModel->item(row, ProcessColumns::Name)->text(), row);
 
     emit checkRunningProcesses(processList);
 }
@@ -209,8 +210,7 @@ void MainWindow::updateRunningProcessDurations()
     for (int row = 0; row < processTableViewModel->rowCount(); row++)
     {
         QString processName = processTableViewModel->item(row, ProcessColumns::Name)->text();
-        if (QString::compare(processTableViewModel->item(row, ProcessColumns::Tracking)->text(), processIsActiveSymbol) == 0
-            && runningProcesses.contains(processName))
+        if (runningProcesses.contains(processName))
         {
             processDurations[processName]++;
             processTableViewModel->setItem(row, ProcessColumns::Duration, new QStandardItem(Parser::parseDurationToString(processDurations[processName])));
@@ -250,6 +250,13 @@ void MainWindow::on_tableView_doubleClicked(const QModelIndex &index)
     {
         case ProcessColumns::Tracking:
         {
+            if (runningProcesses.contains(processName))
+            {
+                runningProcesses.removeAll(processName);
+                processTableViewModel->setItem(index.row(), ProcessColumns::LastSeen,
+                    new QStandardItem(QDateTime::currentDateTime().toString("yyyy/MM/dd hh:mm:ss")));
+            }
+
             QString processState = processTableViewModel->item(index.row(), ProcessColumns::Tracking)->text();
             processTableViewModel->setItem(index.row(), ProcessColumns::Tracking,
                 new QStandardItem(processState == processIsActiveSymbol ? processIsPausedSymbol : processIsActiveSymbol));
