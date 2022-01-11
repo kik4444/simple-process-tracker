@@ -91,6 +91,7 @@ private: // Methods
     void loadWindowData();
     void saveWindowData();
 
+    void updateLastSeenIfRunningAndRemove(QString processName, int row);
     void updateLastSeenForRunningProcesses();
 
 private: // Variables
