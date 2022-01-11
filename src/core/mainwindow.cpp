@@ -305,6 +305,8 @@ void MainWindow::on_tableView_doubleClicked(const QModelIndex &index)
 void MainWindow::tableCellCustomContextMenuRequested(const QPoint &pos)
 {
     QModelIndex selectedCell = ui->tableView->indexAt(pos);
+    if (selectedCell.row() < 0 || selectedCell.column() < 0)
+        return;
 
     QList<QPair<QString, ProcessColumns::ProcessColumns>> actionNames = {
         {"Resume/Pause", ProcessColumns::Tracking},
