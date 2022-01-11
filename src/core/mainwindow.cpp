@@ -195,14 +195,7 @@ void MainWindow::foundRunningProcess(QString processName)
 void MainWindow::foundStoppedProcesses(QMap<QString, int> stoppedProcesses)
 {
     foreach (QString processName, stoppedProcesses.keys())
-    {
-        if (runningProcesses.contains(processName))
-        {
-            runningProcesses.removeAll(processName);
-            processTableViewModel->setItem(stoppedProcesses[processName], ProcessColumns::LastSeen,
-                new QStandardItem(QDateTime::currentDateTime().toString("yyyy/MM/dd hh:mm:ss")));
-        }
-    }
+        updateLastSeenIfRunningAndRemove(processName, stoppedProcesses[processName]);
 }
 
 void MainWindow::updateRunningProcessDurations()
@@ -225,12 +218,20 @@ void MainWindow::newProcessAdded(QString processName, QString iconPath)
         QString::number(processTableViewModel->rowCount() + 1), 0, "Now", QDateTime::currentDateTime().toString("yyyy/MM/dd hh:mm:ss"));
 }
 
+void MainWindow::updateLastSeenIfRunningAndRemove(QString processName, int row)
+{
+    if (runningProcesses.contains(processName))
+    {
+        runningProcesses.removeAll(processName);
+        processTableViewModel->setItem(row, ProcessColumns::LastSeen,
+            new QStandardItem(QDateTime::currentDateTime().toString("yyyy/MM/dd hh:mm:ss")));
+    }
+}
+
 void MainWindow::updateLastSeenForRunningProcesses()
 {
     for (int row = 0; row < processTableViewModel->rowCount(); row++)
-        if (runningProcesses.contains(processTableViewModel->item(row, ProcessColumns::Name)->text()))
-            processTableViewModel->setItem(row, ProcessColumns::LastSeen,
-                new QStandardItem(QDateTime::currentDateTime().toString("yyyy/MM/dd hh:mm:ss")));
+        updateLastSeenIfRunningAndRemove(processTableViewModel->item(row, ProcessColumns::Name)->text(), row);
 }
 
 void MainWindow::userOptionsChosen(uint processPollInterval)
@@ -250,12 +251,7 @@ void MainWindow::on_tableView_doubleClicked(const QModelIndex &index)
     {
         case ProcessColumns::Tracking:
         {
-            if (runningProcesses.contains(processName))
-            {
-                runningProcesses.removeAll(processName);
-                processTableViewModel->setItem(index.row(), ProcessColumns::LastSeen,
-                    new QStandardItem(QDateTime::currentDateTime().toString("yyyy/MM/dd hh:mm:ss")));
-            }
+            updateLastSeenIfRunningAndRemove(processName, index.row());
 
             QString processState = processTableViewModel->item(index.row(), ProcessColumns::Tracking)->text();
             processTableViewModel->setItem(index.row(), ProcessColumns::Tracking,
