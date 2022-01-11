@@ -197,7 +197,7 @@ void MainWindow::foundRunningProcess(QString processName)
 void MainWindow::foundStoppedProcesses(QMap<QString, int> stoppedProcesses)
 {
     foreach (QString processName, stoppedProcesses.keys())
-        updateLastSeenIfRunningAndRemove(processName, stoppedProcesses[processName]);
+        updateLastSeenIfRunningAndRemoveFromRunning(processName, stoppedProcesses[processName]);
 }
 
 void MainWindow::updateRunningProcessDurations()
@@ -229,7 +229,7 @@ void MainWindow::newProcessAdded(QString processName, QString iconPath)
         QString::number(processTableViewModel->rowCount() + 1), 0, "Now", QDateTime::currentDateTime().toString("yyyy/MM/dd hh:mm:ss"));
 }
 
-void MainWindow::updateLastSeenIfRunningAndRemove(QString processName, int row)
+void MainWindow::updateLastSeenIfRunningAndRemoveFromRunning(QString processName, int row)
 {
     if (runningProcesses.contains(processName))
     {
@@ -242,7 +242,7 @@ void MainWindow::updateLastSeenIfRunningAndRemove(QString processName, int row)
 void MainWindow::updateLastSeenForRunningProcesses()
 {
     for (int row = 0; row < processTableViewModel->rowCount(); row++)
-        updateLastSeenIfRunningAndRemove(processTableViewModel->item(row, ProcessColumns::Name)->text(), row);
+        updateLastSeenIfRunningAndRemoveFromRunning(processTableViewModel->item(row, ProcessColumns::Name)->text(), row);
 }
 
 void MainWindow::userOptionsChosen(uint processPollInterval)
@@ -273,7 +273,7 @@ void MainWindow::on_tableView_doubleClicked(const QModelIndex &index)
     {
         case ProcessColumns::Tracking:
         {
-            updateLastSeenIfRunningAndRemove(processName, index.row());
+            updateLastSeenIfRunningAndRemoveFromRunning(processName, index.row());
 
             QString processState = processTableViewModel->item(index.row(), ProcessColumns::Tracking)->text();
             processTableViewModel->setItem(index.row(), ProcessColumns::Tracking,
