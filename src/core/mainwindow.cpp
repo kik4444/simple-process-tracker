@@ -348,14 +348,17 @@ void MainWindow::tableCellCustomContextMenuRequested(const QPoint &pos)
 
     QAction *action = new QAction("Remove", this);
     connect(action, &QAction::triggered, this, [=](){
-        int answer = getConfirmDialogAnswer("Confirm removal", "Remove multiple processes? This action is irreversible!");
+        QString processName = processTableViewModel->item(selectedRows.first().row(), ProcessColumns::Name)->text();
+        int answer = getConfirmDialogAnswer("Confirm removal", QString("Remove %1? This action is irreversible!")
+            .arg(selectedRows.size() == 1 ? processName : "multiple processes"));
+
         if (answer == QMessageBox::Yes)
         {
             QModelIndexList indexes = selectedRows;
             quicksettings("processList");
             while (!indexes.isEmpty())
             {
-                settings.remove(processTableViewModel->item(indexes.last().row(), ProcessColumns::Name)->text());
+                settings.remove(processName);
                 processTableViewModel->removeRows(indexes.last().row(), 1);
                 indexes.removeLast();
             }
