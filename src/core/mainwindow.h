@@ -143,6 +143,8 @@ private slots:
     void systemTrayIconActionOpen();
     void systemTrayIconActionResumeAll();
     void systemTrayIconActionPauseAll();
+    void systemTrayIconActionShowAll();
+    void systemTrayIconActionHideAll();
     void systemTrayIconActionExit();
     void on_actionHelp_triggered();
 };
