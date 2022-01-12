@@ -56,11 +56,6 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     ui->tableView->horizontalHeader()->setContextMenuPolicy(Qt::CustomContextMenu);
     connect(ui->tableView->horizontalHeader(), &QHeaderView::customContextMenuRequested, this, &MainWindow::tableHorizontalHeaderCustomContextMenuRequested);
 
-    // Setup vertical header
-//    ui->tableView->verticalHeader()->setSectionResizeMode(QHeaderView::Fixed);
-//    ui->tableView->verticalHeader()->setContextMenuPolicy(Qt::CustomContextMenu);
-//    connect(ui->tableView->verticalHeader(), &QHeaderView::customContextMenuRequested, this, &MainWindow::tableVerticalHeaderCustomContextMenuRequested);
-
     // Setup line edit in toolbar for filtering process list
     QLineEdit *processFilterLineEdit = new QLineEdit(ui->toolBar);
     processFilterLineEdit->setPlaceholderText("🔍 Filter processes");
@@ -96,8 +91,6 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     systemTrayIconMenu->addAction("Open", this, &MainWindow::systemTrayIconActionOpen);
     systemTrayIconMenu->addAction("Resume all", this, &MainWindow::systemTrayIconActionResumeAll);
     systemTrayIconMenu->addAction("Pause all", this, &MainWindow::systemTrayIconActionPauseAll);
-//    systemTrayIconMenu->addAction("Show all", this, &MainWindow::systemTrayIconActionShowAll);
-//    systemTrayIconMenu->addAction("Hide all", this, &MainWindow::systemTrayIconActionHideAll);
     systemTrayIconMenu->addAction("Exit", this, &MainWindow::systemTrayIconActionExit);
 
     connect(systemTrayIcon, &QSystemTrayIcon::activated, this, &MainWindow::systemTrayIconActionOpen);
@@ -187,7 +180,6 @@ void MainWindow::loadWindowData()
     this->resize(settings.value("windowWidth", 1280).toUInt(), settings.value("windowHeight", 720).toUInt());
     processPollInterval = settings.value("processPollInterval", processPollInterval).toUInt();
     ui->tableView->horizontalHeader()->restoreState(settings.value("tableHorizontalHeader", "").toByteArray());
-//    ui->tableView->verticalHeader()->restoreState(settings.value("tableVerticalHeader", "").toByteArray());
 }
 
 void MainWindow::saveWindowData()
@@ -197,7 +189,6 @@ void MainWindow::saveWindowData()
     settings.setValue("windowHeight", this->height());
     settings.setValue("processPollInterval", processPollInterval);
     settings.setValue("tableHorizontalHeader", ui->tableView->horizontalHeader()->saveState());
-//    settings.setValue("tableVerticalHeader", ui->tableView->verticalHeader()->saveState());
 }
 
 void MainWindow::pollProcesses()
@@ -343,7 +334,6 @@ void MainWindow::exportSelectedRows(QList<QModelIndex> selectedRows)
         QJsonObject processData;
         QString processName = processTableViewModel->item(index.row(), ProcessColumns::Name)->text();
 
-//        processData["number"] = processTableViewModel->item(index.row(), ProcessColumns::Number)->text();
         processData["tracking"] = processTableViewModel->item(index.row(), ProcessColumns::Tracking)->text() == processIsActiveSymbol;
         processData["iconPath"] = processIcons[processName];
         processData["notes"] = processTableViewModel->item(index.row(), ProcessColumns::Notes)->text();
@@ -466,12 +456,6 @@ void MainWindow::tableCellCustomContextMenuRequested(const QPoint &pos)
         menu->addAction(action);
     }
 
-    // Hide action
-//    QAction *action = new QAction("Hide", this);
-//    foreach (QModelIndex index, selectedRows)
-//        connect(action, &QAction::triggered, this, [=](){ui->tableView->hideRow(index.row());});
-//    menu->addAction(action);
-
     // Remove action
     QAction *action = new QAction("Remove", this);
     connect(action, &QAction::triggered, this, [=](){removeSelectedRows(selectedRows);});
@@ -508,29 +492,6 @@ void MainWindow::tableHorizontalHeaderCustomContextMenuRequested(const QPoint &p
     menu->popup(ui->tableView->horizontalHeader()->viewport()->mapToGlobal(pos));
 }
 
-//void MainWindow::tableVerticalHeaderCustomContextMenuRequested(const QPoint &pos)
-//{
-//    QMenu *menu = new QMenu(this);
-//    for (int row = 0; row < processTableViewModel->rowCount(); row++)
-//    {
-//        QAction *action = new QAction(processTableViewModel->item(row, ProcessColumns::Name)->text(), this);
-//        action->setCheckable(true);
-//        action->setChecked(!ui->tableView->isRowHidden(row));
-
-//        connect(action, &QAction::triggered, this, [=](bool checked)
-//        {
-//            if (!checked)
-//                ui->tableView->hideRow(row);
-//            else
-//                ui->tableView->showRow(row);
-//        });
-
-//        menu->addAction(action);
-//    }
-
-//    menu->popup(ui->tableView->verticalHeader()->viewport()->mapToGlobal(pos));
-//}
-
 void MainWindow::on_actionAdd_triggered()
 {
     ProcessDialog *processDialog = new ProcessDialog();
@@ -542,17 +503,6 @@ void MainWindow::on_actionPoll_triggered()
 {
     pollProcesses();
 }
-
-//void MainWindow::on_actionInvert_hidden_triggered()
-//{
-//    for (int row = 0; row < processTableViewModel->rowCount(); row++)
-//    {
-//        if (ui->tableView->isRowHidden(row))
-//            ui->tableView->showRow(row);
-//        else
-//            ui->tableView->hideRow(row);
-//    }
-//}
 
 void MainWindow::on_actionStretch_triggered()
 {
@@ -637,18 +587,6 @@ void MainWindow::systemTrayIconActionPauseAll()
     for (int row = 0; row < processTableViewModel->rowCount(); row++)
         processTableViewModel->setItem(row, ProcessColumns::Tracking, new MyStandardItem(processIsPausedSymbol));
 }
-
-//void MainWindow::systemTrayIconActionShowAll()
-//{
-//    for (int row = 0; row < processTableViewModel->rowCount(); row++)
-//        ui->tableView->showRow(row);
-//}
-
-//void MainWindow::systemTrayIconActionHideAll()
-//{
-//    for (int row = 0; row < processTableViewModel->rowCount(); row++)
-//        ui->tableView->hideRow(row);
-//}
 
 void MainWindow::systemTrayIconActionExit()
 {
