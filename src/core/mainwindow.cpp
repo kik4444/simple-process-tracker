@@ -93,11 +93,6 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
-void MainWindow::on_actionDebug_triggered()
-{
-
-}
-
 void MainWindow::loadProcessData()
 {
     quicksettings("processList");
@@ -216,17 +211,23 @@ void MainWindow::updateRunningProcessDurations()
 
 void MainWindow::newProcessAdded(QString processName, QString iconPath)
 {
-    for (int row = 0; row < processTableViewModel->rowCount(); row++)
+    if (processAlreadyExists(processName))
     {
-        if (processTableViewModel->item(row, ProcessColumns::Name)->text() == processName)
-        {
-            systemTrayIcon->showMessage("Error", processName + " is already added", QSystemTrayIcon::Warning, 3000);
-            return;
-        }
+        systemTrayIcon->showMessage("Error", processName + " is already added", QSystemTrayIcon::Warning, 3000);
+        return;
     }
 
     createProcessInTable(processIsActiveSymbol, getIcon(processName, iconPath), processName,
         QString::number(processTableViewModel->rowCount() + 1), 0, "Now", QDateTime::currentDateTime().toString("yyyy/MM/dd hh:mm:ss"));
+}
+
+bool MainWindow::processAlreadyExists(QString processName)
+{
+    for (int row = 0; row < processTableViewModel->rowCount(); row++)
+        if (processTableViewModel->item(row, ProcessColumns::Name)->text() == processName)
+            return true;
+
+    return false;
 }
 
 void MainWindow::updateLastSeenIfRunningAndRemoveFromRunning(QString processName, int row)
@@ -302,18 +303,18 @@ void MainWindow::exportSelectedRows(QList<QModelIndex> selectedRows)
         QJsonObject processData;
         QString processName = processTableViewModel->item(index.row(), ProcessColumns::Name)->text();
 
-        processData.insert("tracking", processTableViewModel->item(index.row(), ProcessColumns::Tracking)->text() == processIsActiveSymbol);
-        processData.insert("iconPath", processIcons[processName]);
-        processData.insert("notes", processTableViewModel->item(index.row(), ProcessColumns::Notes)->text());
-        processData.insert("duration", QJsonValue::fromVariant(processDurations[processName]));
-        processData.insert("lastSeen", processTableViewModel->item(index.row(), ProcessColumns::LastSeen)->text());
-        processData.insert("dateAdded", processTableViewModel->item(index.row(), ProcessColumns::DateAdded)->text());
+        processData["tracking"] = processTableViewModel->item(index.row(), ProcessColumns::Tracking)->text() == processIsActiveSymbol;
+        processData["iconPath"] = processIcons[processName];
+        processData["notes"] = processTableViewModel->item(index.row(), ProcessColumns::Notes)->text();
+        processData["duration"] = QJsonValue::fromVariant(processDurations[processName]);
+        processData["lastSeen"] = QDateTime::currentDateTime().toString("yyyy/MM/dd hh:mm:ss");
+        processData["dateAdded"] = processTableViewModel->item(index.row(), ProcessColumns::DateAdded)->text();
 
         processesJson.insert(processName, processData);
     }
 
     QFile jsonFile(exportLocation);
-    if (jsonFile.open(QIODevice::WriteOnly))
+    if (jsonFile.open(QIODevice::WriteOnly | QIODevice::Text))
     {
         jsonFile.write(QJsonDocument(processesJson).toJson(QJsonDocument::Indented));
         systemTrayIcon->showMessage("Exported " + exportLocation, "Successfully exported processes", QSystemTrayIcon::Information, 3000);
@@ -494,6 +495,38 @@ void MainWindow::on_actionOptions_triggered()
     Options *options = new Options(nullptr, processPollInterval / 1000);
     connect(options, &Options::userOptionsChosen, this, &MainWindow::userOptionsChosen);
     options->show();
+}
+
+void MainWindow::on_actionImport_triggered()
+{
+    QStringList importLocations = QFileDialog::getOpenFileNames(this, "Choose import locations", "", "Text files (*.json)");
+    foreach (QString importLocation, importLocations)
+    {
+        QFile jsonFile(importLocation);
+        QJsonObject jsonObject;
+        if (jsonFile.open(QIODevice::ReadOnly | QIODevice::Text))
+            jsonObject = QJsonDocument::fromJson(jsonFile.readAll()).object();
+
+        foreach (QString processName, jsonObject.keys())
+        {
+            if (processAlreadyExists(processName))
+            {
+                systemTrayIcon->showMessage("Error", processName + " is already added", QSystemTrayIcon::Warning, 3000);
+                continue;
+            }
+
+            QJsonObject processData = jsonObject[processName].toObject();
+
+            createProcessInTable(
+                processData["tracking"].toBool() ? processIsActiveSymbol : processIsPausedSymbol,
+                getIcon(processName, processData["iconPath"].toString()),
+                processName,
+                processData["notes"].toString(),
+                processData["duration"].toVariant().toULongLong(),
+                processData["lastSeen"].toString(),
+                processData["dateAdded"].toString());
+        }
+    }
 }
 
 void MainWindow::on_actionHelp_triggered()
