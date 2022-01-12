@@ -64,7 +64,6 @@
 
 // For exporting or importing Json backups
 #include <QJsonDocument>
-#include <QJsonArray>
 
 // For quick access to QSettings
 #define quicksettings(location) QSettings settings(QSettings::IniFormat, QSettings::UserScope, "simple-process-tracker", location)
@@ -136,11 +135,11 @@ public slots:
     void foundRunningProcess(QString processName);
     void foundStoppedProcesses(QMap<QString, int> stoppedProcesses);
 
+    bool processAlreadyExists(QString processName);
+
     void userOptionsChosen(uint processPollInterval);
 
 private slots:
-    void on_actionDebug_triggered();
-
     void saveProcessData();
 
     void on_tableView_doubleClicked(const QModelIndex &index);
@@ -154,6 +153,7 @@ private slots:
     void on_actionInvert_hidden_triggered();
     void on_actionStretch_triggered();
     void on_actionOptions_triggered();
+    void on_actionImport_triggered();
     void on_actionExit_triggered();
 
     void systemTrayIconActionOpen();
