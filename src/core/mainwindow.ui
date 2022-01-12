@@ -80,6 +80,7 @@
    <addaction name="actionInvert_hidden"/>
    <addaction name="actionStretch"/>
    <addaction name="actionOptions"/>
+   <addaction name="actionImport"/>
    <addaction name="actionHelp"/>
    <addaction name="actionExit"/>
    <addaction name="actionDebug"/>
@@ -164,6 +165,15 @@
    </property>
    <property name="text">
     <string>Invert hidden</string>
+   </property>
+  </action>
+  <action name="actionImport">
+   <property name="icon">
+    <iconset resource="../resources.qrc">
+     <normaloff>:/import-icon.svg</normaloff>:/import-icon.svg</iconset>
+   </property>
+   <property name="text">
+    <string>Import</string>
    </property>
   </action>
  </widget>
