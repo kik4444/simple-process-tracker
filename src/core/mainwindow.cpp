@@ -45,6 +45,12 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     connect(ui->tableView->verticalHeader(), &QHeaderView::customContextMenuRequested, this, &MainWindow::tableVerticalHeaderCustomContextMenuRequested);
 
     // Setup line edit in toolbar for filtering process list
+    QLineEdit *processFilterLineEdit = new QLineEdit(ui->toolBar);
+    processFilterLineEdit->setPlaceholderText("🔍 Filter processes");
+//    connect(processFilterLineEdit, &QLineEdit::focus, this
+    connect(processFilterLineEdit, &QLineEdit::textChanged, this, &MainWindow::processFilterLineEdit_textChanged);
+    processFilterLineEdit->setVisible(true);
+    ui->toolBar->addWidget(processFilterLineEdit);
 
     loadProcessData();
     loadWindowData();
@@ -572,6 +578,18 @@ void MainWindow::on_actionHelp_triggered()
 void MainWindow::on_actionExit_triggered()
 {
     qApp->quit();
+}
+
+void MainWindow::processFilterLineEdit_textChanged(const QString &arg1)
+{
+    if (arg1.isEmpty())
+    {
+        //restore vertical header state
+    }
+    else
+    {
+        //if any cell contains arg1, show the row, else hide it
+    }
 }
 
 void MainWindow::systemTrayIconActionOpen()
