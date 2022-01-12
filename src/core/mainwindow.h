@@ -105,6 +105,7 @@ private: // Methods
     void removeSelectedRows(QList<QModelIndex> selectedRows);
 
     void exportSelectedRows(QList<QModelIndex> selectedRows);
+    bool isJsonValid(QJsonObject jsonObject);
 
 private: // Variables
     Ui::MainWindow *ui;
