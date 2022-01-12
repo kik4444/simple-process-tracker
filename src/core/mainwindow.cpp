@@ -40,9 +40,9 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     connect(ui->tableView->horizontalHeader(), &QHeaderView::customContextMenuRequested, this, &MainWindow::tableHorizontalHeaderCustomContextMenuRequested);
 
     // Setup vertical header
-    ui->tableView->verticalHeader()->setSectionResizeMode(QHeaderView::Fixed);
-    ui->tableView->verticalHeader()->setContextMenuPolicy(Qt::CustomContextMenu);
-    connect(ui->tableView->verticalHeader(), &QHeaderView::customContextMenuRequested, this, &MainWindow::tableVerticalHeaderCustomContextMenuRequested);
+//    ui->tableView->verticalHeader()->setSectionResizeMode(QHeaderView::Fixed);
+//    ui->tableView->verticalHeader()->setContextMenuPolicy(Qt::CustomContextMenu);
+//    connect(ui->tableView->verticalHeader(), &QHeaderView::customContextMenuRequested, this, &MainWindow::tableVerticalHeaderCustomContextMenuRequested);
 
     // Setup line edit in toolbar for filtering process list
     QLineEdit *processFilterLineEdit = new QLineEdit(ui->toolBar);
@@ -167,7 +167,7 @@ void MainWindow::loadWindowData()
     this->resize(settings.value("windowWidth", 1280).toUInt(), settings.value("windowHeight", 720).toUInt());
     processPollInterval = settings.value("processPollInterval", processPollInterval).toUInt();
     ui->tableView->horizontalHeader()->restoreState(settings.value("tableHorizontalHeader", "").toByteArray());
-    ui->tableView->verticalHeader()->restoreState(settings.value("tableVerticalHeader", "").toByteArray());
+//    ui->tableView->verticalHeader()->restoreState(settings.value("tableVerticalHeader", "").toByteArray());
 }
 
 void MainWindow::saveWindowData()
@@ -177,7 +177,7 @@ void MainWindow::saveWindowData()
     settings.setValue("windowHeight", this->height());
     settings.setValue("processPollInterval", processPollInterval);
     settings.setValue("tableHorizontalHeader", ui->tableView->horizontalHeader()->saveState());
-    settings.setValue("tableVerticalHeader", ui->tableView->verticalHeader()->saveState());
+//    settings.setValue("tableVerticalHeader", ui->tableView->verticalHeader()->saveState());
 }
 
 void MainWindow::pollProcesses()
@@ -477,28 +477,28 @@ void MainWindow::tableHorizontalHeaderCustomContextMenuRequested(const QPoint &p
     menu->popup(ui->tableView->horizontalHeader()->viewport()->mapToGlobal(pos));
 }
 
-void MainWindow::tableVerticalHeaderCustomContextMenuRequested(const QPoint &pos)
-{
-    QMenu *menu = new QMenu(this);
-    for (int row = 0; row < processTableViewModel->rowCount(); row++)
-    {
-        QAction *action = new QAction(processTableViewModel->item(row, ProcessColumns::Name)->text(), this);
-        action->setCheckable(true);
-        action->setChecked(!ui->tableView->isRowHidden(row));
+//void MainWindow::tableVerticalHeaderCustomContextMenuRequested(const QPoint &pos)
+//{
+//    QMenu *menu = new QMenu(this);
+//    for (int row = 0; row < processTableViewModel->rowCount(); row++)
+//    {
+//        QAction *action = new QAction(processTableViewModel->item(row, ProcessColumns::Name)->text(), this);
+//        action->setCheckable(true);
+//        action->setChecked(!ui->tableView->isRowHidden(row));
 
-        connect(action, &QAction::triggered, this, [=](bool checked)
-        {
-            if (!checked)
-                ui->tableView->hideRow(row);
-            else
-                ui->tableView->showRow(row);
-        });
+//        connect(action, &QAction::triggered, this, [=](bool checked)
+//        {
+//            if (!checked)
+//                ui->tableView->hideRow(row);
+//            else
+//                ui->tableView->showRow(row);
+//        });
 
-        menu->addAction(action);
-    }
+//        menu->addAction(action);
+//    }
 
-    menu->popup(ui->tableView->verticalHeader()->viewport()->mapToGlobal(pos));
-}
+//    menu->popup(ui->tableView->verticalHeader()->viewport()->mapToGlobal(pos));
+//}
 
 void MainWindow::on_actionAdd_triggered()
 {
