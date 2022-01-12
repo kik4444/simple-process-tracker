@@ -47,7 +47,6 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     // Setup line edit in toolbar for filtering process list
     QLineEdit *processFilterLineEdit = new QLineEdit(ui->toolBar);
     processFilterLineEdit->setPlaceholderText("🔍 Filter processes");
-//    connect(processFilterLineEdit, &QLineEdit::focus, this
     connect(processFilterLineEdit, &QLineEdit::textChanged, this, &MainWindow::processFilterLineEdit_textChanged);
     processFilterLineEdit->setVisible(true);
     ui->toolBar->addWidget(processFilterLineEdit);
@@ -275,6 +274,8 @@ int MainWindow::getConfirmDialogAnswer(QString title, QString text)
 void MainWindow::removeSelectedRows(QList<QModelIndex> selectedRows)
 {
     QString processName = processTableViewModel->item(selectedRows.first().row(), ProcessColumns::Name)->text();
+    if (selectedRows.size() == 0)
+        return;
 
     int answer = getConfirmDialogAnswer("Confirm removal", QString("Remove %1? This action is irreversible!")
         .arg(selectedRows.size() == 1 ? processName : "multiple processes"));
@@ -301,6 +302,9 @@ void MainWindow::removeSelectedRows(QList<QModelIndex> selectedRows)
 void MainWindow::exportSelectedRows(QList<QModelIndex> selectedRows)
 {
     QString exportLocation = QFileDialog::getSaveFileName(this, "Choose export location", "", "Text files (*.json)");
+    if (exportLocation.isEmpty())
+           return;
+
     if (!exportLocation.endsWith(".json", Qt::CaseInsensitive))
         exportLocation += ".json";
 
@@ -325,7 +329,7 @@ void MainWindow::exportSelectedRows(QList<QModelIndex> selectedRows)
     if (jsonFile.open(QIODevice::WriteOnly | QIODevice::Text))
     {
         jsonFile.write(QJsonDocument(processesJson).toJson(QJsonDocument::Indented));
-        systemTrayIcon->showMessage("Exported " + exportLocation, "Successfully exported processes", QSystemTrayIcon::Information, 3000);
+        systemTrayIcon->showMessage("Processes exported", exportLocation, QSystemTrayIcon::Information, 3000);
     }
 }
 
@@ -533,7 +537,7 @@ void MainWindow::on_actionOptions_triggered()
 
 void MainWindow::on_actionImport_triggered()
 {
-    QStringList importLocations = QFileDialog::getOpenFileNames(this, "Choose import locations", "", "Text files (*.json)");
+    QStringList importLocations = QFileDialog::getOpenFileNames(this, "Choose import files", "", "Text files (*.json)");
     foreach (QString importLocation, importLocations)
     {
         QFile jsonFile(importLocation);
@@ -582,14 +586,7 @@ void MainWindow::on_actionExit_triggered()
 
 void MainWindow::processFilterLineEdit_textChanged(const QString &arg1)
 {
-    if (arg1.isEmpty())
-    {
-        //restore vertical header state
-    }
-    else
-    {
-        //if any cell contains arg1, show the row, else hide it
-    }
+    //TODO
 }
 
 void MainWindow::systemTrayIconActionOpen()
