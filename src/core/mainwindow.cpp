@@ -79,8 +79,8 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     systemTrayIconMenu->addAction("Open", this, &MainWindow::systemTrayIconActionOpen);
     systemTrayIconMenu->addAction("Resume all", this, &MainWindow::systemTrayIconActionResumeAll);
     systemTrayIconMenu->addAction("Pause all", this, &MainWindow::systemTrayIconActionPauseAll);
-    systemTrayIconMenu->addAction("Show all", this, &MainWindow::systemTrayIconActionShowAll);
-    systemTrayIconMenu->addAction("Hide all", this, &MainWindow::systemTrayIconActionHideAll);
+//    systemTrayIconMenu->addAction("Show all", this, &MainWindow::systemTrayIconActionShowAll);
+//    systemTrayIconMenu->addAction("Hide all", this, &MainWindow::systemTrayIconActionHideAll);
     systemTrayIconMenu->addAction("Exit", this, &MainWindow::systemTrayIconActionExit);
 
     connect(systemTrayIcon, &QSystemTrayIcon::activated, this, &MainWindow::systemTrayIconActionOpen);
@@ -436,13 +436,13 @@ void MainWindow::tableCellCustomContextMenuRequested(const QPoint &pos)
     }
 
     // Hide action
-    QAction *action = new QAction("Hide", this);
-    foreach (QModelIndex index, selectedRows)
-        connect(action, &QAction::triggered, this, [=](){ui->tableView->hideRow(index.row());});
-    menu->addAction(action);
+//    QAction *action = new QAction("Hide", this);
+//    foreach (QModelIndex index, selectedRows)
+//        connect(action, &QAction::triggered, this, [=](){ui->tableView->hideRow(index.row());});
+//    menu->addAction(action);
 
     // Remove action
-    action = new QAction("Remove", this);
+    QAction *action = new QAction("Remove", this);
     connect(action, &QAction::triggered, this, [=](){removeSelectedRows(selectedRows);});
     menu->addAction(action);
 
@@ -512,16 +512,16 @@ void MainWindow::on_actionPoll_triggered()
     pollProcesses();
 }
 
-void MainWindow::on_actionInvert_hidden_triggered()
-{
-    for (int row = 0; row < processTableViewModel->rowCount(); row++)
-    {
-        if (ui->tableView->isRowHidden(row))
-            ui->tableView->showRow(row);
-        else
-            ui->tableView->hideRow(row);
-    }
-}
+//void MainWindow::on_actionInvert_hidden_triggered()
+//{
+//    for (int row = 0; row < processTableViewModel->rowCount(); row++)
+//    {
+//        if (ui->tableView->isRowHidden(row))
+//            ui->tableView->showRow(row);
+//        else
+//            ui->tableView->hideRow(row);
+//    }
+//}
 
 void MainWindow::on_actionStretch_triggered()
 {
@@ -606,17 +606,17 @@ void MainWindow::systemTrayIconActionPauseAll()
         processTableViewModel->setItem(row, ProcessColumns::Tracking, new MyStandardItem(processIsPausedSymbol));
 }
 
-void MainWindow::systemTrayIconActionShowAll()
-{
-    for (int row = 0; row < processTableViewModel->rowCount(); row++)
-        ui->tableView->showRow(row);
-}
+//void MainWindow::systemTrayIconActionShowAll()
+//{
+//    for (int row = 0; row < processTableViewModel->rowCount(); row++)
+//        ui->tableView->showRow(row);
+//}
 
-void MainWindow::systemTrayIconActionHideAll()
-{
-    for (int row = 0; row < processTableViewModel->rowCount(); row++)
-        ui->tableView->hideRow(row);
-}
+//void MainWindow::systemTrayIconActionHideAll()
+//{
+//    for (int row = 0; row < processTableViewModel->rowCount(); row++)
+//        ui->tableView->hideRow(row);
+//}
 
 void MainWindow::systemTrayIconActionExit()
 {
