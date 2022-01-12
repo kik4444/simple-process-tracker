@@ -77,7 +77,6 @@
    </attribute>
    <addaction name="actionAdd"/>
    <addaction name="actionPoll"/>
-   <addaction name="actionInvert_hidden"/>
    <addaction name="actionStretch"/>
    <addaction name="actionOptions"/>
    <addaction name="actionImport"/>
@@ -150,15 +149,6 @@
    </property>
    <property name="text">
     <string>Stretch</string>
-   </property>
-  </action>
-  <action name="actionInvert_hidden">
-   <property name="icon">
-    <iconset resource="../resources.qrc">
-     <normaloff>:/hide-icon.svg</normaloff>:/hide-icon.svg</iconset>
-   </property>
-   <property name="text">
-    <string>Invert hidden</string>
    </property>
   </action>
   <action name="actionImport">
