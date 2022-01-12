@@ -156,6 +156,7 @@ private slots:
     void on_actionOptions_triggered();
     void on_actionImport_triggered();
     void on_actionExit_triggered();
+    void processFilterLineEdit_textChanged(const QString &arg1);
 
     void systemTrayIconActionOpen();
     void systemTrayIconActionResumeAll();
