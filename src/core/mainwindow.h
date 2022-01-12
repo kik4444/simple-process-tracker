@@ -90,7 +90,7 @@ private: // Methods
     void pollProcesses();
     void updateRunningProcessDurations();
 
-    void createProcessInTable(QString activeSymbol, QIcon icon, QString processName, QString notes, quint64 duration, QString lastSeen, QString dateAdded);
+    void createProcessInTable(QString number, QString activeSymbol, QIcon icon, QString processName, QString notes, quint64 duration, QString lastSeen, QString dateAdded);
     QIcon getIcon(QString processName, QString iconPath);
 
     void loadProcessData();

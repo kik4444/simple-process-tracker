@@ -25,6 +25,7 @@
  *      loadProcessData() ,
  *      createProcessInTable() ,
  *      saveProcessData() ,
+ *      newProcessAdded() ,
  *      exportSelectedRows() ,
  *      on_tableView_doubleClicked() and tableCellCustomContextMenuRequested() - optional ,
  *      on_actionImport_triggered()
@@ -126,6 +127,7 @@ void MainWindow::loadProcessData()
         processDurations.insert(processName, settings.value("duration", 0).toULongLong());
 
         createProcessInTable(
+            settings.value("number").toString(),
             settings.value("tracking", true).toBool() ? processIsActiveSymbol : processIsPausedSymbol,
             getIcon(processName, settings.value("iconPath").toString()),
             processName,
@@ -144,11 +146,12 @@ QIcon MainWindow::getIcon(QString processName, QString iconPath)
     return QIcon(processIcons[processName]);
 }
 
-void MainWindow::createProcessInTable(QString activeSymbol, QIcon icon, QString processName, QString notes, quint64 duration, QString lastSeen, QString dateAdded)
+void MainWindow::createProcessInTable(QString number, QString activeSymbol, QIcon icon, QString processName, QString notes, quint64 duration, QString lastSeen, QString dateAdded)
 {
     processDurations.insert(processName, duration);
 
     int newestRow = processTableViewModel->rowCount();
+    processTableViewModel->setItem(newestRow, ProcessColumns::Number, new MyStandardItem(number));
     processTableViewModel->setItem(newestRow, ProcessColumns::Tracking, new MyStandardItem(activeSymbol));
     processTableViewModel->setItem(newestRow, ProcessColumns::Icon, new MyStandardItem(icon, ""));
     processTableViewModel->setItem(newestRow, ProcessColumns::Name, new MyStandardItem(processName));
@@ -166,6 +169,7 @@ void MainWindow::saveProcessData()
         QString processName = processTableViewModel->item(row, ProcessColumns::Name)->text();
         settings.beginGroup(processName);
 
+        settings.setValue("number", processTableViewModel->item(row, ProcessColumns::Number)->text());
         settings.setValue("tracking", processTableViewModel->item(row, ProcessColumns::Tracking)->text() == processIsActiveSymbol);
         settings.setValue("iconPath", processIcons[processName]);
         settings.setValue("notes", processTableViewModel->item(row, ProcessColumns::Notes)->text());
@@ -240,8 +244,8 @@ void MainWindow::newProcessAdded(QString processName, QString iconPath)
         return;
     }
 
-    createProcessInTable(processIsActiveSymbol, getIcon(processName, iconPath), processName,
-        QString::number(processTableViewModel->rowCount() + 1), 0, "Now", QDateTime::currentDateTime().toString("yyyy/MM/dd hh:mm:ss"));
+    createProcessInTable(QString::number(processTableViewModel->rowCount() + 1),
+        processIsActiveSymbol, getIcon(processName, iconPath), processName, "", 0, "Now", QDateTime::currentDateTime().toString("yyyy/MM/dd hh:mm:ss"));
 }
 
 bool MainWindow::processAlreadyExists(QString processName)
@@ -329,6 +333,7 @@ void MainWindow::exportSelectedRows(QList<QModelIndex> selectedRows)
         QJsonObject processData;
         QString processName = processTableViewModel->item(index.row(), ProcessColumns::Name)->text();
 
+        processData["number"] = processTableViewModel->item(index.row(), ProcessColumns::Number)->text();
         processData["tracking"] = processTableViewModel->item(index.row(), ProcessColumns::Tracking)->text() == processIsActiveSymbol;
         processData["iconPath"] = processIcons[processName];
         processData["notes"] = processTableViewModel->item(index.row(), ProcessColumns::Notes)->text();
@@ -578,6 +583,7 @@ void MainWindow::on_actionImport_triggered()
             QJsonObject processData = jsonObject[processName].toObject();
 
             createProcessInTable(
+                processData["number"].toString(),
                 processData["tracking"].toBool() ? processIsActiveSymbol : processIsPausedSymbol,
                 getIcon(processName, processData["iconPath"].toString()),
                 processName,
