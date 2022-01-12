@@ -25,6 +25,8 @@
 
 class MyItemDelegate : public QStyledItemDelegate
 {
+
+private:
     void initStyleOption(QStyleOptionViewItem *item, const QModelIndex &index) const override
     {
         QStyledItemDelegate::initStyleOption(item, index);
