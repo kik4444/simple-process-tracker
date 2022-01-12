@@ -44,6 +44,8 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     ui->tableView->verticalHeader()->setContextMenuPolicy(Qt::CustomContextMenu);
     connect(ui->tableView->verticalHeader(), &QHeaderView::customContextMenuRequested, this, &MainWindow::tableVerticalHeaderCustomContextMenuRequested);
 
+    // Setup line edit in toolbar for filtering process list
+
     loadProcessData();
     loadWindowData();
     pollProcesses();

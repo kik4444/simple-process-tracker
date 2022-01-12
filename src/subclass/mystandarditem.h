@@ -32,7 +32,11 @@ public:
 
     bool operator < (const QStandardItem &other) const
     {
-        if (text().toULongLong() && other.text().toULongLong())
+        bool textConversionSuccess, otherConversionSuccess;
+        Q_UNUSED(text().toULongLong(&textConversionSuccess));
+        Q_UNUSED(other.text().toULongLong(&otherConversionSuccess));
+
+        if (textConversionSuccess && otherConversionSuccess)
         {
             return text().toULongLong() < other.text().toULongLong();
         }
