@@ -47,7 +47,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     processTableViewModel->setHorizontalHeaderLabels(QStringList()
         << "#" << "Tracking" << "Icon" << "Name" << "Notes" << "Duration" << "Last seen" << "Date added");
 
-    filterProxyModel = new QSortFilterProxyModel(this);
+    filterProxyModel = new MySortFilterProxyModel(this);
     filterProxyModel->setSourceModel(processTableViewModel);
     ui->tableView->setModel(filterProxyModel);
 

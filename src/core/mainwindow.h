@@ -29,6 +29,9 @@
 // For natural duration sorting
 #include "../subclass/mystandarditem.h"
 
+// For easier QSortFilterProxyModel modifications
+#include "../subclass/mysortfilterproxymodel.h"
+
 // For showing list of processes
 #include "processdialog.h"
 
@@ -112,7 +115,7 @@ private: // Variables
     Ui::MainWindow *ui;
 
     MyStandardItemModel *processTableViewModel = new MyStandardItemModel();
-    QSortFilterProxyModel *filterProxyModel;
+    MySortFilterProxyModel *filterProxyModel;
 
     QSystemTrayIcon *systemTrayIcon;
 

@@ -42,6 +42,7 @@ set(source_files
     subclass/myitemdelegate.h
     subclass/mystandarditemmodel.h
     subclass/mystandarditem.h
+    subclass/mysortfilterproxymodel.h
 
 #    platform/platform.h
 )
