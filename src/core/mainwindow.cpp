@@ -321,6 +321,32 @@ void MainWindow::exportSelectedRows(QList<QModelIndex> selectedRows)
     }
 }
 
+bool MainWindow::isJsonValid(QJsonObject jsonObject)
+{
+    if (jsonObject.size() >= 1)
+    {
+        foreach (QString processName, jsonObject.keys())
+        {
+            QJsonObject processData = jsonObject[processName].toObject();
+
+            bool quint64ConversionSuccess;
+            // If only QJsonObject had a toULongLong() method directly...
+            Q_UNUSED(processData["duration"].toVariant().toString().toULongLong(&quint64ConversionSuccess));
+
+            if (!processName.isEmpty()
+                && processData["tracking"].isBool()
+                && processData["iconPath"].isString()
+                && processData["notes"].isString()
+                && quint64ConversionSuccess
+                && processData["lastSeen"].isString()
+                && processData["dateAdded"].isString())
+                    return true;
+        }
+    }
+
+    return false;
+}
+
 /*---------------------------------------------------- User input ----------------------------------------------------*/
 
 void MainWindow::on_tableView_doubleClicked(const QModelIndex &index)
@@ -506,6 +532,12 @@ void MainWindow::on_actionImport_triggered()
         QJsonObject jsonObject;
         if (jsonFile.open(QIODevice::ReadOnly | QIODevice::Text))
             jsonObject = QJsonDocument::fromJson(jsonFile.readAll()).object();
+
+        if (!isJsonValid(jsonObject))
+        {
+            systemTrayIcon->showMessage("Error invalid Json", importLocation, QSystemTrayIcon::Warning, 3000);
+            continue;
+        }
 
         foreach (QString processName, jsonObject.keys())
         {
