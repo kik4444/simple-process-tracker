@@ -17,6 +17,21 @@
 #include "mainwindow.h"
 #include "./ui_mainwindow.h"
 
+/* If adding new column, modify:
+ *
+ * mystandarditemmodel.h - ProcessColumns
+ *
+ * mainwindow.cpp - MainWindow() - processTableViewModel->setHorizontalHeaderLabels ,
+ *      loadProcessData() ,
+ *      createProcessInTable() ,
+ *      saveProcessData() ,
+ *      exportSelectedRows() ,
+ *      on_tableView_doubleClicked() and tableCellCustomContextMenuRequested() - optional ,
+ *      on_actionImport_triggered()
+ *
+ * mainwindow.h - createProcessInTable()
+ */
+
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
@@ -28,7 +43,8 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
 
     // Setup table
     ui->tableView->setItemDelegate(new MyItemDelegate());
-    processTableViewModel->setHorizontalHeaderLabels(QStringList() << "Tracking" << "Icon" << "Name" << "Notes" << "Duration" << "Last seen" << "Date added");
+    processTableViewModel->setHorizontalHeaderLabels(QStringList()
+        << "#" << "Tracking" << "Icon" << "Name" << "Notes" << "Duration" << "Last seen" << "Date added");
     ui->tableView->setModel(processTableViewModel);
 
     // Setup cell context menu
@@ -274,8 +290,6 @@ int MainWindow::getConfirmDialogAnswer(QString title, QString text)
 void MainWindow::removeSelectedRows(QList<QModelIndex> selectedRows)
 {
     QString processName = processTableViewModel->item(selectedRows.first().row(), ProcessColumns::Name)->text();
-    if (selectedRows.size() == 0)
-        return;
 
     int answer = getConfirmDialogAnswer("Confirm removal", QString("Remove %1? This action is irreversible!")
         .arg(selectedRows.size() == 1 ? processName : "multiple processes"));
@@ -413,6 +427,8 @@ void MainWindow::on_tableView_doubleClicked(const QModelIndex &index)
 void MainWindow::tableCellCustomContextMenuRequested(const QPoint &pos)
 {
     QList<QModelIndex> selectedRows = ui->tableView->selectionModel()->selectedRows();
+    if (selectedRows.size() == 0)
+        return;
 
     QList<QPair<QString, ProcessColumns::ProcessColumns>> actionNames = {{"Resume / Pause", ProcessColumns::Tracking}};
     if (selectedRows.size() == 1)

@@ -27,13 +27,14 @@ namespace ProcessColumns
 {
     enum ProcessColumns
     {
-        Tracking = 0,
-        Icon = 1,
-        Name = 2,
-        Notes = 3,
-        Duration = 4,
-        LastSeen = 5,
-        DateAdded = 6
+        Number = 0,
+        Tracking = 1,
+        Icon = 2,
+        Name = 3,
+        Notes = 4,
+        Duration = 5,
+        LastSeen = 6,
+        DateAdded = 7
     };
 }
 
