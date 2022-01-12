@@ -315,6 +315,16 @@ void MainWindow::removeSelectedRows(QList<QModelIndex> selectedRows)
             indexes.removeLast();
         }
     }
+
+    normalizeProcessNumbers();
+}
+
+void MainWindow::normalizeProcessNumbers()
+{
+    for (int row = 0; row < processTableViewModel->rowCount(); row++)
+    {
+        qDebug() << processTableViewModel->item(row, ProcessColumns::Name)->text();
+    }
 }
 
 void MainWindow::exportSelectedRows(QList<QModelIndex> selectedRows)
@@ -333,7 +343,7 @@ void MainWindow::exportSelectedRows(QList<QModelIndex> selectedRows)
         QJsonObject processData;
         QString processName = processTableViewModel->item(index.row(), ProcessColumns::Name)->text();
 
-        processData["number"] = processTableViewModel->item(index.row(), ProcessColumns::Number)->text();
+//        processData["number"] = processTableViewModel->item(index.row(), ProcessColumns::Number)->text();
         processData["tracking"] = processTableViewModel->item(index.row(), ProcessColumns::Tracking)->text() == processIsActiveSymbol;
         processData["iconPath"] = processIcons[processName];
         processData["notes"] = processTableViewModel->item(index.row(), ProcessColumns::Notes)->text();
@@ -583,7 +593,7 @@ void MainWindow::on_actionImport_triggered()
             QJsonObject processData = jsonObject[processName].toObject();
 
             createProcessInTable(
-                processData["number"].toString(),
+                QString::number(processTableViewModel->rowCount() + 1),
                 processData["tracking"].toBool() ? processIsActiveSymbol : processIsPausedSymbol,
                 getIcon(processName, processData["iconPath"].toString()),
                 processName,

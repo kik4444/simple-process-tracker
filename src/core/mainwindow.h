@@ -103,6 +103,7 @@ private: // Methods
     void updateLastSeenForRunningProcesses();
 
     void removeSelectedRows(QList<QModelIndex> selectedRows);
+    void normalizeProcessNumbers();
 
     void exportSelectedRows(QList<QModelIndex> selectedRows);
     bool isJsonValid(QJsonObject jsonObject);
