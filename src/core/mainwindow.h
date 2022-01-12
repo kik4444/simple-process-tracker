@@ -62,6 +62,10 @@
 // For SVG icons
 #include <QtSvg>
 
+// For exporting or importing Json backups
+#include <QJsonDocument>
+#include <QJsonArray>
+
 // For quick access to QSettings
 #define quicksettings(location) QSettings settings(QSettings::IniFormat, QSettings::UserScope, "simple-process-tracker", location)
 
@@ -100,6 +104,8 @@ private: // Methods
     void updateLastSeenForRunningProcesses();
 
     void removeSelectedRows(QList<QModelIndex> selectedRows);
+
+    void exportSelectedRows(QList<QModelIndex> selectedRows);
 
 private: // Variables
     Ui::MainWindow *ui;

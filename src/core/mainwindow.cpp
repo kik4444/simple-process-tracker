@@ -289,6 +289,37 @@ void MainWindow::removeSelectedRows(QList<QModelIndex> selectedRows)
     }
 }
 
+void MainWindow::exportSelectedRows(QList<QModelIndex> selectedRows)
+{
+    QString exportLocation = QFileDialog::getSaveFileName(this, "Choose export location", "", "Text files (*.json)");
+    if (!exportLocation.endsWith(".json", Qt::CaseInsensitive))
+        exportLocation += ".json";
+
+    QJsonObject processesJson;
+
+    foreach (QModelIndex index, selectedRows)
+    {
+        QJsonObject processData;
+        QString processName = processTableViewModel->item(index.row(), ProcessColumns::Name)->text();
+
+        processData.insert("tracking", processTableViewModel->item(index.row(), ProcessColumns::Tracking)->text() == processIsActiveSymbol);
+        processData.insert("iconPath", processIcons[processName]);
+        processData.insert("notes", processTableViewModel->item(index.row(), ProcessColumns::Notes)->text());
+        processData.insert("duration", QJsonValue::fromVariant(processDurations[processName]));
+        processData.insert("lastSeen", processTableViewModel->item(index.row(), ProcessColumns::LastSeen)->text());
+        processData.insert("dateAdded", processTableViewModel->item(index.row(), ProcessColumns::DateAdded)->text());
+
+        processesJson.insert(processName, processData);
+    }
+
+    QFile jsonFile(exportLocation);
+    if (jsonFile.open(QIODevice::WriteOnly))
+    {
+        jsonFile.write(QJsonDocument(processesJson).toJson(QJsonDocument::Indented));
+        systemTrayIcon->showMessage("Exported " + exportLocation, "Successfully exported processes", QSystemTrayIcon::Information, 3000);
+    }
+}
+
 /*---------------------------------------------------- User input ----------------------------------------------------*/
 
 void MainWindow::on_tableView_doubleClicked(const QModelIndex &index)
@@ -365,15 +396,20 @@ void MainWindow::tableCellCustomContextMenuRequested(const QPoint &pos)
         menu->addAction(action);
     }
 
-    QAction *action = new QAction("Remove", this);
-    connect(action, &QAction::triggered, this, [=](){removeSelectedRows(selectedRows);});
-
-    menu->addAction(action);
-
-    action = new QAction("Hide", this);
+    // Hide action
+    QAction *action = new QAction("Hide", this);
     foreach (QModelIndex index, selectedRows)
         connect(action, &QAction::triggered, this, [=](){ui->tableView->hideRow(index.row());});
+    menu->addAction(action);
 
+    // Remove action
+    action = new QAction("Remove", this);
+    connect(action, &QAction::triggered, this, [=](){removeSelectedRows(selectedRows);});
+    menu->addAction(action);
+
+    // Export action
+    action = new QAction("Export", this);
+    connect(action, &QAction::triggered, this, [=](){exportSelectedRows(selectedRows);});
     menu->addAction(action);
 
     menu->popup(ui->tableView->viewport()->mapToGlobal(pos));
