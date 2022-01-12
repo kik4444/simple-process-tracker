@@ -112,6 +112,7 @@ private: // Variables
     Ui::MainWindow *ui;
 
     MyStandardItemModel *processTableViewModel = new MyStandardItemModel();
+    QSortFilterProxyModel *filterProxyModel;
 
     QSystemTrayIcon *systemTrayIcon;
 

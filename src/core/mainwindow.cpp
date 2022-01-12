@@ -46,7 +46,10 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     ui->tableView->setItemDelegate(new MyItemDelegate());
     processTableViewModel->setHorizontalHeaderLabels(QStringList()
         << "#" << "Tracking" << "Icon" << "Name" << "Notes" << "Duration" << "Last seen" << "Date added");
-    ui->tableView->setModel(processTableViewModel);
+
+    filterProxyModel = new QSortFilterProxyModel(this);
+    filterProxyModel->setSourceModel(processTableViewModel);
+    ui->tableView->setModel(filterProxyModel);
 
     // Setup cell context menu
     ui->tableView->setContextMenuPolicy(Qt::CustomContextMenu);
