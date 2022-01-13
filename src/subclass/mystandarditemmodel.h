@@ -49,11 +49,6 @@ private:
         Qt::ItemFlags itemFlags = QStandardItemModel::flags(index);
         return index.column() == ProcessColumns::Notes ? itemFlags : itemFlags & ~Qt::ItemIsEditable;
     }
-
-    QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override
-    {
-        return QStandardItemModel::data(index, role);
-    }
 };
 
 #endif // MYSTANDARDITEMMODEL_H

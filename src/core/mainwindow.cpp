@@ -31,9 +31,10 @@
  *      on_actionImport_triggered()
  *
  * mainwindow.h - createProcessInTable()
+ *
+ *
+ * SUPER IMPORTANT - use processTableViewModel only to add new rows, and processFilterProxyModel for everything else
  */
-
-// SUPER IMPORTANT - use processTableViewModel only to add new rows, and processFilterProxyModel for everything else
 
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWindow)
 {
