@@ -130,7 +130,7 @@ private: // Methods
     void addOrRemoveProcessCategory(QModelIndex index, QString category, bool alreadyInCategory);
 
     void restoreTableFilterState(int categorySelection);
-    void tableResetFilter();
+    void tableResetFilter(QModelIndex index = QModelIndex());
     void tableFilterByCategory(QModelIndex index);
 
 private: // Variables
