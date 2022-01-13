@@ -48,7 +48,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     // Setup processes table
     ui->tableView->setItemDelegate(new MyItemDelegate());
     processTableViewModel->setHorizontalHeaderLabels(QStringList()
-        << "#" << "Tracking" << "Icon" << "Name" << "Notes" << "Duration" << "Last seen" << "Date added");
+        << "Categories" << "#" << "Tracking" << "Icon" << "Name" << "Notes" << "Duration" << "Last seen" << "Date added");
 
     processFilterProxyModel = new MySortFilterProxyModel(this);
     processFilterProxyModel->setSourceModel(processTableViewModel);
@@ -86,6 +86,8 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     loadProcessData();
     loadWindowData();
     pollProcesses();
+
+    ui->tableView->hideColumn(ProcessColumns::HiddenCategories);
 
     // Background timers
     processPollTimer = new QTimer(this);
@@ -145,6 +147,7 @@ void MainWindow::loadProcessData()
         processDurations.insert(processName, settings.value("duration", 0).toULongLong());
 
         createProcessInTable(
+            settings.value("categories").toString(),
             settings.value("number").toString(),
             settings.value("tracking", true).toBool() ? processIsActiveSymbol : processIsPausedSymbol,
             getIcon(processName, settings.value("iconPath").toString()),
@@ -164,11 +167,12 @@ QIcon MainWindow::getIcon(QString processName, QString iconPath)
     return QIcon(processIcons[processName]);
 }
 
-void MainWindow::createProcessInTable(QString number, QString activeSymbol, QIcon icon, QString processName, QString notes, quint64 duration, QString lastSeen, QString dateAdded)
+void MainWindow::createProcessInTable(QString categories, QString number, QString activeSymbol, QIcon icon, QString processName, QString notes, quint64 duration, QString lastSeen, QString dateAdded)
 {
     processDurations.insert(processName, duration);
 
     int newestRow = processTableViewModel->rowCount();
+    processTableViewModel->setItem(newestRow, ProcessColumns::HiddenCategories, new MyStandardItem(categories));
     processTableViewModel->setItem(newestRow, ProcessColumns::Number, new MyStandardItem(number));
     processTableViewModel->setItem(newestRow, ProcessColumns::Tracking, new MyStandardItem(activeSymbol));
     processTableViewModel->setItem(newestRow, ProcessColumns::Icon, new MyStandardItem(icon, ""));
@@ -197,6 +201,7 @@ void MainWindow::saveProcessData()
         QString processName = getIndexData(row, ProcessColumns::Name).toString();
         settings.beginGroup(processName);
 
+        settings.setValue("number", getIndexData(row, ProcessColumns::HiddenCategories).toString());
         settings.setValue("number", getIndexData(row, ProcessColumns::Number).toString());
         settings.setValue("tracking", getIndexData(row, ProcessColumns::Tracking).toString() == processIsActiveSymbol);
         settings.setValue("iconPath", processIcons[processName]);
@@ -272,7 +277,7 @@ void MainWindow::newProcessAdded(QString processName, QString iconPath)
         return;
     }
 
-    createProcessInTable(QString::number(processFilterProxyModel->rowCount() + 1),
+    createProcessInTable("", QString::number(processFilterProxyModel->rowCount() + 1),
         processIsActiveSymbol, getIcon(processName, iconPath), processName, "", 0, "Now", QDateTime::currentDateTime().toString("yyyy/MM/dd hh:mm:ss"));
 }
 
@@ -369,6 +374,7 @@ void MainWindow::exportSelectedRows(QList<QModelIndex> selectedRows)
         QJsonObject processData;
         QString processName = getIndexData(index.row(), ProcessColumns::Name).toString();
 
+        processData["categories"] = getIndexData(index.row(), ProcessColumns::HiddenCategories).toString();
         processData["tracking"] = getIndexData(index.row(), ProcessColumns::Tracking).toString() == processIsActiveSymbol;
         processData["iconPath"] = processIcons[processName];
         processData["notes"] = getIndexData(index.row(), ProcessColumns::Notes).toString();
@@ -416,7 +422,7 @@ bool MainWindow::isJsonValid(QJsonObject jsonObject)
 bool MainWindow::categoryAlreadyExists(QString categoryName)
 {
     for (int row = 0; row < categoriesTableModel->rowCount(); row++)
-        if (categoriesTableModel->item(row, 0)->text() == categoryName)
+        if (categoriesTableModel->item(row, CategoryColumns::Name)->text() == categoryName)
             return true;
 
     return false;
@@ -524,7 +530,7 @@ void MainWindow::tableCellCustomContextMenuRequested(const QPoint &pos)
 void MainWindow::tableHorizontalHeaderCustomContextMenuRequested(const QPoint &pos)
 {
     QMenu *menu = new QMenu(this);
-    for (int column = 0; column < processTableViewModel->columnCount(); column++)
+    for (int column = ProcessColumns::Number; column < processTableViewModel->columnCount(); column++)
     {
         QAction *action = new QAction(processTableViewModel->horizontalHeaderItem(column)->text(), this);
         action->setCheckable(true);
@@ -556,7 +562,7 @@ void MainWindow::categoriesTableCustomContextMenuRequested(const QPoint &pos)
         if (!categoryName.isEmpty())
         {
             if (!categoryAlreadyExists(categoryName))
-                categoriesTableModel->setItem(categoriesTableModel->rowCount(), 0, new QStandardItem(categoryName));
+                categoriesTableModel->setItem(categoriesTableModel->rowCount(), CategoryColumns::Name, new QStandardItem(categoryName));
             else
                 systemTrayIcon->showMessage("Error", "Category " + categoryName + " already exists", QSystemTrayIcon::Warning, 3000);
         }
@@ -569,7 +575,7 @@ void MainWindow::categoriesTableCustomContextMenuRequested(const QPoint &pos)
         action = new QAction("Remove category", this);
         connect(action, &QAction::triggered, this, [=]()
         {
-            QString categoryName = categoriesTableModel->item(selectedCategory.row(), 0)->text();
+            QString categoryName = categoriesTableModel->item(selectedCategory.row(), CategoryColumns::Name)->text();
 
             if (getConfirmDialogAnswer("Remove category", "Are you sure you wish to remove category "
                 + categoryName + "? This action is irreversible!") == QMessageBox::Yes)
@@ -632,6 +638,7 @@ void MainWindow::on_actionImport_triggered()
             QJsonObject processData = jsonObject[processName].toObject();
 
             createProcessInTable(
+                processData["categories"].toString(),
                 QString::number(processFilterProxyModel->rowCount() + 1),
                 processData["tracking"].toBool() ? processIsActiveSymbol : processIsPausedSymbol,
                 getIcon(processName, processData["iconPath"].toString()),
@@ -660,6 +667,7 @@ void MainWindow::processFilterLineEdit_textChanged(const QString &arg1)
     if (arg1.isEmpty())
     {
         processFilterProxyModel->setFilterFixedString("");
+        //TODO restore currently selected category filter
     }
     else
     {
