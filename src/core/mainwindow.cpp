@@ -202,13 +202,13 @@ QVariant MainWindow::getIndexData(int row, int column)
     return processFilterProxyModel->data(processFilterProxyModel->index(row, column));
 }
 
-QString MainWindow::getDelimitedCategories()
+QStringList MainWindow::getDelimitedCategories()
 {
     QStringList categories;
     for (int row = 0; row < categoriesTableModel->rowCount(); row++)
         categories.append(categoriesTableModel->item(row, CategoryColumns::Name)->text());
 
-    return categories.join(categoryDelimiter);
+    return categories;
 }
 
 void MainWindow::createCategoriesFromDelimitedList(QString delimitedCategories)
@@ -256,7 +256,7 @@ void MainWindow::saveWindowData()
     settings.setValue("categoriesDockWidth", ui->categoriesDock->width());
     settings.setValue("processPollInterval", processPollInterval);
     settings.setValue("tableHorizontalHeader", ui->tableView->horizontalHeader()->saveState());
-    settings.setValue("categories", getDelimitedCategories());
+    settings.setValue("categories", getDelimitedCategories().join(categoryDelimiter));
 }
 
 void MainWindow::pollProcesses()
@@ -537,6 +537,11 @@ void MainWindow::tableCellCustomContextMenuRequested(const QPoint &pos)
 
         menu->addAction(action);
     }
+
+    // Category management actions
+    // On multiple selected - Add all to specific category or remove all categories
+    // On single selected - Add to specific category or remove from specific category via checked actions
+    QMenu *categoriesSubMenu = menu->addMenu("Categories");
 
     // Remove action
     QAction *action = new QAction("Remove", this);

@@ -100,7 +100,7 @@ private: // Methods
     QModelIndex getIndex(int row, int column);
     QVariant getIndexData(int row, int column);
 
-    QString getDelimitedCategories();
+    QStringList getDelimitedCategories();
     void createCategoriesFromDelimitedList(QString delimitedCategories);
 
     void loadProcessData();
