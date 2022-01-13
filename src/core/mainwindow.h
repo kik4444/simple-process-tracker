@@ -141,6 +141,8 @@ private: // Variables
 
     uint processPollInterval = 5000;
 
+    int currentlySelectedCategoriesRow = -1;
+
     const QString processIsActiveSymbol = "▶";
     const QString processIsPausedSymbol = "⏸";
 
