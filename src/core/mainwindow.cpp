@@ -134,7 +134,10 @@ MainWindow::~MainWindow()
 
 void MainWindow::on_actionDebug_triggered()
 {
-    categoriesTableModel->setItem(categoriesTableModel->rowCount(), 0, new QStandardItem("Hello"));
+    for (int row = 0; row < processFilterProxyModel->rowCount(); row++)
+    {
+        qDebug() << getIndexData(row, ProcessColumns::HiddenCategories).toString();
+    }
 }
 
 void MainWindow::loadProcessData()
@@ -186,7 +189,7 @@ void MainWindow::createProcessInTable(QString categories, QString number, QStrin
 void MainWindow::createCategoryInTable(QString categoryName)
 {
     if (!categoryName.isEmpty())
-        categoriesTableModel->setItem(categoriesTableModel->rowCount(), CategoryColumns::Name, new QStandardItem(categoryName));
+        categoriesTableModel->setItem(categoriesTableModel->rowCount(), CategoryColumns::Name, new MyStandardItem(categoryName));
 }
 
 QModelIndex MainWindow::getIndex(int row, int column)

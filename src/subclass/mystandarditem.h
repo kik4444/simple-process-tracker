@@ -29,6 +29,11 @@ public:
     MyStandardItem(const QIcon &icon, const QString &text) : QStandardItem(icon, text) {};
     explicit MyStandardItem(int rows, int columns = 1) : QStandardItem(rows, columns) {};
     virtual ~MyStandardItem() {};
+
+    bool operator < (const QStandardItem &other) const
+    {
+        return text().toLower() < other.text().toLower();
+    }
 };
 
 #endif // MYSTANDARDITEM_H
