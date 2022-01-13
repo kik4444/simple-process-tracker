@@ -735,18 +735,32 @@ void MainWindow::on_actionMove_Up_triggered()
     if (first.row() == 0 || selectedRows.size() == processFilterProxyModel->rowCount())
         return;
 
-    foreach (QModelIndex first, selectedRows)
+    for (auto first = selectedRows.begin(); first < selectedRows.end(); first++)
     {
-        QModelIndex upper = processFilterProxyModel->index(first.row() - 1, ProcessColumns::Number);
-        QVariant tempNumber = getIndexData(first.row(), ProcessColumns::Number);
-        processFilterProxyModel->setData(getIndex(first.row(), ProcessColumns::Number), getIndexData(upper.row(), upper.column()));
+        QModelIndex upper = processFilterProxyModel->index(first->row() - 1, ProcessColumns::Number);
+        QVariant tempNumber = getIndexData(first->row(), ProcessColumns::Number);
+        processFilterProxyModel->setData(getIndex(first->row(), ProcessColumns::Number), upper.data());
         processFilterProxyModel->setData(upper, tempNumber);
     }
 }
 
 void MainWindow::on_actionMove_Down_triggered()
 {
-    //TODO
+    QList<QModelIndex> selectedRows = ui->tableView->selectionModel()->selectedRows();
+    if (selectedRows.size() < 1)
+        return;
+
+    QModelIndex last = selectedRows.last();
+    if (last.row() >= processFilterProxyModel->rowCount() - 1 || selectedRows.size() == processFilterProxyModel->rowCount())
+        return;
+
+    for (auto last = selectedRows.rbegin(); last < selectedRows.rend(); last++)
+    {
+        QModelIndex lower = processFilterProxyModel->index(last->row() + 1, ProcessColumns::Number);
+        QVariant tempNumber = getIndexData(last->row(), ProcessColumns::Number);
+        processFilterProxyModel->setData(getIndex(last->row(), ProcessColumns::Number), lower.data());
+        processFilterProxyModel->setData(lower, tempNumber);
+    }
 }
 
 void MainWindow::on_actionOptions_triggered()
