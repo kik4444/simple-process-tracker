@@ -171,7 +171,7 @@ public slots:
     void userOptionsChosen(uint processPollInterval);
 
 private slots:
-    void on_actionDebug_triggered();
+//    void on_actionDebug_triggered();
 
     void saveProcessData();
 

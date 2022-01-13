@@ -87,7 +87,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     loadWindowData();
     pollProcesses();
 
-    ui->tableView->showColumn(ProcessColumns::HiddenCategories);
+    ui->tableView->hideColumn(ProcessColumns::HiddenCategories);
 
     // Background timers
     processPollTimer = new QTimer(this);
@@ -132,10 +132,10 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
-void MainWindow::on_actionDebug_triggered()
-{
-    removeCategoryFromAllProcesses("test");
-}
+//void MainWindow::on_actionDebug_triggered()
+//{
+//    removeCategoryFromAllProcesses("test");
+//}
 
 void MainWindow::loadProcessData()
 {
@@ -785,15 +785,16 @@ void MainWindow::processFilterLineEdit_textChanged(const QString &arg1)
 {
     if (arg1.isEmpty())
     {
-        processFilterProxyModel->setFilterFixedString("");
-        //TODO restore currently selected category filter
+        if (currentlySelectedCategoriesRow == -1)
+            tableResetFilter();
+        else
+            tableFilterByCategory(categoriesTableModel->item(currentlySelectedCategoriesRow, CategoryColumns::Name)->text());
     }
     else
     {
         processFilterProxyModel->setFilterRegularExpression(QRegularExpression(arg1, QRegularExpression::CaseInsensitiveOption));
+        processFilterProxyModel->setFilterKeyColumn(-1);
     }
-
-    processFilterProxyModel->setFilterKeyColumn(-1); // -1 means all columns
 }
 
 void MainWindow::systemTrayIconActionOpen()
