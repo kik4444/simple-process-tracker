@@ -131,6 +131,7 @@ MainWindow::~MainWindow()
 
 void MainWindow::on_actionDebug_triggered()
 {
+    this->resizeDocks({ui->dockWidget}, {100}, Qt::Horizontal);
     qDebug() << ui->dockWidget->width();
 }
 
