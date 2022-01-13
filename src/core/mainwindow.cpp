@@ -243,6 +243,7 @@ void MainWindow::loadWindowData()
     processPollInterval = settings.value("processPollInterval", processPollInterval).toUInt();
     ui->tableView->horizontalHeader()->restoreState(settings.value("tableHorizontalHeader", "").toByteArray());
     createCategoriesFromDelimitedList(settings.value("categories").toString());
+    tableFilterByCategory(categoriesTableModel->index(settings.value("categorySelection", 0).toInt(), CategoryColumns::Name));
 }
 
 void MainWindow::saveWindowData()
@@ -254,6 +255,7 @@ void MainWindow::saveWindowData()
     settings.setValue("processPollInterval", processPollInterval);
     settings.setValue("tableHorizontalHeader", ui->tableView->horizontalHeader()->saveState());
     settings.setValue("categories", getDelimitedCategories().join(categoryDelimiter));
+    settings.setValue("categorySelection", ui->categoriesTable->selectionModel()->selectedRows().first().row());
 }
 
 void MainWindow::pollProcesses()
@@ -502,9 +504,11 @@ void MainWindow::tableResetFilter()
     processFilterProxyModel->setFilterKeyColumn(-1); // -1 means all columns
 }
 
-void MainWindow::tableFilterByCategory(QString category)
+void MainWindow::tableFilterByCategory(QModelIndex index)
 {
-    processFilterProxyModel->setFilterFixedString(category);
+    currentlySelectedCategoriesRow = index.row();
+    ui->categoriesTable->selectionModel()->select(index, QItemSelectionModel::Select);
+    processFilterProxyModel->setFilterFixedString(categoriesTableModel->item(index.row(), CategoryColumns::Name)->text());
     processFilterProxyModel->setFilterKeyColumn(ProcessColumns::HiddenCategories);
 }
 
@@ -700,10 +704,7 @@ void MainWindow::on_categoriesTable_clicked(const QModelIndex &index)
         tableResetFilter();
     }
     else
-    {
-        currentlySelectedCategoriesRow = index.row();
-        tableFilterByCategory(categoriesTableModel->item(index.row(), ProcessColumns::HiddenCategories)->text());
-    }
+        tableFilterByCategory(index);
 }
 
 void MainWindow::on_actionAdd_triggered()
@@ -788,7 +789,7 @@ void MainWindow::processFilterLineEdit_textChanged(const QString &arg1)
         if (currentlySelectedCategoriesRow == -1)
             tableResetFilter();
         else
-            tableFilterByCategory(categoriesTableModel->item(currentlySelectedCategoriesRow, CategoryColumns::Name)->text());
+            tableFilterByCategory(categoriesTableModel->index(currentlySelectedCategoriesRow, CategoryColumns::Name));
     }
     else
     {
