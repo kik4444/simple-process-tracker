@@ -29,26 +29,6 @@ public:
     MyStandardItem(const QIcon &icon, const QString &text) : QStandardItem(icon, text) {};
     explicit MyStandardItem(int rows, int columns = 1) : QStandardItem(rows, columns) {};
     virtual ~MyStandardItem() {};
-
-    // No longer needed with QSortFilterProxyModel ?
-//    bool operator < (const QStandardItem &other) const
-//    {
-//        bool textConversionSuccess, otherConversionSuccess;
-//        Q_UNUSED(text().toULongLong(&textConversionSuccess));
-//        Q_UNUSED(other.text().toULongLong(&otherConversionSuccess));
-
-//        if (textConversionSuccess && otherConversionSuccess)
-//        {
-//            return text().toULongLong() < other.text().toULongLong();
-//        }
-//        else if (text().contains(":") && other.text().contains(":"))
-//        {
-//            if (Parser::parseStringToDuration(text()) && Parser::parseStringToDuration(other.text()))
-//                return Parser::parseStringToDuration(text()) < Parser::parseStringToDuration(other.text());
-//        }
-
-//        return text() < other.text();
-//    }
 };
 
 #endif // MYSTANDARDITEM_H
