@@ -413,6 +413,21 @@ bool MainWindow::isJsonValid(QJsonObject jsonObject)
     return false;
 }
 
+bool MainWindow::categoryAlreadyExists(QString categoryName)
+{
+    for (int row = 0; row < categoriesTableModel->rowCount(); row++)
+        if (categoriesTableModel->item(row, 0)->text() == categoryName)
+            return true;
+
+    return false;
+}
+
+void MainWindow::removeCategoryAndItsEntries(QString categoryName, int row)
+{
+    //TODO remove entries from this category
+    categoriesTableModel->removeRows(row, 1);
+}
+
 /*---------------------------------------------------- User input ----------------------------------------------------*/
 
 void MainWindow::on_tableView_doubleClicked(const QModelIndex &index)
@@ -501,6 +516,8 @@ void MainWindow::tableCellCustomContextMenuRequested(const QPoint &pos)
     connect(action, &QAction::triggered, this, [=](){exportSelectedRows(selectedRows);});
     menu->addAction(action);
 
+    //TODO checked action for adding/removing from category
+
     menu->popup(ui->tableView->viewport()->mapToGlobal(pos));
 }
 
@@ -529,13 +546,39 @@ void MainWindow::tableHorizontalHeaderCustomContextMenuRequested(const QPoint &p
 
 void MainWindow::categoriesTableCustomContextMenuRequested(const QPoint &pos)
 {
-    qDebug() << "Hello";
     QMenu *menu = new QMenu(this);
-    menu->addAction(new QAction("Hello there", this));
+
+    QAction *action = new QAction("Add category", this);
+    connect(action, &QAction::triggered, this, [=]()
+    {
+        QString categoryName = QInputDialog::getText(this, "Add category", "Set category name", QLineEdit::Normal, "");
+        categoryName.remove(categoryDelimiter);
+        if (!categoryName.isEmpty())
+        {
+            if (!categoryAlreadyExists(categoryName))
+                categoriesTableModel->setItem(categoriesTableModel->rowCount(), 0, new QStandardItem(categoryName));
+            else
+                systemTrayIcon->showMessage("Error", "Category " + categoryName + " already exists", QSystemTrayIcon::Warning, 3000);
+        }
+    });
+    menu->addAction(action);
+
+    QModelIndex selectedCategory = ui->categoriesTable->indexAt(pos);
+    if (selectedCategory.row() >= 0 && selectedCategory.column() >= 0)
+    {
+        action = new QAction("Remove category", this);
+        connect(action, &QAction::triggered, this, [=]()
+        {
+            QString categoryName = categoriesTableModel->item(selectedCategory.row(), 0)->text();
+
+            if (getConfirmDialogAnswer("Remove category", "Are you sure you wish to remove category "
+                + categoryName + "? This action is irreversible!") == QMessageBox::Yes)
+                removeCategoryAndItsEntries(categoryName, selectedCategory.row());
+        });
+        menu->addAction(action);
+    }
 
     menu->popup(ui->categoriesTable->viewport()->mapToGlobal(pos));
-
-    //TODO save dock width, and rest of categories
 }
 
 void MainWindow::on_actionAdd_triggered()

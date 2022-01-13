@@ -105,6 +105,8 @@ private: // Methods
 
     int getConfirmDialogAnswer(QString title, QString text);
 
+    bool processAlreadyExists(QString processName);
+
     void updateLastSeenIfRunningAndRemoveFromRunning(QString processName, int row);
     void updateLastSeenForRunningProcesses();
 
@@ -113,6 +115,9 @@ private: // Methods
 
     void exportSelectedRows(QList<QModelIndex> selectedRows);
     bool isJsonValid(QJsonObject jsonObject);
+
+    bool categoryAlreadyExists(QString categoryName);
+    void removeCategoryAndItsEntries(QString categoryName, int row);
 
 private: // Variables
     Ui::MainWindow *ui;
@@ -138,6 +143,8 @@ private: // Variables
     const uint processSecondIncrementInterval = 1000;
     const uint processAutoSaveInterval = 60000;
 
+    const QChar categoryDelimiter = ';';
+
 signals:
     void checkRunningProcesses(QMap<QString, int> processList);
 
@@ -145,8 +152,6 @@ public slots:
     void newProcessAdded(QString processName, QString iconPath);
     void foundRunningProcess(QString processName);
     void foundStoppedProcesses(QMap<QString, int> stoppedProcesses);
-
-    bool processAlreadyExists(QString processName);
 
     void userOptionsChosen(uint processPollInterval);
 
