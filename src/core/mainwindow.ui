@@ -65,12 +65,13 @@
    </attribute>
    <addaction name="actionAdd"/>
    <addaction name="actionPoll"/>
-   <addaction name="actionStretch"/>
+   <addaction name="actionMove_Up"/>
+   <addaction name="actionMove_Down"/>
    <addaction name="actionOptions"/>
    <addaction name="actionImport"/>
+   <addaction name="actionStretch"/>
    <addaction name="actionHelp"/>
    <addaction name="actionExit"/>
-   <addaction name="actionDebug"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
   <widget class="QDockWidget" name="categoriesDock">
@@ -767,11 +768,30 @@
    </property>
   </action>
   <action name="actionDebug">
+   <property name="icon">
+    <iconset resource="../resources.qrc">
+     <normaloff>:/app-icon.svg</normaloff>:/app-icon.svg</iconset>
+   </property>
    <property name="text">
     <string>Debug</string>
    </property>
-   <property name="visible">
-    <bool>false</bool>
+  </action>
+  <action name="actionMove_Up">
+   <property name="icon">
+    <iconset resource="../resources.qrc">
+     <normaloff>:/move-up-icon.svg</normaloff>:/move-up-icon.svg</iconset>
+   </property>
+   <property name="text">
+    <string>Move Up</string>
+   </property>
+  </action>
+  <action name="actionMove_Down">
+   <property name="icon">
+    <iconset resource="../resources.qrc">
+     <normaloff>:/move-down-icon.svg</normaloff>:/move-down-icon.svg</iconset>
+   </property>
+   <property name="text">
+    <string>Move Down</string>
    </property>
   </action>
  </widget>

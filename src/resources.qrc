@@ -11,6 +11,8 @@
         <file alias="gpl-v3-logo.svg">../Assets/Icons/gpl-v3-logo.svg</file>
         <file alias="resize-icon.svg">../Assets/Icons/resize-icon.svg</file>
         <file alias="import-icon.svg">../Assets/Icons/import-icon.svg</file>
+        <file alias="move-up-icon.svg">../Assets/Icons/move-up-icon.svg</file>
+        <file alias="move-down-icon.svg">../Assets/Icons/move-down-icon.svg</file>
         <file alias="Help.md">../Assets/InternalText/Help.md</file>
         <file alias="AboutQt.md">../Assets/InternalText/AboutQt.md</file>
         <file alias="COPYING">../COPYING</file>
