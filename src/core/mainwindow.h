@@ -122,12 +122,12 @@ private: // Methods
 
     bool categoryAlreadyExists(QString category);
     void removeCategoryAndItsEntries(QModelIndex index, QString category);
-
+    void removeCategoryFromAllProcesses(QString category);
     void addAllSelectedProcessesToCategory(QList<QModelIndex> selectedProcesses, QString category);
     void removeAllCategoriesFromSelectedProcesses(QList<QModelIndex> selectedProcesses);
 
     bool processIsInCategory(QModelIndex index, QString category);
-    void addOrRemoveProcessFromCategory(QModelIndex index, QString category, bool alreadyInCategory);
+    void addOrRemoveProcessCategory(QModelIndex index, QString category, bool alreadyInCategory);
 
 private: // Variables
     Ui::MainWindow *ui;

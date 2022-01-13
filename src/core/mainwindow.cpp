@@ -460,15 +460,21 @@ bool MainWindow::categoryAlreadyExists(QString category)
 
 void MainWindow::removeCategoryAndItsEntries(QModelIndex index, QString category)
 {
-    //TODO remove this category from all processes that have it
     categoriesTableModel->removeRows(index.row(), 1);
+    removeCategoryFromAllProcesses(category);
+}
+
+void MainWindow::removeCategoryFromAllProcesses(QString category)
+{
+    for (int row = 0; row < processFilterProxyModel->rowCount(); row++)
+        addOrRemoveProcessCategory(getIndex(row, ProcessColumns::HiddenCategories), category, true);
 }
 
 void MainWindow::addAllSelectedProcessesToCategory(QList<QModelIndex> selectedRows, QString category)
 {
     foreach (QModelIndex index, selectedRows)
         if (!processIsInCategory(index, category))
-            addOrRemoveProcessFromCategory(index, category, false);
+            addOrRemoveProcessCategory(index, category, false);
 }
 
 void MainWindow::removeAllCategoriesFromSelectedProcesses(QList<QModelIndex> selectedRows)
@@ -483,7 +489,7 @@ bool MainWindow::processIsInCategory(QModelIndex index, QString category)
     return processCategories.contains(category);
 }
 
-void MainWindow::addOrRemoveProcessFromCategory(QModelIndex index, QString category, bool alreadyInCategory)
+void MainWindow::addOrRemoveProcessCategory(QModelIndex index, QString category, bool alreadyInCategory)
 {
     QStringList processCategories = getIndexData(index.row(), ProcessColumns::HiddenCategories).toString().split(categoryDelimiter);
 
@@ -600,7 +606,7 @@ void MainWindow::tableCellCustomContextMenuRequested(const QPoint &pos)
             QAction *action = new QAction(category, this);
             action->setCheckable(true);
             action->setChecked(processIsInCategory(selectedRows.first(), category));
-            connect(action, &QAction::triggered, this, [=](bool checked){addOrRemoveProcessFromCategory(selectedRows.first(), category, !checked);});
+            connect(action, &QAction::triggered, this, [=](bool checked){addOrRemoveProcessCategory(selectedRows.first(), category, !checked);});
             categoriesSubMenu->addAction(action);
         }
     }
