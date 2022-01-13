@@ -243,12 +243,7 @@ void MainWindow::loadWindowData()
     processPollInterval = settings.value("processPollInterval", processPollInterval).toUInt();
     ui->tableView->horizontalHeader()->restoreState(settings.value("tableHorizontalHeader", "").toByteArray());
     createCategoriesFromDelimitedList(settings.value("categories").toString());
-
-    int filterCategoryRow = settings.value("categorySelection", 0).toInt();
-    if (filterCategoryRow < 0)
-        tableResetFilter();
-    else
-        tableFilterByCategory(categoriesTableModel->index(filterCategoryRow, CategoryColumns::Name));
+    restoreTableFilterState(settings.value("lastCategoryRow", -1).toInt());
 }
 
 void MainWindow::saveWindowData()
@@ -260,7 +255,7 @@ void MainWindow::saveWindowData()
     settings.setValue("processPollInterval", processPollInterval);
     settings.setValue("tableHorizontalHeader", ui->tableView->horizontalHeader()->saveState());
     settings.setValue("categories", getDelimitedCategories().join(categoryDelimiter));
-    settings.setValue("categorySelection", currentlySelectedCategoriesRow);
+    settings.setValue("lastCategoryRow", currentlySelectedCategoriesRow);
 }
 
 void MainWindow::pollProcesses()
@@ -501,6 +496,14 @@ void MainWindow::addOrRemoveProcessCategory(QModelIndex index, QString category,
         processCategories.append(category);
 
     processFilterProxyModel->setData(getIndex(index.row(), ProcessColumns::HiddenCategories), processCategories.join(categoryDelimiter));
+}
+
+void MainWindow::restoreTableFilterState(int lastCategoryRow)
+{
+    if (lastCategoryRow < 0 || lastCategoryRow >= categoriesTableModel->rowCount())
+        tableResetFilter();
+    else
+        tableFilterByCategory(categoriesTableModel->index(lastCategoryRow, CategoryColumns::Name));
 }
 
 void MainWindow::tableResetFilter()
