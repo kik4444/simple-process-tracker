@@ -131,8 +131,7 @@ MainWindow::~MainWindow()
 
 void MainWindow::on_actionDebug_triggered()
 {
-    this->resizeDocks({ui->dockWidget}, {100}, Qt::Horizontal);
-    qDebug() << ui->dockWidget->width();
+
 }
 
 void MainWindow::loadProcessData()
@@ -213,6 +212,7 @@ void MainWindow::loadWindowData()
 {
     quicksettings("config");
     this->resize(settings.value("windowWidth", 1280).toUInt(), settings.value("windowHeight", 720).toUInt());
+    this->resizeDocks({ui->categoriesDock}, {settings.value("categoriesDockWidth", 300).toInt()}, Qt::Horizontal);
     processPollInterval = settings.value("processPollInterval", processPollInterval).toUInt();
     ui->tableView->horizontalHeader()->restoreState(settings.value("tableHorizontalHeader", "").toByteArray());
 }
@@ -222,6 +222,7 @@ void MainWindow::saveWindowData()
     quicksettings("config");
     settings.setValue("windowWidth", this->width());
     settings.setValue("windowHeight", this->height());
+    settings.setValue("categoriesDockWidth", ui->categoriesDock->width());
     settings.setValue("processPollInterval", processPollInterval);
     settings.setValue("tableHorizontalHeader", ui->tableView->horizontalHeader()->saveState());
 }

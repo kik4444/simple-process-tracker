@@ -73,7 +73,7 @@
    <addaction name="actionDebug"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
-  <widget class="QDockWidget" name="dockWidget">
+  <widget class="QDockWidget" name="categoriesDock">
    <property name="features">
     <set>QDockWidget::DockWidgetMovable</set>
    </property>
