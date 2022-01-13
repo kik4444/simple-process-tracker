@@ -159,6 +159,11 @@ void MainWindow::createProcessInTable(QString number, QString activeSymbol, QIco
     processTableViewModel->setItem(newestRow, ProcessColumns::DateAdded, new MyStandardItem(dateAdded));
 }
 
+QModelIndex MainWindow::getIndex(int row, int column)
+{
+    return processFilterProxyModel->index(row, column);
+}
+
 QVariant MainWindow::getIndexData(int row, int column)
 {
     return processFilterProxyModel->data(processFilterProxyModel->index(row, column));
@@ -167,7 +172,7 @@ QVariant MainWindow::getIndexData(int row, int column)
 void MainWindow::saveProcessData()
 {
     quicksettings("processList");
-    for (int row = 0; row < processTableViewModel->rowCount(); row++)
+    for (int row = 0; row < processFilterProxyModel->rowCount(); row++)
     {
         QString processName = getIndexData(row, ProcessColumns::Name).toString();
         settings.beginGroup(processName);
@@ -205,7 +210,7 @@ void MainWindow::pollProcesses()
 {
     QMap<QString, int> processList;
 
-    for (int row = 0; row < processTableViewModel->rowCount(); row++)
+    for (int row = 0; row < processFilterProxyModel->rowCount(); row++)
         if (getIndexData(row, ProcessColumns::Tracking).toString() == processIsActiveSymbol)
             processList.insert(getIndexData(row, ProcessColumns::Name).toString(), row);
 
@@ -225,14 +230,14 @@ void MainWindow::foundStoppedProcesses(QMap<QString, int> stoppedProcesses)
 
 void MainWindow::updateRunningProcessDurations()
 {
-    for (int row = 0; row < processTableViewModel->rowCount(); row++)
+    for (int row = 0; row < processFilterProxyModel->rowCount(); row++)
     {
         QString processName = getIndexData(row, ProcessColumns::Name).toString();
         if (runningProcesses.contains(processName))
         {
             processDurations[processName]++;
-            processTableViewModel->setItem(row, ProcessColumns::Duration, new MyStandardItem(Parser::parseDurationToString(processDurations[processName])));
-            processTableViewModel->setItem(row, ProcessColumns::LastSeen, new MyStandardItem("Now"));
+            processFilterProxyModel->setData(getIndex(row, ProcessColumns::Duration), Parser::parseDurationToString(processDurations[processName]));
+            processFilterProxyModel->setData(getIndex(row, ProcessColumns::LastSeen), "Now");
         }
     }
 }
@@ -245,13 +250,13 @@ void MainWindow::newProcessAdded(QString processName, QString iconPath)
         return;
     }
 
-    createProcessInTable(QString::number(processTableViewModel->rowCount() + 1),
+    createProcessInTable(QString::number(processFilterProxyModel->rowCount() + 1),
         processIsActiveSymbol, getIcon(processName, iconPath), processName, "", 0, "Now", QDateTime::currentDateTime().toString("yyyy/MM/dd hh:mm:ss"));
 }
 
 bool MainWindow::processAlreadyExists(QString processName)
 {
-    for (int row = 0; row < processTableViewModel->rowCount(); row++)
+    for (int row = 0; row < processFilterProxyModel->rowCount(); row++)
         if (getIndexData(row, ProcessColumns::Name).toString() == processName)
             return true;
 
@@ -263,14 +268,14 @@ void MainWindow::updateLastSeenIfRunningAndRemoveFromRunning(QString processName
     if (runningProcesses.contains(processName))
     {
         runningProcesses.removeAll(processName);
-        processTableViewModel->setItem(row, ProcessColumns::LastSeen,
-            new MyStandardItem(QDateTime::currentDateTime().toString("yyyy/MM/dd hh:mm:ss")));
+        processFilterProxyModel->setData(getIndex(row, ProcessColumns::LastSeen),
+            QDateTime::currentDateTime().toString("yyyy/MM/dd hh:mm:ss"));
     }
 }
 
 void MainWindow::updateLastSeenForRunningProcesses()
 {
-    for (int row = 0; row < processTableViewModel->rowCount(); row++)
+    for (int row = 0; row < processFilterProxyModel->rowCount(); row++)
         updateLastSeenIfRunningAndRemoveFromRunning(getIndexData(row, ProcessColumns::Name).toString(), row);
 }
 
@@ -322,7 +327,7 @@ void MainWindow::removeSelectedRows(QList<QModelIndex> selectedRows)
 
 void MainWindow::normalizeProcessNumbers()
 {
-//    for (int row = 0; row < processTableViewModel->rowCount(); row++)
+//    for (int row = 0; row < processFilterProxyModel->rowCount(); row++)
 //    {
 //        qDebug() << getIndexData(row, ProcessColumns::Name).toString();
 //    }
@@ -401,8 +406,8 @@ void MainWindow::on_tableView_doubleClicked(const QModelIndex &index)
             updateLastSeenIfRunningAndRemoveFromRunning(processName, index.row());
 
             QString processState = getIndexData(index.row(), ProcessColumns::Tracking).toString();
-            processTableViewModel->setItem(index.row(), ProcessColumns::Tracking,
-                new MyStandardItem(processState == processIsActiveSymbol ? processIsPausedSymbol : processIsActiveSymbol));
+            processFilterProxyModel->setData(getIndex(index.row(), ProcessColumns::Tracking),
+                processState == processIsActiveSymbol ? processIsPausedSymbol : processIsActiveSymbol);
 
             break;
         }
@@ -413,7 +418,7 @@ void MainWindow::on_tableView_doubleClicked(const QModelIndex &index)
             QPixmap icon(fileName);
 
             if (!fileName.isEmpty() && !icon.isNull())
-                processTableViewModel->setItem(index.row(), ProcessColumns::Icon, new MyStandardItem(icon, ""));
+                processFilterProxyModel->setData(getIndex(index.row(), ProcessColumns::Icon), icon, Qt::DecorationRole);
 
             break;
         }
@@ -553,7 +558,7 @@ void MainWindow::on_actionImport_triggered()
             QJsonObject processData = jsonObject[processName].toObject();
 
             createProcessInTable(
-                QString::number(processTableViewModel->rowCount() + 1),
+                QString::number(processFilterProxyModel->rowCount() + 1),
                 processData["tracking"].toBool() ? processIsActiveSymbol : processIsPausedSymbol,
                 getIcon(processName, processData["iconPath"].toString()),
                 processName,
@@ -588,14 +593,14 @@ void MainWindow::systemTrayIconActionOpen()
 
 void MainWindow::systemTrayIconActionResumeAll()
 {
-    for (int row = 0; row < processTableViewModel->rowCount(); row++)
-        processTableViewModel->setItem(row, ProcessColumns::Tracking, new MyStandardItem(processIsActiveSymbol));
+    for (int row = 0; row < processFilterProxyModel->rowCount(); row++)
+        processFilterProxyModel->setData(getIndex(row, ProcessColumns::Tracking), processIsActiveSymbol);
 }
 
 void MainWindow::systemTrayIconActionPauseAll()
 {
-    for (int row = 0; row < processTableViewModel->rowCount(); row++)
-        processTableViewModel->setItem(row, ProcessColumns::Tracking, new MyStandardItem(processIsPausedSymbol));
+    for (int row = 0; row < processFilterProxyModel->rowCount(); row++)
+        processFilterProxyModel->setData(getIndex(row, ProcessColumns::Tracking), processIsPausedSymbol);
 }
 
 void MainWindow::systemTrayIconActionExit()

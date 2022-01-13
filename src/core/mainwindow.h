@@ -96,6 +96,7 @@ private: // Methods
     void createProcessInTable(QString number, QString activeSymbol, QIcon icon, QString processName, QString notes, quint64 duration, QString lastSeen, QString dateAdded);
     QIcon getIcon(QString processName, QString iconPath);
 
+    QModelIndex getIndex(int row, int column);
     QVariant getIndexData(int row, int column);
 
     void loadProcessData();
