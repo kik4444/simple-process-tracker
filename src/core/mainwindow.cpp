@@ -727,12 +727,26 @@ void MainWindow::on_actionPoll_triggered()
 
 void MainWindow::on_actionMove_Up_triggered()
 {
+    QList<QModelIndex> selectedRows = ui->tableView->selectionModel()->selectedRows();
+    if (selectedRows.size() < 1)
+        return;
 
+    QModelIndex first = selectedRows.first();
+    if (first.row() == 0 || selectedRows.size() == processFilterProxyModel->rowCount())
+        return;
+
+    foreach (QModelIndex first, selectedRows)
+    {
+        QModelIndex upper = processFilterProxyModel->index(first.row() - 1, ProcessColumns::Number);
+        QVariant tempNumber = getIndexData(first.row(), ProcessColumns::Number);
+        processFilterProxyModel->setData(getIndex(first.row(), ProcessColumns::Number), getIndexData(upper.row(), upper.column()));
+        processFilterProxyModel->setData(upper, tempNumber);
+    }
 }
 
 void MainWindow::on_actionMove_Down_triggered()
 {
-
+    //TODO
 }
 
 void MainWindow::on_actionOptions_triggered()
