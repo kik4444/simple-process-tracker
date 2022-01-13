@@ -151,6 +151,8 @@ public slots:
     void userOptionsChosen(uint processPollInterval);
 
 private slots:
+    void on_actionDebug_triggered();
+
     void saveProcessData();
 
     void on_tableView_doubleClicked(const QModelIndex &index);

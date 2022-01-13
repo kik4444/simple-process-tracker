@@ -129,6 +129,11 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
+void MainWindow::on_actionDebug_triggered()
+{
+    qDebug() << ui->dockWidget->width();
+}
+
 void MainWindow::loadProcessData()
 {
     quicksettings("processList");
