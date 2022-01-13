@@ -238,6 +238,8 @@ void MainWindow::saveProcessData()
     }
 }
 
+//TODO save/load process categories
+
 void MainWindow::loadWindowData()
 {
     quicksettings("config");
@@ -384,6 +386,8 @@ void MainWindow::normalizeProcessNumbers()
         processFilterProxyModel->setData(getIndex(row, ProcessColumns::Number), row + 1);
 }
 
+//TODO export/imort process categories
+
 void MainWindow::exportSelectedRows(QList<QModelIndex> selectedRows)
 {
     QString exportLocation = QFileDialog::getSaveFileName(this, "Choose export location", "", "Text files (*.json)");
@@ -460,16 +464,16 @@ void MainWindow::removeCategoryAndItsEntries(QString category, int row)
     categoriesTableModel->removeRows(row, 1);
 }
 
-void MainWindow::addAllSelectedProcessesToCategory(QList<QModelIndex> selectedProcesses, QString category)
+void MainWindow::addAllSelectedProcessesToCategory(QList<QModelIndex> selectedRows, QString category)
 {
     //TODO
-    qDebug() << category << selectedProcesses;
+    qDebug() << category << selectedRows;
 }
 
-void MainWindow::removeAllCategoriesFromSelectedProcesses(QList<QModelIndex> selectedProcesses)
+void MainWindow::removeAllCategoriesFromSelectedProcesses(QList<QModelIndex> selectedRows)
 {
     //TODO
-    qDebug() << selectedProcesses;
+    qDebug() << selectedRows;
 }
 
 bool MainWindow::processIsInCategory(QString processName, QString category)
@@ -677,7 +681,10 @@ void MainWindow::on_categoriesTable_clicked(const QModelIndex &index)
         currentlySelectedCategoriesRow = -1;
     }
     else
+    {
         currentlySelectedCategoriesRow = index.row();
+        //TODO trigger re-filter
+    }
 }
 
 void MainWindow::on_actionAdd_triggered()
