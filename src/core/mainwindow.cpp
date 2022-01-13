@@ -33,6 +33,8 @@
  * mainwindow.h - createProcessInTable()
  */
 
+// SUPER IMPORTANT - use processTableViewModel only to add new rows, and processFilterProxyModel for everything else
+
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
@@ -47,9 +49,9 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     processTableViewModel->setHorizontalHeaderLabels(QStringList()
         << "#" << "Tracking" << "Icon" << "Name" << "Notes" << "Duration" << "Last seen" << "Date added");
 
-    filterProxyModel = new MySortFilterProxyModel(this);
-    filterProxyModel->setSourceModel(processTableViewModel);
-    ui->tableView->setModel(filterProxyModel);
+    processFilterProxyModel = new MySortFilterProxyModel(this);
+    processFilterProxyModel->setSourceModel(processTableViewModel);
+    ui->tableView->setModel(processFilterProxyModel);
 
     // Setup cell context menu
     ui->tableView->setContextMenuPolicy(Qt::CustomContextMenu);
@@ -157,21 +159,26 @@ void MainWindow::createProcessInTable(QString number, QString activeSymbol, QIco
     processTableViewModel->setItem(newestRow, ProcessColumns::DateAdded, new MyStandardItem(dateAdded));
 }
 
+QVariant MainWindow::getIndexData(int row, int column)
+{
+    return processFilterProxyModel->data(processFilterProxyModel->index(row, column));
+}
+
 void MainWindow::saveProcessData()
 {
     quicksettings("processList");
     for (int row = 0; row < processTableViewModel->rowCount(); row++)
     {
-        QString processName = processTableViewModel->item(row, ProcessColumns::Name)->text();
+        QString processName = getIndexData(row, ProcessColumns::Name).toString();
         settings.beginGroup(processName);
 
-        settings.setValue("number", processTableViewModel->item(row, ProcessColumns::Number)->text());
-        settings.setValue("tracking", processTableViewModel->item(row, ProcessColumns::Tracking)->text() == processIsActiveSymbol);
+        settings.setValue("number", getIndexData(row, ProcessColumns::Number).toString());
+        settings.setValue("tracking", getIndexData(row, ProcessColumns::Tracking).toString() == processIsActiveSymbol);
         settings.setValue("iconPath", processIcons[processName]);
-        settings.setValue("notes", processTableViewModel->item(row, ProcessColumns::Notes)->text());
+        settings.setValue("notes", getIndexData(row, ProcessColumns::Notes).toString());
         settings.setValue("duration", processDurations[processName]);
-        settings.setValue("lastSeen", processTableViewModel->item(row, ProcessColumns::LastSeen)->text());
-        settings.setValue("dateAdded", processTableViewModel->item(row, ProcessColumns::DateAdded)->text());
+        settings.setValue("lastSeen", getIndexData(row, ProcessColumns::LastSeen).toString());
+        settings.setValue("dateAdded", getIndexData(row, ProcessColumns::DateAdded).toString());
 
         settings.endGroup();
     }
@@ -199,8 +206,8 @@ void MainWindow::pollProcesses()
     QMap<QString, int> processList;
 
     for (int row = 0; row < processTableViewModel->rowCount(); row++)
-        if (processTableViewModel->item(row, ProcessColumns::Tracking)->text() == processIsActiveSymbol)
-            processList.insert(processTableViewModel->item(row, ProcessColumns::Name)->text(), row);
+        if (getIndexData(row, ProcessColumns::Tracking).toString() == processIsActiveSymbol)
+            processList.insert(getIndexData(row, ProcessColumns::Name).toString(), row);
 
     emit checkRunningProcesses(processList);
 }
@@ -220,7 +227,7 @@ void MainWindow::updateRunningProcessDurations()
 {
     for (int row = 0; row < processTableViewModel->rowCount(); row++)
     {
-        QString processName = processTableViewModel->item(row, ProcessColumns::Name)->text();
+        QString processName = getIndexData(row, ProcessColumns::Name).toString();
         if (runningProcesses.contains(processName))
         {
             processDurations[processName]++;
@@ -245,7 +252,7 @@ void MainWindow::newProcessAdded(QString processName, QString iconPath)
 bool MainWindow::processAlreadyExists(QString processName)
 {
     for (int row = 0; row < processTableViewModel->rowCount(); row++)
-        if (processTableViewModel->item(row, ProcessColumns::Name)->text() == processName)
+        if (getIndexData(row, ProcessColumns::Name).toString() == processName)
             return true;
 
     return false;
@@ -264,7 +271,7 @@ void MainWindow::updateLastSeenIfRunningAndRemoveFromRunning(QString processName
 void MainWindow::updateLastSeenForRunningProcesses()
 {
     for (int row = 0; row < processTableViewModel->rowCount(); row++)
-        updateLastSeenIfRunningAndRemoveFromRunning(processTableViewModel->item(row, ProcessColumns::Name)->text(), row);
+        updateLastSeenIfRunningAndRemoveFromRunning(getIndexData(row, ProcessColumns::Name).toString(), row);
 }
 
 void MainWindow::userOptionsChosen(uint processPollInterval)
@@ -287,7 +294,7 @@ int MainWindow::getConfirmDialogAnswer(QString title, QString text)
 
 void MainWindow::removeSelectedRows(QList<QModelIndex> selectedRows)
 {
-    QString processName = processTableViewModel->item(selectedRows.first().row(), ProcessColumns::Name)->text();
+    QString processName = getIndexData(selectedRows.first().row(), ProcessColumns::Name).toString();
 
     int answer = getConfirmDialogAnswer("Confirm removal", QString("Remove %1? This action is irreversible!")
         .arg(selectedRows.size() == 1 ? processName : "multiple processes"));
@@ -297,7 +304,7 @@ void MainWindow::removeSelectedRows(QList<QModelIndex> selectedRows)
         quicksettings("processList");
         foreach(QModelIndex index, selectedRows)
         {
-            QString currentProcessName = processTableViewModel->item(index.row(), ProcessColumns::Name)->text();
+            QString currentProcessName = getIndexData(index.row(), ProcessColumns::Name).toString();
             settings.remove(currentProcessName);
             runningProcesses.removeAll(currentProcessName);
         }
@@ -305,7 +312,7 @@ void MainWindow::removeSelectedRows(QList<QModelIndex> selectedRows)
         QModelIndexList indexes = selectedRows;
         while (!indexes.isEmpty())
         {
-            processTableViewModel->removeRows(indexes.last().row(), 1);
+            processFilterProxyModel->removeRows(indexes.last().row(), 1);
             indexes.removeLast();
         }
     }
@@ -315,10 +322,10 @@ void MainWindow::removeSelectedRows(QList<QModelIndex> selectedRows)
 
 void MainWindow::normalizeProcessNumbers()
 {
-    for (int row = 0; row < processTableViewModel->rowCount(); row++)
-    {
-        qDebug() << processTableViewModel->item(row, ProcessColumns::Name)->text();
-    }
+//    for (int row = 0; row < processTableViewModel->rowCount(); row++)
+//    {
+//        qDebug() << getIndexData(row, ProcessColumns::Name).toString();
+//    }
 }
 
 void MainWindow::exportSelectedRows(QList<QModelIndex> selectedRows)
@@ -335,14 +342,14 @@ void MainWindow::exportSelectedRows(QList<QModelIndex> selectedRows)
     foreach (QModelIndex index, selectedRows)
     {
         QJsonObject processData;
-        QString processName = processTableViewModel->item(index.row(), ProcessColumns::Name)->text();
+        QString processName = getIndexData(index.row(), ProcessColumns::Name).toString();
 
-        processData["tracking"] = processTableViewModel->item(index.row(), ProcessColumns::Tracking)->text() == processIsActiveSymbol;
+        processData["tracking"] = getIndexData(index.row(), ProcessColumns::Tracking).toString() == processIsActiveSymbol;
         processData["iconPath"] = processIcons[processName];
-        processData["notes"] = processTableViewModel->item(index.row(), ProcessColumns::Notes)->text();
+        processData["notes"] = getIndexData(index.row(), ProcessColumns::Notes).toString();
         processData["duration"] = QJsonValue::fromVariant(processDurations[processName]);
         processData["lastSeen"] = QDateTime::currentDateTime().toString("yyyy/MM/dd hh:mm:ss");
-        processData["dateAdded"] = processTableViewModel->item(index.row(), ProcessColumns::DateAdded)->text();
+        processData["dateAdded"] = getIndexData(index.row(), ProcessColumns::DateAdded).toString();
 
         processesJson.insert(processName, processData);
     }
@@ -385,7 +392,7 @@ bool MainWindow::isJsonValid(QJsonObject jsonObject)
 
 void MainWindow::on_tableView_doubleClicked(const QModelIndex &index)
 {
-    QString processName = processTableViewModel->item(index.row(), ProcessColumns::Name)->text();
+    QString processName = getIndexData(index.row(), ProcessColumns::Name).toString();
 
     switch (index.column())
     {
@@ -393,7 +400,7 @@ void MainWindow::on_tableView_doubleClicked(const QModelIndex &index)
         {
             updateLastSeenIfRunningAndRemoveFromRunning(processName, index.row());
 
-            QString processState = processTableViewModel->item(index.row(), ProcessColumns::Tracking)->text();
+            QString processState = getIndexData(index.row(), ProcessColumns::Tracking).toString();
             processTableViewModel->setItem(index.row(), ProcessColumns::Tracking,
                 new MyStandardItem(processState == processIsActiveSymbol ? processIsPausedSymbol : processIsActiveSymbol));
 
@@ -421,7 +428,7 @@ void MainWindow::on_tableView_doubleClicked(const QModelIndex &index)
         case ProcessColumns::Duration:
         {
             bool ok;
-            QString displayDuration = processTableViewModel->item(index.row(), ProcessColumns::Duration)->text();
+            QString displayDuration = getIndexData(index.row(), ProcessColumns::Duration).toString();
             QString durationInput = QInputDialog::getText(this, "Custom duration", "Set custom duration", QLineEdit::Normal, displayDuration, &ok);
 
             if (ok)
@@ -454,7 +461,7 @@ void MainWindow::tableCellCustomContextMenuRequested(const QPoint &pos)
 
         foreach (QModelIndex index, selectedRows)
             connect(action, &QAction::triggered, this, [=](){on_tableView_doubleClicked(
-                processTableViewModel->indexFromItem(processTableViewModel->item(index.row(), actionName.second)));});
+                processFilterProxyModel->index(index.row(), actionName.second));});
 
         menu->addAction(action);
     }
