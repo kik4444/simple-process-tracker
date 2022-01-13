@@ -44,7 +44,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     connect(processScanner, &ProcessScanner::foundRunningProcess, this, &MainWindow::foundRunningProcess);
     connect(processScanner, &ProcessScanner::foundStoppedProcesses, this, &MainWindow::foundStoppedProcesses);
 
-    // Setup table
+    // Setup processes table
     ui->tableView->setItemDelegate(new MyItemDelegate());
     processTableViewModel->setHorizontalHeaderLabels(QStringList()
         << "#" << "Tracking" << "Icon" << "Name" << "Notes" << "Duration" << "Last seen" << "Date added");
@@ -61,9 +61,14 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     ui->tableView->horizontalHeader()->setContextMenuPolicy(Qt::CustomContextMenu);
     connect(ui->tableView->horizontalHeader(), &QHeaderView::customContextMenuRequested, this, &MainWindow::tableHorizontalHeaderCustomContextMenuRequested);
 
-    // Setup dock context menu
-    ui->dockWidget->setContextMenuPolicy(Qt::CustomContextMenu);
-    connect(ui->dockWidget, &QDockWidget::customContextMenuRequested, this, &MainWindow::dockCustomContextMenuRequested);
+    // Setup categories table
+    categoriesTableModel->setHorizontalHeaderLabels(QStringList() << "Categories");
+    ui->categoriesTable->setModel(categoriesTableModel);
+    ui->categoriesTable->horizontalHeader()->sectionResizeMode(QHeaderView::Stretch);
+
+    // Setup categories table context menu
+    ui->categoriesTable->setContextMenuPolicy(Qt::CustomContextMenu);
+    connect(ui->categoriesTable, &QTableView::customContextMenuRequested, this, &MainWindow::dockCustomContextMenuRequested);
 
     // Setup line edit in toolbar for filtering process list
     QLineEdit *processFilterLineEdit = new QLineEdit(ui->toolBar);
@@ -515,7 +520,7 @@ void MainWindow::dockCustomContextMenuRequested(const QPoint &pos)
     QMenu *menu = new QMenu(this);
     menu->addAction(new QAction("Hello there", this));
 
-    menu->popup(ui->dockWidget->mapToGlobal(pos));
+    menu->popup(ui->categoriesTable->viewport()->mapToGlobal(pos));
 }
 
 void MainWindow::on_actionAdd_triggered()
