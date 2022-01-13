@@ -96,6 +96,8 @@ private: // Methods
     void createProcessInTable(QString number, QString activeSymbol, QIcon icon, QString processName, QString notes, quint64 duration, QString lastSeen, QString dateAdded);
     QIcon getIcon(QString processName, QString iconPath);
 
+    QVariant getIndexData(int row, int column);
+
     void loadProcessData();
     void loadWindowData();
     void saveWindowData();
@@ -115,7 +117,7 @@ private: // Variables
     Ui::MainWindow *ui;
 
     MyStandardItemModel *processTableViewModel = new MyStandardItemModel();
-    MySortFilterProxyModel *filterProxyModel;
+    MySortFilterProxyModel *processFilterProxyModel;
 
     QSystemTrayIcon *systemTrayIcon;
 
@@ -152,11 +154,9 @@ private slots:
 
     void tableCellCustomContextMenuRequested(const QPoint &pos);
     void tableHorizontalHeaderCustomContextMenuRequested(const QPoint &pos);
-//    void tableVerticalHeaderCustomContextMenuRequested(const QPoint &pos);
 
     void on_actionAdd_triggered();
     void on_actionPoll_triggered();
-//    void on_actionInvert_hidden_triggered();
     void on_actionStretch_triggered();
     void on_actionOptions_triggered();
     void on_actionImport_triggered();
@@ -166,8 +166,6 @@ private slots:
     void systemTrayIconActionOpen();
     void systemTrayIconActionResumeAll();
     void systemTrayIconActionPauseAll();
-//    void systemTrayIconActionShowAll();
-//    void systemTrayIconActionHideAll();
     void systemTrayIconActionExit();
     void on_actionHelp_triggered();
 };
