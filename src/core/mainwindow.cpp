@@ -725,9 +725,14 @@ void MainWindow::on_actionPoll_triggered()
     pollProcesses();
 }
 
-void MainWindow::on_actionStretch_triggered()
+void MainWindow::on_actionMove_Up_triggered()
 {
-    ui->tableView->horizontalHeader()->resizeSections(QHeaderView::Stretch);
+
+}
+
+void MainWindow::on_actionMove_Down_triggered()
+{
+
 }
 
 void MainWindow::on_actionOptions_triggered()
@@ -775,6 +780,11 @@ void MainWindow::on_actionImport_triggered()
                 processData["dateAdded"].toString());
         }
     }
+}
+
+void MainWindow::on_actionStretch_triggered()
+{
+    ui->tableView->horizontalHeader()->resizeSections(QHeaderView::Stretch);
 }
 
 void MainWindow::on_actionHelp_triggered()
