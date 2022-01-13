@@ -120,6 +120,8 @@ private: // Variables
     MyStandardItemModel *processTableViewModel = new MyStandardItemModel();
     MySortFilterProxyModel *processFilterProxyModel;
 
+    QStandardItemModel *categoriesTableModel = new QStandardItemModel();
+
     QSystemTrayIcon *systemTrayIcon;
 
     QTimer *processPollTimer, *runningProcessDurationsUpdateTimer, *processDataAutoSaveTimer;
