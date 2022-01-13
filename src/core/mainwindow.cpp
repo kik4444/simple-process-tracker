@@ -615,8 +615,13 @@ void MainWindow::categoriesTableCustomContextMenuRequested(const QPoint &pos)
 
 void MainWindow::on_categoriesTable_clicked(const QModelIndex &index)
 {
-    //TODO implement deselecting rows
-    qDebug() << (ui->categoriesTable->selectionModel()->selectedRows().first() == index) << index.row();
+    if (currentlySelectedCategoriesRow == index.row())
+    {
+        ui->categoriesTable->selectionModel()->select(index, QItemSelectionModel::Deselect);
+        currentlySelectedCategoriesRow = -1;
+    }
+    else
+        currentlySelectedCategoriesRow = index.row();
 }
 
 void MainWindow::on_actionAdd_triggered()
