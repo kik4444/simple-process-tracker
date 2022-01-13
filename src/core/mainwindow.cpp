@@ -506,8 +506,10 @@ void MainWindow::restoreTableFilterState(int lastCategoryRow)
         tableFilterByCategory(categoriesTableModel->index(lastCategoryRow, CategoryColumns::Name));
 }
 
-void MainWindow::tableResetFilter()
+void MainWindow::tableResetFilter(QModelIndex index)
 {
+    ui->categoriesTable->selectionModel()->select(index, QItemSelectionModel::Deselect);
+    currentlySelectedCategoriesRow = -1;
     processFilterProxyModel->setFilterFixedString("");
     processFilterProxyModel->setFilterKeyColumn(-1); // -1 means all columns
 }
@@ -706,11 +708,7 @@ void MainWindow::categoriesTableCustomContextMenuRequested(const QPoint &pos)
 void MainWindow::on_categoriesTable_clicked(const QModelIndex &index)
 {
     if (currentlySelectedCategoriesRow == index.row())
-    {
-        ui->categoriesTable->selectionModel()->select(index, QItemSelectionModel::Deselect);
-        currentlySelectedCategoriesRow = -1;
-        tableResetFilter();
-    }
+        tableResetFilter(index);
     else
         tableFilterByCategory(index);
 }
