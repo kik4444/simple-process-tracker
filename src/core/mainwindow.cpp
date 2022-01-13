@@ -68,7 +68,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
 
     // Setup categories table context menu
     ui->categoriesTable->setContextMenuPolicy(Qt::CustomContextMenu);
-    connect(ui->categoriesTable, &QTableView::customContextMenuRequested, this, &MainWindow::dockCustomContextMenuRequested);
+    connect(ui->categoriesTable, &QTableView::customContextMenuRequested, this, &MainWindow::categoriesTableCustomContextMenuRequested);
 
     // Setup line edit in toolbar for filtering process list
     QLineEdit *processFilterLineEdit = new QLineEdit(ui->toolBar);
@@ -514,7 +514,7 @@ void MainWindow::tableHorizontalHeaderCustomContextMenuRequested(const QPoint &p
     menu->popup(ui->tableView->horizontalHeader()->viewport()->mapToGlobal(pos));
 }
 
-void MainWindow::dockCustomContextMenuRequested(const QPoint &pos)
+void MainWindow::categoriesTableCustomContextMenuRequested(const QPoint &pos)
 {
     qDebug() << "Hello";
     QMenu *menu = new QMenu(this);
