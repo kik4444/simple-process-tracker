@@ -57,9 +57,13 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     ui->tableView->setContextMenuPolicy(Qt::CustomContextMenu);
     connect(ui->tableView, &QTableView::customContextMenuRequested, this, &MainWindow::tableCellCustomContextMenuRequested);
 
-    // Setup horizontal header
+    // Setup horizontal header context menu
     ui->tableView->horizontalHeader()->setContextMenuPolicy(Qt::CustomContextMenu);
     connect(ui->tableView->horizontalHeader(), &QHeaderView::customContextMenuRequested, this, &MainWindow::tableHorizontalHeaderCustomContextMenuRequested);
+
+    // Setup dock context menu
+    ui->dockWidget->setContextMenuPolicy(Qt::CustomContextMenu);
+    connect(ui->dockWidget, &QDockWidget::customContextMenuRequested, this, &MainWindow::dockCustomContextMenuRequested);
 
     // Setup line edit in toolbar for filtering process list
     QLineEdit *processFilterLineEdit = new QLineEdit(ui->toolBar);
@@ -503,6 +507,15 @@ void MainWindow::tableHorizontalHeaderCustomContextMenuRequested(const QPoint &p
     }
 
     menu->popup(ui->tableView->horizontalHeader()->viewport()->mapToGlobal(pos));
+}
+
+void MainWindow::dockCustomContextMenuRequested(const QPoint &pos)
+{
+    qDebug() << "Hello";
+    QMenu *menu = new QMenu(this);
+    menu->addAction(new QAction("Hello there", this));
+
+    menu->popup(ui->dockWidget->mapToGlobal(pos));
 }
 
 void MainWindow::on_actionAdd_triggered()
