@@ -170,6 +170,8 @@ private slots:
     void tableHorizontalHeaderCustomContextMenuRequested(const QPoint &pos);
     void categoriesTableCustomContextMenuRequested(const QPoint &pos);
 
+    void on_categoriesTable_clicked(const QModelIndex &index);
+
     void on_actionAdd_triggered();
     void on_actionPoll_triggered();
     void on_actionStretch_triggered();
