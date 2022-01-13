@@ -186,9 +186,11 @@ private slots:
 
     void on_actionAdd_triggered();
     void on_actionPoll_triggered();
-    void on_actionStretch_triggered();
+    void on_actionMove_Up_triggered();
+    void on_actionMove_Down_triggered();
     void on_actionOptions_triggered();
     void on_actionImport_triggered();
+    void on_actionStretch_triggered();
     void on_actionExit_triggered();
     void processFilterLineEdit_textChanged(const QString &arg1);
 
