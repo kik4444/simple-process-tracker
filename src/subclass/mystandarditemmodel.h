@@ -27,14 +27,23 @@ namespace ProcessColumns
 {
     enum ProcessColumns
     {
-        Number = 0,
-        Tracking = 1,
-        Icon = 2,
-        Name = 3,
-        Notes = 4,
-        Duration = 5,
-        LastSeen = 6,
-        DateAdded = 7
+        HiddenCategories = 0,
+        Number = 1,
+        Tracking = 2,
+        Icon = 3,
+        Name = 4,
+        Notes = 5,
+        Duration = 6,
+        LastSeen = 7,
+        DateAdded = 8
+    };
+}
+
+namespace CategoryColumns
+{
+    enum CategoryColumns
+    {
+        Name = 0
     };
 }
 
