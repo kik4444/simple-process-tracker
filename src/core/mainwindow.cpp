@@ -498,6 +498,19 @@ void MainWindow::addOrRemoveProcessCategory(QModelIndex index, QString category,
     processFilterProxyModel->setData(getIndex(index.row(), ProcessColumns::HiddenCategories), processCategories.join(categoryDelimiter));
 }
 
+void MainWindow::renameCategory(QModelIndex index, QString newName)
+{
+    tableResetFilter(index);
+    for (int row = 0; row < processFilterProxyModel->rowCount(); row++)
+    {
+        QModelIndex processIndex = getIndex(row, ProcessColumns::HiddenCategories);
+        QStringList processCategories = processIndex.data().toString().split(categoryDelimiter);
+        processFilterProxyModel->setData(processIndex, processCategories.replaceInStrings(index.data().toString(), newName).join(categoryDelimiter));
+    }
+
+    categoriesTableModel->setData(index, newName);
+}
+
 void MainWindow::restoreTableFilterState(int lastCategoryRow)
 {
     if (lastCategoryRow < 0 || lastCategoryRow >= categoriesTableModel->rowCount())
@@ -690,6 +703,21 @@ void MainWindow::categoriesTableCustomContextMenuRequested(const QPoint &pos)
     QModelIndex selectedCategory = ui->categoriesTable->indexAt(pos);
     if (selectedCategory.row() >= 0 && selectedCategory.column() >= 0)
     {
+        action = new QAction("Rename category", this);
+        connect(action, &QAction::triggered, this, [=]()
+        {
+            QString newName = QInputDialog::getText(this, "Rename category", "New category name", QLineEdit::Normal, "");
+            newName.remove(categoryDelimiter);
+            if (!newName.isEmpty())
+            {
+                if (!categoryAlreadyExists(newName))
+                    renameCategory(selectedCategory, newName);
+                else
+                    systemTrayIcon->showMessage("Error", "Category " + newName + " already exists", QSystemTrayIcon::Warning, 3000);
+            }
+        });
+        menu->addAction(action);
+
         action = new QAction("Remove category", this);
         connect(action, &QAction::triggered, this, [=]()
         {

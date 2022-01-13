@@ -125,9 +125,9 @@ private: // Methods
     void removeCategoryFromAllProcesses(QString category);
     void addAllSelectedProcessesToCategory(QList<QModelIndex> selectedProcesses, QString category);
     void removeAllCategoriesFromSelectedProcesses(QList<QModelIndex> selectedProcesses);
-
     bool processIsInCategory(QModelIndex index, QString category);
     void addOrRemoveProcessCategory(QModelIndex index, QString category, bool alreadyInCategory);
+    void renameCategory(QModelIndex index, QString newName);
 
     void restoreTableFilterState(int categorySelection);
     void tableResetFilter(QModelIndex index = QModelIndex());
