@@ -581,7 +581,16 @@ void MainWindow::on_actionExit_triggered()
 
 void MainWindow::processFilterLineEdit_textChanged(const QString &arg1)
 {
-    //TODO
+    if (arg1.isEmpty())
+    {
+        processFilterProxyModel->setFilterFixedString("");
+    }
+    else
+    {
+        processFilterProxyModel->setFilterRegularExpression(QRegularExpression(arg1, QRegularExpression::CaseInsensitiveOption));
+    }
+
+    processFilterProxyModel->setFilterKeyColumn(-1); // -1 means all columns
 }
 
 void MainWindow::systemTrayIconActionOpen()
