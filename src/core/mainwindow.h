@@ -155,6 +155,7 @@ private slots:
 
     void tableCellCustomContextMenuRequested(const QPoint &pos);
     void tableHorizontalHeaderCustomContextMenuRequested(const QPoint &pos);
+    void dockCustomContextMenuRequested(const QPoint &pos);
 
     void on_actionAdd_triggered();
     void on_actionPoll_triggered();
