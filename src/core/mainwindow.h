@@ -93,11 +93,15 @@ private: // Methods
     void pollProcesses();
     void updateRunningProcessDurations();
 
-    void createProcessInTable(QString categories, QString number, QString activeSymbol, QIcon icon, QString processName, QString notes, quint64 duration, QString lastSeen, QString dateAdded);
     QIcon getIcon(QString processName, QString iconPath);
+    void createProcessInTable(QString categories, QString number, QString activeSymbol, QIcon icon, QString processName, QString notes, quint64 duration, QString lastSeen, QString dateAdded);
+    void createCategoryInTable(QString categoryName);
 
     QModelIndex getIndex(int row, int column);
     QVariant getIndexData(int row, int column);
+
+    QString getDelimitedCategories();
+    void createCategoriesFromDelimitedList(QString delimitedCategories);
 
     void loadProcessData();
     void loadWindowData();
