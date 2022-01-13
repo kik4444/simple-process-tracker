@@ -225,7 +225,7 @@ void MainWindow::saveProcessData()
         QString processName = getIndexData(row, ProcessColumns::Name).toString();
         settings.beginGroup(processName);
 
-        settings.setValue("number", getIndexData(row, ProcessColumns::HiddenCategories).toString());
+        settings.setValue("categories", getIndexData(row, ProcessColumns::HiddenCategories).toString());
         settings.setValue("number", getIndexData(row, ProcessColumns::Number).toString());
         settings.setValue("tracking", getIndexData(row, ProcessColumns::Tracking).toString() == processIsActiveSymbol);
         settings.setValue("iconPath", processIcons[processName]);
@@ -237,8 +237,6 @@ void MainWindow::saveProcessData()
         settings.endGroup();
     }
 }
-
-//TODO save/load process categories
 
 void MainWindow::loadWindowData()
 {
@@ -385,8 +383,6 @@ void MainWindow::normalizeProcessNumbers()
     for (int row = 0; row < processFilterProxyModel->rowCount(); row++)
         processFilterProxyModel->setData(getIndex(row, ProcessColumns::Number), row + 1);
 }
-
-//TODO export/imort process categories
 
 void MainWindow::exportSelectedRows(QList<QModelIndex> selectedRows)
 {
