@@ -95,7 +95,7 @@ private: // Methods
 
     QIcon getIcon(QString processName, QString iconPath);
     void createProcessInTable(QString categories, QString number, QString activeSymbol, QIcon icon, QString processName, QString notes, quint64 duration, QString lastSeen, QString dateAdded);
-    void createCategoryInTable(QString categoryName);
+    void createCategoryInTable(QString category);
 
     QModelIndex getIndex(int row, int column);
     QVariant getIndexData(int row, int column);
@@ -120,8 +120,14 @@ private: // Methods
     void exportSelectedRows(QList<QModelIndex> selectedRows);
     bool isJsonValid(QJsonObject jsonObject);
 
-    bool categoryAlreadyExists(QString categoryName);
-    void removeCategoryAndItsEntries(QString categoryName, int row);
+    bool categoryAlreadyExists(QString category);
+    void removeCategoryAndItsEntries(QString category, int row);
+
+    void addAllSelectedProcessesToCategory(QList<QModelIndex> selectedProcesses, QString category);
+    void removeAllCategoriesFromSelectedProcesses(QList<QModelIndex> selectedProcesses);
+
+    bool processIsInCategory(QString processName, QString category);
+    void addOrRemoveProcessFromCategory(QString processName, bool alreadyInCategory);
 
 private: // Variables
     Ui::MainWindow *ui;

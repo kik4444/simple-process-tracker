@@ -186,10 +186,10 @@ void MainWindow::createProcessInTable(QString categories, QString number, QStrin
     processTableViewModel->setItem(newestRow, ProcessColumns::DateAdded, new MyStandardItem(dateAdded));
 }
 
-void MainWindow::createCategoryInTable(QString categoryName)
+void MainWindow::createCategoryInTable(QString category)
 {
-    if (!categoryName.isEmpty())
-        categoriesTableModel->setItem(categoriesTableModel->rowCount(), CategoryColumns::Name, new MyStandardItem(categoryName));
+    if (!category.isEmpty())
+        categoriesTableModel->setItem(categoriesTableModel->rowCount(), CategoryColumns::Name, new MyStandardItem(category));
 }
 
 QModelIndex MainWindow::getIndex(int row, int column)
@@ -445,19 +445,44 @@ bool MainWindow::isJsonValid(QJsonObject jsonObject)
     return false;
 }
 
-bool MainWindow::categoryAlreadyExists(QString categoryName)
+bool MainWindow::categoryAlreadyExists(QString category)
 {
     for (int row = 0; row < categoriesTableModel->rowCount(); row++)
-        if (categoriesTableModel->item(row, CategoryColumns::Name)->text() == categoryName)
+        if (categoriesTableModel->item(row, CategoryColumns::Name)->text() == category)
             return true;
 
     return false;
 }
 
-void MainWindow::removeCategoryAndItsEntries(QString categoryName, int row)
+void MainWindow::removeCategoryAndItsEntries(QString category, int row)
 {
-    //TODO remove entries from this category
+    //TODO remove this category from all processes that have it
     categoriesTableModel->removeRows(row, 1);
+}
+
+void MainWindow::addAllSelectedProcessesToCategory(QList<QModelIndex> selectedProcesses, QString category)
+{
+    //TODO
+    qDebug() << category << selectedProcesses;
+}
+
+void MainWindow::removeAllCategoriesFromSelectedProcesses(QList<QModelIndex> selectedProcesses)
+{
+    //TODO
+    qDebug() << selectedProcesses;
+}
+
+bool MainWindow::processIsInCategory(QString processName, QString category)
+{
+    //TODO
+    qDebug() << processName << category;
+    return true;
+}
+
+void MainWindow::addOrRemoveProcessFromCategory(QString processName, bool alreadyInCategory)
+{
+    //TODO
+    qDebug() << processName << alreadyInCategory;
 }
 
 /*---------------------------------------------------- User input ----------------------------------------------------*/
@@ -542,6 +567,34 @@ void MainWindow::tableCellCustomContextMenuRequested(const QPoint &pos)
     // On multiple selected - Add all to specific category or remove all categories
     // On single selected - Add to specific category or remove from specific category via checked actions
     QMenu *categoriesSubMenu = menu->addMenu("Categories");
+    if (selectedRows.size() > 1)
+    {
+        // Multiple
+        QMenu *addAllSubMenu = categoriesSubMenu->addMenu("Add all to...");
+        foreach (QString category, getDelimitedCategories())
+        {
+            QAction *action = new QAction(category, this);
+            connect(action, &QAction::triggered, this, [=](){addAllSelectedProcessesToCategory(selectedRows, category);});
+            addAllSubMenu->addAction(action);
+        }
+
+        QAction *action = new QAction("Remove all", this);
+        connect(action, &QAction::triggered, this, [=](){removeAllCategoriesFromSelectedProcesses(selectedRows);});
+        categoriesSubMenu->addAction(action);
+    }
+    else
+    {
+        // Single
+        foreach (QString category, getDelimitedCategories())
+        {
+            QAction *action = new QAction(category, this);
+            action->setCheckable(true);
+            QString processName = getIndexData(selectedRows.first().row(), ProcessColumns::Name).toString();
+            action->setChecked(processIsInCategory(processName, category));
+            connect(action, &QAction::triggered, this, [=](bool checked){addOrRemoveProcessFromCategory(processName, !checked);});
+            categoriesSubMenu->addAction(action);
+        }
+    }
 
     // Remove action
     QAction *action = new QAction("Remove", this);
@@ -552,8 +605,6 @@ void MainWindow::tableCellCustomContextMenuRequested(const QPoint &pos)
     action = new QAction("Export", this);
     connect(action, &QAction::triggered, this, [=](){exportSelectedRows(selectedRows);});
     menu->addAction(action);
-
-    //TODO checked action for adding/removing from category
 
     menu->popup(ui->tableView->viewport()->mapToGlobal(pos));
 }
@@ -588,14 +639,14 @@ void MainWindow::categoriesTableCustomContextMenuRequested(const QPoint &pos)
     QAction *action = new QAction("Add category", this);
     connect(action, &QAction::triggered, this, [=]()
     {
-        QString categoryName = QInputDialog::getText(this, "Add category", "Set category name", QLineEdit::Normal, "");
-        categoryName.remove(categoryDelimiter);
-        if (!categoryName.isEmpty())
+        QString category = QInputDialog::getText(this, "Add category", "Set category name", QLineEdit::Normal, "");
+        category.remove(categoryDelimiter);
+        if (!category.isEmpty())
         {
-            if (!categoryAlreadyExists(categoryName))
-                createCategoryInTable(categoryName);
+            if (!categoryAlreadyExists(category))
+                createCategoryInTable(category);
             else
-                systemTrayIcon->showMessage("Error", "Category " + categoryName + " already exists", QSystemTrayIcon::Warning, 3000);
+                systemTrayIcon->showMessage("Error", "Category " + category + " already exists", QSystemTrayIcon::Warning, 3000);
         }
     });
     menu->addAction(action);
@@ -606,11 +657,11 @@ void MainWindow::categoriesTableCustomContextMenuRequested(const QPoint &pos)
         action = new QAction("Remove category", this);
         connect(action, &QAction::triggered, this, [=]()
         {
-            QString categoryName = categoriesTableModel->item(selectedCategory.row(), CategoryColumns::Name)->text();
+            QString category = categoriesTableModel->item(selectedCategory.row(), CategoryColumns::Name)->text();
 
             if (getConfirmDialogAnswer("Remove category", "Are you sure you wish to remove category "
-                + categoryName + "? This action is irreversible!") == QMessageBox::Yes)
-                removeCategoryAndItsEntries(categoryName, selectedCategory.row());
+                + category + "? This action is irreversible!") == QMessageBox::Yes)
+                removeCategoryAndItsEntries(category, selectedCategory.row());
         });
         menu->addAction(action);
     }
