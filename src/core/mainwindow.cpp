@@ -87,7 +87,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     loadWindowData();
     pollProcesses();
 
-    ui->tableView->hideColumn(ProcessColumns::HiddenCategories);
+    ui->tableView->showColumn(ProcessColumns::HiddenCategories);
 
     // Background timers
     processPollTimer = new QTimer(this);
@@ -134,10 +134,7 @@ MainWindow::~MainWindow()
 
 void MainWindow::on_actionDebug_triggered()
 {
-    for (int row = 0; row < processFilterProxyModel->rowCount(); row++)
-    {
-        qDebug() << getIndexData(row, ProcessColumns::HiddenCategories).toString();
-    }
+    removeCategoryFromAllProcesses("test");
 }
 
 void MainWindow::loadProcessData()
@@ -454,10 +451,11 @@ bool MainWindow::categoryAlreadyExists(QString category)
     return false;
 }
 
-void MainWindow::removeCategoryAndItsEntries(QModelIndex index, QString category)
+void MainWindow::removeCategoryAndItsEntries(QModelIndex index)
 {
+    tableResetFilter();
+    removeCategoryFromAllProcesses(categoriesTableModel->item(index.row(), CategoryColumns::Name)->text());
     categoriesTableModel->removeRows(index.row(), 1);
-    removeCategoryFromAllProcesses(category);
 }
 
 void MainWindow::removeCategoryFromAllProcesses(QString category)
@@ -488,6 +486,7 @@ bool MainWindow::processIsInCategory(QModelIndex index, QString category)
 void MainWindow::addOrRemoveProcessCategory(QModelIndex index, QString category, bool alreadyInCategory)
 {
     QStringList processCategories = getIndexData(index.row(), ProcessColumns::HiddenCategories).toString().split(categoryDelimiter);
+    processCategories.removeAll("");
 
     if (alreadyInCategory)
         processCategories.removeAll(category);
@@ -495,6 +494,18 @@ void MainWindow::addOrRemoveProcessCategory(QModelIndex index, QString category,
         processCategories.append(category);
 
     processFilterProxyModel->setData(getIndex(index.row(), ProcessColumns::HiddenCategories), processCategories.join(categoryDelimiter));
+}
+
+void MainWindow::tableResetFilter()
+{
+    processFilterProxyModel->setFilterFixedString("");
+    processFilterProxyModel->setFilterKeyColumn(-1); // -1 means all columns
+}
+
+void MainWindow::tableFilterByCategory(QString category)
+{
+    processFilterProxyModel->setFilterFixedString(category);
+    processFilterProxyModel->setFilterKeyColumn(ProcessColumns::HiddenCategories);
 }
 
 /*---------------------------------------------------- User input ----------------------------------------------------*/
@@ -672,7 +683,7 @@ void MainWindow::categoriesTableCustomContextMenuRequested(const QPoint &pos)
 
             if (getConfirmDialogAnswer("Remove category", "Are you sure you wish to remove category "
                 + category + "? This action is irreversible!") == QMessageBox::Yes)
-                removeCategoryAndItsEntries(selectedCategory, category);
+                removeCategoryAndItsEntries(selectedCategory);
         });
         menu->addAction(action);
     }
@@ -686,11 +697,12 @@ void MainWindow::on_categoriesTable_clicked(const QModelIndex &index)
     {
         ui->categoriesTable->selectionModel()->select(index, QItemSelectionModel::Deselect);
         currentlySelectedCategoriesRow = -1;
+        tableResetFilter();
     }
     else
     {
         currentlySelectedCategoriesRow = index.row();
-        //TODO trigger re-filter
+        tableFilterByCategory(categoriesTableModel->item(index.row(), ProcessColumns::HiddenCategories)->text());
     }
 }
 
