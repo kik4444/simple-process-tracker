@@ -69,6 +69,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
 
     categoriesTableModel->setHorizontalHeaderLabels(QStringList() << "Categories");
     ui->categoriesTable->setModel(categoriesTableModel);
+    ui->categoriesTable->setItemDelegate(new MyItemDelegate());
     ui->categoriesTable->horizontalHeader()->sectionResizeMode(QHeaderView::Stretch);
 
     // Setup categories table context menu
@@ -131,7 +132,7 @@ MainWindow::~MainWindow()
 
 void MainWindow::on_actionDebug_triggered()
 {
-
+    categoriesTableModel->setItem(categoriesTableModel->rowCount(), 0, new QStandardItem("Hello"));
 }
 
 void MainWindow::loadProcessData()
