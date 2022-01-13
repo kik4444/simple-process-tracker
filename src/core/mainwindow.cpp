@@ -458,35 +458,41 @@ bool MainWindow::categoryAlreadyExists(QString category)
     return false;
 }
 
-void MainWindow::removeCategoryAndItsEntries(QString category, int row)
+void MainWindow::removeCategoryAndItsEntries(QModelIndex index, QString category)
 {
     //TODO remove this category from all processes that have it
-    categoriesTableModel->removeRows(row, 1);
+    categoriesTableModel->removeRows(index.row(), 1);
 }
 
 void MainWindow::addAllSelectedProcessesToCategory(QList<QModelIndex> selectedRows, QString category)
 {
-    //TODO
-    qDebug() << category << selectedRows;
+    foreach (QModelIndex index, selectedRows)
+        if (!processIsInCategory(index, category))
+            addOrRemoveProcessFromCategory(index, category, false);
 }
 
 void MainWindow::removeAllCategoriesFromSelectedProcesses(QList<QModelIndex> selectedRows)
 {
-    //TODO
-    qDebug() << selectedRows;
+    foreach (QModelIndex index, selectedRows)
+        processFilterProxyModel->setData(getIndex(index.row(), ProcessColumns::HiddenCategories), "");
 }
 
-bool MainWindow::processIsInCategory(QString processName, QString category)
+bool MainWindow::processIsInCategory(QModelIndex index, QString category)
 {
-    //TODO
-    qDebug() << processName << category;
-    return true;
+    QStringList processCategories = getIndexData(index.row(), ProcessColumns::HiddenCategories).toString().split(categoryDelimiter);
+    return processCategories.contains(category);
 }
 
-void MainWindow::addOrRemoveProcessFromCategory(QString processName, bool alreadyInCategory)
+void MainWindow::addOrRemoveProcessFromCategory(QModelIndex index, QString category, bool alreadyInCategory)
 {
-    //TODO
-    qDebug() << processName << alreadyInCategory;
+    QStringList processCategories = getIndexData(index.row(), ProcessColumns::HiddenCategories).toString().split(categoryDelimiter);
+
+    if (alreadyInCategory)
+        processCategories.removeAll(category);
+    else
+        processCategories.append(category);
+
+    processFilterProxyModel->setData(getIndex(index.row(), ProcessColumns::HiddenCategories), processCategories.join(categoryDelimiter));
 }
 
 /*---------------------------------------------------- User input ----------------------------------------------------*/
@@ -593,9 +599,8 @@ void MainWindow::tableCellCustomContextMenuRequested(const QPoint &pos)
         {
             QAction *action = new QAction(category, this);
             action->setCheckable(true);
-            QString processName = getIndexData(selectedRows.first().row(), ProcessColumns::Name).toString();
-            action->setChecked(processIsInCategory(processName, category));
-            connect(action, &QAction::triggered, this, [=](bool checked){addOrRemoveProcessFromCategory(processName, !checked);});
+            action->setChecked(processIsInCategory(selectedRows.first(), category));
+            connect(action, &QAction::triggered, this, [=](bool checked){addOrRemoveProcessFromCategory(selectedRows.first(), category, !checked);});
             categoriesSubMenu->addAction(action);
         }
     }
@@ -665,7 +670,7 @@ void MainWindow::categoriesTableCustomContextMenuRequested(const QPoint &pos)
 
             if (getConfirmDialogAnswer("Remove category", "Are you sure you wish to remove category "
                 + category + "? This action is irreversible!") == QMessageBox::Yes)
-                removeCategoryAndItsEntries(category, selectedCategory.row());
+                removeCategoryAndItsEntries(selectedCategory, category);
         });
         menu->addAction(action);
     }

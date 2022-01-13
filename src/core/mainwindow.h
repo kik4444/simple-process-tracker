@@ -121,13 +121,13 @@ private: // Methods
     bool isJsonValid(QJsonObject jsonObject);
 
     bool categoryAlreadyExists(QString category);
-    void removeCategoryAndItsEntries(QString category, int row);
+    void removeCategoryAndItsEntries(QModelIndex index, QString category);
 
     void addAllSelectedProcessesToCategory(QList<QModelIndex> selectedProcesses, QString category);
     void removeAllCategoriesFromSelectedProcesses(QList<QModelIndex> selectedProcesses);
 
-    bool processIsInCategory(QString processName, QString category);
-    void addOrRemoveProcessFromCategory(QString processName, bool alreadyInCategory);
+    bool processIsInCategory(QModelIndex index, QString category);
+    void addOrRemoveProcessFromCategory(QModelIndex index, QString category, bool alreadyInCategory);
 
 private: // Variables
     Ui::MainWindow *ui;
