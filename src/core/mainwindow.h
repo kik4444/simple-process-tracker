@@ -71,6 +71,9 @@
 // For quick access to QSettings
 #define quicksettings(location) QSettings settings(QSettings::IniFormat, QSettings::UserScope, "simple-process-tracker", location)
 
+// To easily switch to and from debug mode
+#define DEBUG_MODE
+
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
 
@@ -173,7 +176,9 @@ public slots:
     void userOptionsChosen(uint processPollInterval);
 
 private slots:
-//    void on_actionDebug_triggered();
+    #ifdef DEBUG_MODE
+    void on_actionDebug_triggered();
+    #endif
 
     void saveProcessData();
 

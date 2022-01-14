@@ -87,7 +87,12 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     loadWindowData();
     pollProcesses();
 
+    #ifdef DEBUG_MODE
     ui->tableView->showColumn(ProcessColumns::HiddenCategories);
+    ui->actionDebug->setVisible(true);
+    #else
+    ui->tableView->hideColumn(ProcessColumns::HiddenCategories);
+    #endif
 
     // Background timers
     processPollTimer = new QTimer(this);
@@ -132,10 +137,12 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
-//void MainWindow::on_actionDebug_triggered()
-//{
-//    removeCategoryFromAllProcesses("test");
-//}
+#ifdef DEBUG_MODE
+void MainWindow::on_actionDebug_triggered()
+{
+    qDebug() << "Do something";
+}
+#endif
 
 void MainWindow::loadProcessData()
 {
