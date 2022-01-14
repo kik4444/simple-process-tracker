@@ -206,6 +206,16 @@ QVariant MainWindow::getIndexData(int row, int column)
     return processFilterProxyModel->data(processFilterProxyModel->index(row, column));
 }
 
+QModelIndex MainWindow::getRealIndex(int row, int column)
+{
+    return processFilterProxyModel->sourceModel()->index(row, column);
+}
+
+QVariant MainWindow::getRealIndexData(int row, int column)
+{
+    return processFilterProxyModel->sourceModel()->data(processFilterProxyModel->sourceModel()->index(row, column));
+}
+
 QStringList MainWindow::getDelimitedCategories()
 {
     QStringList categories;
@@ -224,19 +234,19 @@ void MainWindow::createCategoriesFromDelimitedList(QString delimitedCategories)
 void MainWindow::saveProcessData()
 {
     quicksettings("processList");
-    for (int row = 0; row < processFilterProxyModel->rowCount(); row++)
+    for (int row = 0; row < processFilterProxyModel->sourceModel()->rowCount(); row++)
     {
-        QString processName = getIndexData(row, ProcessColumns::Name).toString();
+        QString processName = getRealIndexData(row, ProcessColumns::Name).toString();
         settings.beginGroup(processName);
 
-        settings.setValue("categories", getIndexData(row, ProcessColumns::HiddenCategories).toString());
-        settings.setValue("number", getIndexData(row, ProcessColumns::Number).toString());
-        settings.setValue("tracking", getIndexData(row, ProcessColumns::Tracking).toString() == processIsActiveSymbol);
+        settings.setValue("categories", getRealIndexData(row, ProcessColumns::HiddenCategories).toString());
+        settings.setValue("number", getRealIndexData(row, ProcessColumns::Number).toString());
+        settings.setValue("tracking", getRealIndexData(row, ProcessColumns::Tracking).toString() == processIsActiveSymbol);
         settings.setValue("iconPath", processIcons[processName]);
-        settings.setValue("notes", getIndexData(row, ProcessColumns::Notes).toString());
+        settings.setValue("notes", getRealIndexData(row, ProcessColumns::Notes).toString());
         settings.setValue("duration", processDurations[processName]);
-        settings.setValue("lastSeen", getIndexData(row, ProcessColumns::LastSeen).toString());
-        settings.setValue("dateAdded", getIndexData(row, ProcessColumns::DateAdded).toString());
+        settings.setValue("lastSeen", getRealIndexData(row, ProcessColumns::LastSeen).toString());
+        settings.setValue("dateAdded", getRealIndexData(row, ProcessColumns::DateAdded).toString());
 
         settings.endGroup();
     }
@@ -269,9 +279,9 @@ void MainWindow::pollProcesses()
 {
     QMap<QString, int> processList;
 
-    for (int row = 0; row < processFilterProxyModel->rowCount(); row++)
-        if (getIndexData(row, ProcessColumns::Tracking).toString() == processIsActiveSymbol)
-            processList.insert(getIndexData(row, ProcessColumns::Name).toString(), row);
+    for (int row = 0; row < processFilterProxyModel->sourceModel()->rowCount(); row++)
+        if (getRealIndexData(row, ProcessColumns::Tracking).toString() == processIsActiveSymbol)
+            processList.insert(getRealIndexData(row, ProcessColumns::Name).toString(), row);
 
     emit checkRunningProcesses(processList);
 }
@@ -289,14 +299,14 @@ void MainWindow::foundStoppedProcesses(QMap<QString, int> stoppedProcesses)
 
 void MainWindow::updateRunningProcessDurations()
 {
-    for (int row = 0; row < processFilterProxyModel->rowCount(); row++)
+    for (int row = 0; row < processFilterProxyModel->sourceModel()->rowCount(); row++)
     {
-        QString processName = getIndexData(row, ProcessColumns::Name).toString();
+        QString processName = getRealIndexData(row, ProcessColumns::Name).toString();
         if (runningProcesses.contains(processName))
         {
             processDurations[processName]++;
-            processFilterProxyModel->setData(getIndex(row, ProcessColumns::Duration), Parser::parseDurationToString(processDurations[processName]));
-            processFilterProxyModel->setData(getIndex(row, ProcessColumns::LastSeen), "Now");
+            processFilterProxyModel->sourceModel()->setData(getRealIndex(row, ProcessColumns::Duration), Parser::parseDurationToString(processDurations[processName]));
+            processFilterProxyModel->sourceModel()->setData(getRealIndex(row, ProcessColumns::LastSeen), "Now");
         }
     }
 }
@@ -309,14 +319,14 @@ void MainWindow::newProcessAdded(QString processName, QString iconPath)
         return;
     }
 
-    createProcessInTable("", QString::number(processFilterProxyModel->rowCount() + 1),
+    createProcessInTable("", QString::number(processFilterProxyModel->sourceModel()->rowCount() + 1),
         processIsActiveSymbol, getIcon(processName, iconPath), processName, "", 0, "Now", QDateTime::currentDateTime().toString("yyyy/MM/dd hh:mm:ss"));
 }
 
 bool MainWindow::processAlreadyExists(QString processName)
 {
-    for (int row = 0; row < processFilterProxyModel->rowCount(); row++)
-        if (getIndexData(row, ProcessColumns::Name).toString() == processName)
+    for (int row = 0; row < processFilterProxyModel->sourceModel()->rowCount(); row++)
+        if (getRealIndexData(row, ProcessColumns::Name).toString() == processName)
             return true;
 
     return false;
@@ -327,20 +337,23 @@ void MainWindow::updateLastSeenIfRunningAndRemoveFromRunning(QString processName
     if (runningProcesses.contains(processName))
     {
         runningProcesses.removeAll(processName);
-        processFilterProxyModel->setData(getIndex(row, ProcessColumns::LastSeen),
+        processFilterProxyModel->sourceModel()->setData(getRealIndex(row, ProcessColumns::LastSeen),
             QDateTime::currentDateTime().toString("yyyy/MM/dd hh:mm:ss"));
     }
 }
 
 void MainWindow::updateLastSeenForRunningProcesses()
 {
-    for (int row = 0; row < processFilterProxyModel->rowCount(); row++)
-        updateLastSeenIfRunningAndRemoveFromRunning(getIndexData(row, ProcessColumns::Name).toString(), row);
+    for (int row = 0; row < processFilterProxyModel->sourceModel()->rowCount(); row++)
+        updateLastSeenIfRunningAndRemoveFromRunning(getRealIndexData(row, ProcessColumns::Name).toString(), row);
 }
 
 void MainWindow::setProcessPaused(QModelIndex processIndex, bool paused)
 {
-    updateLastSeenIfRunningAndRemoveFromRunning(getIndexData(processIndex.row(), ProcessColumns::Name).toString(), processIndex.row());
+    // processIndex is from the proxy view model
+    QModelIndex realProcessIndex = processFilterProxyModel->mapToSource(processIndex);
+    updateLastSeenIfRunningAndRemoveFromRunning(getRealIndexData(realProcessIndex.row(), ProcessColumns::Name).toString(), realProcessIndex.row());
+
     QModelIndex processTracking = getIndex(processIndex.row(), ProcessColumns::Tracking);
     processFilterProxyModel->setData(processTracking, paused ? processIsPausedSymbol : processIsActiveSymbol);
 }
@@ -848,7 +861,7 @@ void MainWindow::on_actionImport_triggered()
 
             createProcessInTable(
                 processData["categories"].toString(),
-                QString::number(processFilterProxyModel->rowCount() + 1),
+                QString::number(processFilterProxyModel->sourceModel()->rowCount() + 1),
                 processData["tracking"].toBool() ? processIsActiveSymbol : processIsPausedSymbol,
                 getIcon(processName, processData["iconPath"].toString()),
                 processName,
