@@ -534,18 +534,25 @@ void MainWindow::addOrRemoveProcessCategory(QModelIndex processIndex, QString ca
 
 void MainWindow::renameCategory(QModelIndex categoryIndex, QString newName)
 {
-    processFilterProxyModel->beginResetModel();
-    tableResetFilter(categoryIndex);
-
-    for (int row = 0; row < processFilterProxyModel->rowCount(); row++)
+    QString oldName = categoriesTableModel->item(categoryIndex.row(), CategoryColumns::Name)->text();
+    for (int row = 0; row < processFilterProxyModel->sourceModel()->rowCount(); row++)
     {
-        QModelIndex processIndex = getIndex(row, ProcessColumns::HiddenCategories);
-        QString processCategories = processIndex.data().toString();
-        processFilterProxyModel->setData(processIndex, processCategories.replace(categoryIndex.data().toString(), newName));
+        QModelIndex realProcessIndex = getRealIndex(row, ProcessColumns::HiddenCategories);
+        QStringList processCategories = realProcessIndex.data().toString().split(categoryDelimiter);
+        QStringList renamedProcessCategories;
+
+        foreach (QString processCategory, processCategories)
+        {
+            if (processCategory == oldName)
+                renamedProcessCategories.append(newName);
+            else
+                renamedProcessCategories.append(processCategory);
+        }
+
+        processFilterProxyModel->sourceModel()->setData(realProcessIndex, renamedProcessCategories.join(categoryDelimiter));
     }
 
-    categoriesTableModel->setData(categoryIndex, newName);
-    processFilterProxyModel->endResetModel();
+    categoriesTableModel->setData(categoriesTableModel->index(categoryIndex.row(), CategoryColumns::Name), newName);
 }
 
 void MainWindow::restoreTableFilterState(int lastCategoryRow)
