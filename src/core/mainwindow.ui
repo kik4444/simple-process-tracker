@@ -63,6 +63,7 @@
    <attribute name="toolBarBreak">
     <bool>false</bool>
    </attribute>
+   <addaction name="actionDebug"/>
    <addaction name="actionAdd"/>
    <addaction name="actionPoll"/>
    <addaction name="actionMove_Up"/>
@@ -774,6 +775,9 @@
    </property>
    <property name="text">
     <string>Debug</string>
+   </property>
+   <property name="visible">
+    <bool>false</bool>
    </property>
   </action>
   <action name="actionMove_Up">
