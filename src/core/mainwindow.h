@@ -102,6 +102,8 @@ private: // Methods
 
     QModelIndex getIndex(int row, int column);
     QVariant getIndexData(int row, int column);
+    QModelIndex getRealIndex(int row, int column);
+    QVariant getRealIndexData(int row, int column);
 
     QStringList getDelimitedCategories();
     void createCategoriesFromDelimitedList(QString delimitedCategories);
