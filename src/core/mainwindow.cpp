@@ -386,8 +386,12 @@ void MainWindow::removeSelectedRows(QList<QModelIndex> selectedRows)
 
 void MainWindow::normalizeProcessNumbers()
 {
+    tableResetFilter();
+    processFilterProxyModel->beginResetModel();
     for (int row = 0; row < processFilterProxyModel->rowCount(); row++)
         processFilterProxyModel->setData(getIndex(row, ProcessColumns::Number), row + 1);
+
+    processFilterProxyModel->endResetModel();
 }
 
 void MainWindow::exportSelectedRows(QList<QModelIndex> selectedRows)
