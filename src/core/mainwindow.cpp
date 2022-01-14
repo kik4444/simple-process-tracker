@@ -491,13 +491,15 @@ bool MainWindow::categoryAlreadyExists(QString category)
 void MainWindow::removeCategoryAndItsEntries(QModelIndex categoryIndex)
 {
     tableResetFilter(categoryIndex);
-    processFilterProxyModel->beginResetModel();
-    for (int row = 0; row < processFilterProxyModel->rowCount(); row++)
-        addOrRemoveProcessCategory(getIndex(row, ProcessColumns::HiddenCategories),
+
+    for (int row = 0; row < processFilterProxyModel->sourceModel()->rowCount(); row++)
+    {
+        QModelIndex realProcessIndex = processFilterProxyModel->sourceModel()->index(row, ProcessColumns::HiddenCategories);
+        addOrRemoveProcessCategory(processFilterProxyModel->mapFromSource(realProcessIndex),
             categoriesTableModel->item(categoryIndex.row(), CategoryColumns::Name)->text(), true);
+    }
 
     categoriesTableModel->removeRows(categoryIndex.row(), 1);
-    processFilterProxyModel->endResetModel();
 }
 
 void MainWindow::addAllSelectedProcessesToCategory(QList<QModelIndex> selectedRows, QString category)
