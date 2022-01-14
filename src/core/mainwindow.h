@@ -124,7 +124,6 @@ private: // Methods
 
     bool categoryAlreadyExists(QString category);
     void removeCategoryAndItsEntries(QModelIndex categoryIndex);
-    void removeCategoryFromAllProcesses(QString category);
     void addAllSelectedProcessesToCategory(QList<QModelIndex> selectedProcesses, QString category);
     void removeAllCategoriesFromSelectedProcesses(QList<QModelIndex> selectedProcesses);
     bool processIsInCategory(QModelIndex processIndex, QString category);
