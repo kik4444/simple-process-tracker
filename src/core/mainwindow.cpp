@@ -565,7 +565,7 @@ void MainWindow::on_tableView_doubleClicked(const QModelIndex &index)
         case ProcessColumns::Icon:
         {
             QString fileName = QFileDialog::getOpenFileName(this, "Open Image", "", Utility::imageFormats);
-            QPixmap icon(fileName);
+            QIcon icon = getIcon(getIndexData(index.row(), ProcessColumns::Name).toString(), fileName);
 
             if (!fileName.isEmpty() && !icon.isNull())
                 processFilterProxyModel->setData(getIndex(index.row(), ProcessColumns::Icon), icon, Qt::DecorationRole);
