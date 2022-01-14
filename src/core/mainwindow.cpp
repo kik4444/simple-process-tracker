@@ -500,7 +500,9 @@ void MainWindow::addOrRemoveProcessCategory(QModelIndex processIndex, QString ca
 
 void MainWindow::renameCategory(QModelIndex categoryIndex, QString newName)
 {
+    processFilterProxyModel->beginResetModel();
     tableResetFilter(categoryIndex);
+
     for (int row = 0; row < processFilterProxyModel->rowCount(); row++)
     {
         QModelIndex processIndex = getIndex(row, ProcessColumns::HiddenCategories);
@@ -509,6 +511,7 @@ void MainWindow::renameCategory(QModelIndex categoryIndex, QString newName)
     }
 
     categoriesTableModel->setData(categoryIndex, newName);
+    processFilterProxyModel->endResetModel();
 }
 
 void MainWindow::restoreTableFilterState(int lastCategoryRow)
