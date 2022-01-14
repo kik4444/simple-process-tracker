@@ -380,7 +380,8 @@ void MainWindow::removeSelectedRows(QList<QModelIndex> selectedRows)
             runningProcesses.removeAll(currentProcessName);
         }
 
-        QModelIndexList indexes = selectedRows;
+        QList<QModelIndex> indexes = selectedRows;
+        std::sort(indexes.begin(), indexes.end());
         while (!indexes.isEmpty())
         {
             processFilterProxyModel->removeRows(indexes.last().row(), 1);
