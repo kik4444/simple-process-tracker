@@ -119,20 +119,20 @@ private: // Methods
     void updateLastSeenIfRunningAndRemoveFromRunning(QString processName, int row);
     void updateLastSeenForRunningProcesses();
 
-    void setProcessPaused(QModelIndex processIndex, bool paused);
+    void setProcessPaused(QModelIndex proxyProcessIndex, bool paused);
 
-    void removeSelectedRows(QList<QModelIndex> selectedRows);
+    void removeSelectedRows(QList<QModelIndex> proxySelectedRows);
     void normalizeProcessNumbers();
 
-    void exportSelectedRows(QList<QModelIndex> selectedRows);
+    void exportSelectedRows(QList<QModelIndex> proxySelectedRows);
     bool isJsonValid(QJsonObject jsonObject);
 
     bool categoryAlreadyExists(QString category);
     void removeCategoryAndItsEntries(QModelIndex categoryIndex);
-    void addAllSelectedProcessesToCategory(QList<QModelIndex> selectedProcesses, QString category);
-    void removeAllCategoriesFromSelectedProcesses(QList<QModelIndex> selectedProcesses);
-    bool processIsInCategory(QModelIndex processIndex, QString category);
-    void addOrRemoveProcessCategory(QModelIndex processIndex, QString category, bool alreadyInCategory);
+    void addAllSelectedProcessesToCategory(QList<QModelIndex> proxySelectedProcesses, QString category);
+    void removeAllCategoriesFromSelectedProcesses(QList<QModelIndex> proxySelectedRows);
+    bool isProcessInCategory(QModelIndex proxyProcessIndex, QString category);
+    void addOrRemoveProcessCategory(QModelIndex proxyProcessIndex, QString category, bool alreadyInCategory);
     void renameCategory(QModelIndex categoryIndex, QString newName);
 
     void restoreTableFilterState(int categorySelection);
@@ -169,12 +169,12 @@ private: // Variables
     const QChar categoryDelimiter = ';';
 
 signals:
-    void checkRunningProcesses(QMap<QString, int> processList);
+    void checkRunningProcesses(QMap<QString, int> realProcessList);
 
 public slots:
     void newProcessAdded(QString processName, QString iconPath);
     void foundRunningProcess(QString processName);
-    void foundStoppedProcesses(QMap<QString, int> stoppedProcesses);
+    void foundStoppedProcesses(QMap<QString, int> realStoppedProcesses);
 
     void userOptionsChosen(uint processPollInterval);
 
@@ -185,7 +185,7 @@ private slots:
 
     void saveProcessData();
 
-    void on_tableView_doubleClicked(const QModelIndex &index);
+    void on_tableView_doubleClicked(const QModelIndex &proxyIndex);
 
     void tableCellCustomContextMenuRequested(const QPoint &pos);
     void tableHorizontalHeaderCustomContextMenuRequested(const QPoint &pos);

@@ -44,10 +44,10 @@ public:
 
 signals:
     void foundRunningProcess(QString processName);
-    void foundStoppedProcesses(QMap<QString, int> stoppedProcesses);
+    void foundStoppedProcesses(QMap<QString, int> realStoppedProcesses);
 
 public slots:
-    void checkRunningProcesses(QMap<QString, int> processList);
+    void checkRunningProcesses(QMap<QString, int> realProcessList);
 };
 
 #endif // PROCESSSCANNER_H
