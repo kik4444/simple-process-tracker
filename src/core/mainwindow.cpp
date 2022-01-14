@@ -178,7 +178,7 @@ void MainWindow::createProcessInTable(QString categories, QString number, QStrin
 {
     processDurations.insert(processName, duration);
 
-    int newestRow = processTableViewModel->rowCount();
+    int newestRow = processFilterProxyModel->sourceModel()->rowCount();
     processTableViewModel->setItem(newestRow, ProcessColumns::HiddenCategories, new MyStandardItem(categories));
     processTableViewModel->setItem(newestRow, ProcessColumns::Number, new MyStandardItem(number));
     processTableViewModel->setItem(newestRow, ProcessColumns::Tracking, new MyStandardItem(activeSymbol));
@@ -708,7 +708,7 @@ void MainWindow::tableCellCustomContextMenuRequested(const QPoint &pos)
 void MainWindow::tableHorizontalHeaderCustomContextMenuRequested(const QPoint &pos)
 {
     QMenu *menu = new QMenu(this);
-    for (int column = ProcessColumns::Number; column < processTableViewModel->columnCount(); column++)
+    for (int column = ProcessColumns::Number; column < processFilterProxyModel->sourceModel()->columnCount(); column++)
     {
         QAction *action = new QAction(processTableViewModel->horizontalHeaderItem(column)->text(), this);
         action->setCheckable(true);
