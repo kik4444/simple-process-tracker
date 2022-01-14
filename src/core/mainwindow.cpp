@@ -555,6 +555,12 @@ void MainWindow::tableFilterByCategory(QModelIndex categoryIndex)
     processFilterProxyModel->setFilterKeyColumn(ProcessColumns::HiddenCategories);
 }
 
+void MainWindow::tableFilterByText(QString text)
+{
+    processFilterProxyModel->setFilterRegularExpression(QRegularExpression(text, QRegularExpression::CaseInsensitiveOption));
+    processFilterProxyModel->setFilterKeyColumn(ProcessColumns::Name);
+}
+
 /*---------------------------------------------------- User input ----------------------------------------------------*/
 
 void MainWindow::on_tableView_doubleClicked(const QModelIndex &index)
@@ -879,10 +885,7 @@ void MainWindow::processFilterLineEdit_textChanged(const QString &arg1)
             tableFilterByCategory(categoriesTableModel->index(currentlySelectedCategoriesRow, CategoryColumns::Name));
     }
     else
-    {
-        processFilterProxyModel->setFilterRegularExpression(QRegularExpression(arg1, QRegularExpression::CaseInsensitiveOption));
-        processFilterProxyModel->setFilterKeyColumn(-1);
-    }
+        tableFilterByText(arg1);
 }
 
 void MainWindow::systemTrayIconActionOpen()
