@@ -69,8 +69,6 @@
    <addaction name="actionDebug"/>
    <addaction name="actionAdd"/>
    <addaction name="actionPoll"/>
-   <addaction name="actionMove_Up"/>
-   <addaction name="actionMove_Down"/>
    <addaction name="actionOptions"/>
    <addaction name="actionExport"/>
    <addaction name="actionImport"/>
@@ -699,6 +697,24 @@
     </layout>
    </widget>
   </widget>
+  <widget class="QToolBar" name="toolBar_2">
+   <property name="windowTitle">
+    <string>toolBar_2</string>
+   </property>
+   <property name="toolButtonStyle">
+    <enum>Qt::ToolButtonTextBesideIcon</enum>
+   </property>
+   <attribute name="toolBarArea">
+    <enum>BottomToolBarArea</enum>
+   </attribute>
+   <attribute name="toolBarBreak">
+    <bool>false</bool>
+   </attribute>
+   <addaction name="actionMove_to_Top"/>
+   <addaction name="actionMove_Up"/>
+   <addaction name="actionMove_Down"/>
+   <addaction name="actionMove_to_Bottom"/>
+  </widget>
   <action name="actionAdd">
    <property name="icon">
     <iconset>
@@ -812,6 +828,24 @@
    </property>
    <property name="text">
     <string>Export</string>
+   </property>
+  </action>
+  <action name="actionMove_to_Top">
+   <property name="icon">
+    <iconset resource="../resources.qrc">
+     <normaloff>:/move-to-top-icon.svg</normaloff>:/move-to-top-icon.svg</iconset>
+   </property>
+   <property name="text">
+    <string>Move to Top</string>
+   </property>
+  </action>
+  <action name="actionMove_to_Bottom">
+   <property name="icon">
+    <iconset resource="../resources.qrc">
+     <normaloff>:/move-to-bottom-icon.svg</normaloff>:/move-to-bottom-icon.svg</iconset>
+   </property>
+   <property name="text">
+    <string>Move to Bottom</string>
    </property>
   </action>
  </widget>

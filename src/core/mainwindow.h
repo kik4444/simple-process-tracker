@@ -209,5 +209,7 @@ private slots:
     void systemTrayIconActionPauseAll();
     void systemTrayIconActionExit();
     void on_actionHelp_triggered();
+    void on_actionMove_to_Top_triggered();
+    void on_actionMove_to_Bottom_triggered();
 };
 #endif // MAINWINDOW_H
