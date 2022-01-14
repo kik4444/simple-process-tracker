@@ -140,7 +140,7 @@ MainWindow::~MainWindow()
 #ifdef DEBUG_MODE
 void MainWindow::on_actionDebug_triggered()
 {
-    qDebug() << "Do something";
+    normalizeProcessNumbers();
 }
 #endif
 
@@ -407,12 +407,15 @@ void MainWindow::removeSelectedRows(QList<QModelIndex> selectedRows)
 
 void MainWindow::normalizeProcessNumbers()
 {
-    tableResetFilter();
-    processFilterProxyModel->beginResetModel();
-    for (int row = 0; row < processFilterProxyModel->rowCount(); row++)
-        processFilterProxyModel->setData(getIndex(row, ProcessColumns::Number), row + 1);
+    QList<QModelIndex> realIndexNumbers;
+    for (int row = 0; row < processFilterProxyModel->sourceModel()->rowCount(); row++)
+        realIndexNumbers.append(getRealIndex(row, ProcessColumns::Number));
 
-    processFilterProxyModel->endResetModel();
+    std::sort(realIndexNumbers.begin(), realIndexNumbers.end(),
+        [](const QModelIndex &left, const QModelIndex &right){return left.data().toUInt() < right.data().toUInt();});
+
+    for (int row = 0; row < processFilterProxyModel->sourceModel()->rowCount(); row++)
+        processFilterProxyModel->sourceModel()->setData(realIndexNumbers.at(row), row + 1);
 }
 
 void MainWindow::exportSelectedRows(QList<QModelIndex> selectedRows)
