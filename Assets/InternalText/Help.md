@@ -77,4 +77,4 @@ The time the process was added to Simple Process Tracker.
 Right-click on a single or multiple selected processes to reveal extra actions for category management and other.
 
 ## System tray
-Simple Process Tracker will create an icon on startup in the system tray (bottom right of the screen) To remind you that it is working in the background. Right-click this icon for additional actions to open or exit Simple Process Tracker, pause or resume **all** processes.
+Simple Process Tracker will create an icon on startup in the system tray (bottom right of the screen) To remind you that it is working in the background. Right-click this icon for additional actions to open or exit Simple Process Tracker, pause or resume all currently shown processes.
