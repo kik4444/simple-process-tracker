@@ -28,7 +28,7 @@ public:
     explicit MySortFilterProxyModel(QObject *parent = nullptr) : QSortFilterProxyModel(parent) {};
     ~MySortFilterProxyModel() {};
 
-    virtual bool lessThan(const QModelIndex &source_left, const QModelIndex &source_right) const
+    virtual bool lessThan(const QModelIndex &source_left, const QModelIndex &source_right) const override
     {
         switch (source_left.column())
         {
@@ -41,6 +41,16 @@ public:
             default:
                 return QSortFilterProxyModel::lessThan(source_left, source_right);
         }
+    }
+
+    void beginResetModel()
+    {
+        QAbstractItemModel::beginResetModel();
+    }
+
+    void endResetModel()
+    {
+        QAbstractItemModel::endResetModel();
     }
 };
 
