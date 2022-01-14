@@ -417,7 +417,7 @@ void MainWindow::normalizeProcessNumbers()
         processFilterProxyModel->sourceModel()->setData(realIndexNumbers.at(row), row + 1);
 }
 
-void MainWindow::exportSelectedRows(QList<QModelIndex> proxySelectedRows)
+void MainWindow::exportProcesses(QList<QModelIndex> realProcesses)
 {
     QString exportLocation = QFileDialog::getSaveFileName(this, "Choose export location", "", "Text files (*.json)");
     if (exportLocation.isEmpty())
@@ -428,18 +428,18 @@ void MainWindow::exportSelectedRows(QList<QModelIndex> proxySelectedRows)
 
     QJsonObject processesJson;
 
-    foreach (QModelIndex index, proxySelectedRows)
+    foreach (QModelIndex index, realProcesses)
     {
         QJsonObject processData;
-        QString processName = getIndexData(index.row(), ProcessColumns::Name).toString();
+        QString processName = getRealIndexData(index.row(), ProcessColumns::Name).toString();
 
-        processData["categories"] = getIndexData(index.row(), ProcessColumns::HiddenCategories).toString();
-        processData["tracking"] = getIndexData(index.row(), ProcessColumns::Tracking).toString() == processIsActiveSymbol;
+        processData["categories"] = getRealIndexData(index.row(), ProcessColumns::HiddenCategories).toString();
+        processData["tracking"] = getRealIndexData(index.row(), ProcessColumns::Tracking).toString() == processIsActiveSymbol;
         processData["iconPath"] = processIcons[processName];
-        processData["notes"] = getIndexData(index.row(), ProcessColumns::Notes).toString();
+        processData["notes"] = getRealIndexData(index.row(), ProcessColumns::Notes).toString();
         processData["duration"] = QJsonValue::fromVariant(processDurations[processName]);
         processData["lastSeen"] = QDateTime::currentDateTime().toString("yyyy/MM/dd hh:mm:ss");
-        processData["dateAdded"] = getIndexData(index.row(), ProcessColumns::DateAdded).toString();
+        processData["dateAdded"] = getRealIndexData(index.row(), ProcessColumns::DateAdded).toString();
 
         processesJson.insert(processName, processData);
     }
@@ -697,7 +697,12 @@ void MainWindow::tableCellCustomContextMenuRequested(const QPoint &pos)
 
     // Export action
     action = new QAction("Export", this);
-    connect(action, &QAction::triggered, this, [=](){exportSelectedRows(proxySelectedRows);});
+    connect(action, &QAction::triggered, this, [=](){
+        QList<QModelIndex> realProcesses;
+        foreach (QModelIndex index, proxySelectedRows)
+            realProcesses.append(processFilterProxyModel->mapToSource(index));
+        exportProcesses(realProcesses);
+    });
     menu->addAction(action);
 
     menu->popup(ui->tableView->viewport()->mapToGlobal(pos));
@@ -841,6 +846,14 @@ void MainWindow::on_actionOptions_triggered()
     Options *options = new Options(nullptr, processPollInterval / 1000);
     connect(options, &Options::userOptionsChosen, this, &MainWindow::userOptionsChosen);
     options->show();
+}
+
+void MainWindow::on_actionExport_triggered()
+{
+    QList<QModelIndex> realProcesses;
+    for (int row = 0; row < processFilterProxyModel->sourceModel()->rowCount(); row++)
+        realProcesses.append(getRealIndex(row, ProcessColumns::Name));
+    exportProcesses(realProcesses);
 }
 
 void MainWindow::on_actionImport_triggered()
