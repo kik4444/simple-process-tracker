@@ -1,48 +1,80 @@
 # Simple Process Tracker v2.0
 
-A lightweight, simple Qt-based app that tracks how user-selected processes have been running on the system.
+A simple, lightweight app that tracks how long user-selected processes have cumulatively been running on the system.
+
 Source code - https://github.com/kik4444/simple-process-tracker
 
-## How to use
+Credits:
 
-### Adding processes to track
-Click the "Add" button on the top left. A new window will appear. In this window you can find the process you wish to track. Additionally you can set an icon for it. When you have found a process, double-click it to add it, or click it once and then the "ok" button.
+https://www.svgrepo.com - for SVG icons used in Simple Process Tracker
 
-### Pause / resume time tracking
-Double-click the "Tracking" cell for a given row to pause or resume tracking a process.
+## Toolbar
 
-### Add custom icon to process
-Double-click the "Icon" cell to change the icon of a process.
+### Add button
+Add a process to track from a list of found processes on this PC. Additionally you may select an icon for the process.
 
-### Removing processes
-Double-click the "Name" cell to confirm removing a tracked process. Removing is irreversible as it will also remove the saved data for that process.
+### Poll button
+Manually check which processes are currently working. Processes are normally checked on a configurable interval of time. If a process stops or starts, this won't be reflected in Simple Process Tracker until the next scheduled check. This button can be used to force a check ahead of schedule.
 
-### Custom notes
-Double-click the "Notes" cell to start writing in it. You can write anything in this cell.
+### Move Up button
+Move the currently selected process one position up. Use when processes are sorted by number.
 
-### Set custom running duration
-Double-click the "Duration" cell and an input dialog will appear. Write your custom duration in dd::hh:mm:ss format. E.g. 2 days, 1 hour, 32 minutes and 42 seconds is 02:01:32:42. Click "Ok" and the processes' duration will start counting up from that.
+### Move Down button
+Move the currently selected process one position down. Use when processes are sorted by number.
 
-### Hide / show columns
-Right-click on the horizontal header (where it says "Tracking", "Icon", etc.) and a context menu will popup where you can hide or show columns.
+### Options button
+Specify in seconds how often Simple Process Tracker should check which processes are working. For example, if the schedule is 5 seconds, if a tracked process started 1 second ago, it will take 4 seconds until Simple Process Tracker detects it and starts counting it. Use with lower values for more accuracy and more frequent CPU usage spikes, or higher values for less accuracy and less CPU usage spikes.
 
-### Hide / show rows
-Right-click on the vertical header on the left with the numbers and a context menu will popup where you can hide or show rows. Alternatively you can right-click a process to show most available actions for it.
+### Import button
+Import a JSON file containing one or more processes' saved data.
 
-### Manually poll processes
-Click the "Poll" button on the main window button to force check processes. This is useful if you've set the poll interval to be very infrequent in the options window and wish to initiate a poll immediately.
+### Stretch button
+Resize the processes table's columns equally to fit the available space.
 
-### Stretching columns to fit
-Click the "Stretch" button to automatically resize all columns to fit the available window space.
+### Help button
+Show this help page, the Qt version information and Simple Process Tracker's license.
 
-### Options
-Click the "Options" button on the main window to open the options window. Here you can set how often Simple Process Tracker should check whether a process is running. The default value is 5 seconds. Lower values = more accuracy + more CPU usage. Higher values = less accuracy + less CPU usage. I recommend 15 seconds.
+### Exit button
+Shut down Simple Process Tracker without putting it in the background.
 
-### About
-Click the "About" button to open this help section.
+### Text field
+Filter the process list by process name.
 
-### Running in the background
-This program can work in the background if you close the main window. It is visible in the system tray icon. To close the program completely, right click the system tray icon and click "Exit" or click the big "Exit" button on the main window.
+## Categories table
+In this table you can create, rename or remove custom categories that can be assigned to one or more processes. Every process can have zero or more categories assigned to it. Right-click in this table to reveal options for adding, renaming or removing categories.
 
-Credits
-https://www.svgrepo.com - for SVG icons
+### Selecting a category
+Left-click on a category to show only processes that belong to it. Click it again to show all processes.
+
+## Processes table
+This is the main table that contains all processes' data separated by columns. Right-click the columns to show or hide them.
+
+### # column
+The number of the process.
+
+### Tracking column
+An indicator whether Simple Process Tracker is actively tracking the process. Double-click to pause or resume tracking.
+
+### Icon column
+The user-defined icon for this process. Double-click to change it.
+
+### Name column
+The name of the process as it appears in this PC. Double-click to remove the process and data associated with it.
+
+### Notes column
+User notes for the process. Write whatever you wish in this column.
+
+### Duration column
+The cumulative amount of time the process has been working in days, hours, minutes and seconds. Double-click to set a custom duration in dd:hh:mm:ss format. For example 2 days, 1 hour, 32 minutes and 42 seconds is 02:01:32:42.
+
+### Last seen column
+The time the process was last found to be working.
+
+### Date added column
+The time the process was added to Simple Process Tracker.
+
+## Right-click actions
+Right-click on a single or multiple selected processes to reveal extra actions for category management and other.
+
+## System tray
+Simple Process Tracker will create an icon on startup in the system tray (bottom right of the screen) To remind you that it is working in the background. Right-click this icon for additional actions to open or exit Simple Process Tracker, pause or resume **all** processes.
