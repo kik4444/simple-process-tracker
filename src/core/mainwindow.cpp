@@ -331,6 +331,13 @@ void MainWindow::updateLastSeenForRunningProcesses()
         updateLastSeenIfRunningAndRemoveFromRunning(getIndexData(row, ProcessColumns::Name).toString(), row);
 }
 
+void MainWindow::setProcessPaused(QModelIndex processIndex, bool paused)
+{
+    updateLastSeenIfRunningAndRemoveFromRunning(getIndexData(processIndex.row(), ProcessColumns::Name).toString(), processIndex.row());
+    QModelIndex processTracking = getIndex(processIndex.row(), ProcessColumns::Tracking);
+    processFilterProxyModel->setData(processTracking, paused ? processIsPausedSymbol : processIsActiveSymbol);
+}
+
 void MainWindow::userOptionsChosen(uint processPollInterval)
 {
     uint pollInterval = processPollInterval * 1000;
@@ -522,19 +529,19 @@ void MainWindow::restoreTableFilterState(int lastCategoryRow)
         tableFilterByCategory(categoriesTableModel->index(lastCategoryRow, CategoryColumns::Name));
 }
 
-void MainWindow::tableResetFilter(QModelIndex index)
+void MainWindow::tableResetFilter(QModelIndex categoryIndex)
 {
-    ui->categoriesTable->selectionModel()->select(index, QItemSelectionModel::Deselect);
+    ui->categoriesTable->selectionModel()->select(categoryIndex, QItemSelectionModel::Deselect);
     currentlySelectedCategoriesRow = -1;
     processFilterProxyModel->setFilterFixedString("");
     processFilterProxyModel->setFilterKeyColumn(-1); // -1 means all columns
 }
 
-void MainWindow::tableFilterByCategory(QModelIndex index)
+void MainWindow::tableFilterByCategory(QModelIndex categoryIndex)
 {
-    currentlySelectedCategoriesRow = index.row();
-    ui->categoriesTable->selectionModel()->select(index, QItemSelectionModel::Select);
-    processFilterProxyModel->setFilterFixedString(categoriesTableModel->item(index.row(), CategoryColumns::Name)->text());
+    currentlySelectedCategoriesRow = categoryIndex.row();
+    ui->categoriesTable->selectionModel()->select(categoryIndex, QItemSelectionModel::Select);
+    processFilterProxyModel->setFilterFixedString(categoriesTableModel->item(categoryIndex.row(), CategoryColumns::Name)->text());
     processFilterProxyModel->setFilterKeyColumn(ProcessColumns::HiddenCategories);
 }
 
@@ -548,12 +555,7 @@ void MainWindow::on_tableView_doubleClicked(const QModelIndex &index)
     {
         case ProcessColumns::Tracking:
         {
-            updateLastSeenIfRunningAndRemoveFromRunning(processName, index.row());
-
-            QString processState = getIndexData(index.row(), ProcessColumns::Tracking).toString();
-            processFilterProxyModel->setData(getIndex(index.row(), ProcessColumns::Tracking),
-                processState == processIsActiveSymbol ? processIsPausedSymbol : processIsActiveSymbol);
-
+            setProcessPaused(index, getIndexData(index.row(), ProcessColumns::Tracking).toString() == processIsActiveSymbol);
             break;
         }
 
@@ -881,13 +883,13 @@ void MainWindow::systemTrayIconActionOpen()
 void MainWindow::systemTrayIconActionResumeAll()
 {
     for (int row = 0; row < processFilterProxyModel->rowCount(); row++)
-        processFilterProxyModel->setData(getIndex(row, ProcessColumns::Tracking), processIsActiveSymbol);
+        setProcessPaused(processFilterProxyModel->index(row, ProcessColumns::Tracking), false);
 }
 
 void MainWindow::systemTrayIconActionPauseAll()
 {
     for (int row = 0; row < processFilterProxyModel->rowCount(); row++)
-        processFilterProxyModel->setData(getIndex(row, ProcessColumns::Tracking), processIsPausedSymbol);
+        setProcessPaused(processFilterProxyModel->index(row, ProcessColumns::Tracking), true);
 }
 
 void MainWindow::systemTrayIconActionExit()
