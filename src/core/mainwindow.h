@@ -124,7 +124,7 @@ private: // Methods
     void removeSelectedRows(QList<QModelIndex> proxySelectedRows);
     void normalizeProcessNumbers();
 
-    void exportSelectedRows(QList<QModelIndex> proxySelectedRows);
+    void exportProcesses(QList<QModelIndex> proxySelectedRows);
     bool isJsonValid(QJsonObject jsonObject);
 
     bool categoryAlreadyExists(QString category);
@@ -198,6 +198,7 @@ private slots:
     void on_actionMove_Up_triggered();
     void on_actionMove_Down_triggered();
     void on_actionOptions_triggered();
+    void on_actionExport_triggered();
     void on_actionImport_triggered();
     void on_actionStretch_triggered();
     void on_actionExit_triggered();
