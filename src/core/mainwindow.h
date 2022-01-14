@@ -114,6 +114,8 @@ private: // Methods
     void updateLastSeenIfRunningAndRemoveFromRunning(QString processName, int row);
     void updateLastSeenForRunningProcesses();
 
+    void setProcessPaused(QModelIndex processIndex, bool paused);
+
     void removeSelectedRows(QList<QModelIndex> selectedRows);
     void normalizeProcessNumbers();
 
@@ -121,16 +123,16 @@ private: // Methods
     bool isJsonValid(QJsonObject jsonObject);
 
     bool categoryAlreadyExists(QString category);
-    void removeCategoryAndItsEntries(QModelIndex index);
+    void removeCategoryAndItsEntries(QModelIndex categoryIndex);
     void removeCategoryFromAllProcesses(QString category);
     void addAllSelectedProcessesToCategory(QList<QModelIndex> selectedProcesses, QString category);
     void removeAllCategoriesFromSelectedProcesses(QList<QModelIndex> selectedProcesses);
-    bool processIsInCategory(QModelIndex index, QString category);
-    void addOrRemoveProcessCategory(QModelIndex index, QString category, bool alreadyInCategory);
-    void renameCategory(QModelIndex index, QString newName);
+    bool processIsInCategory(QModelIndex processIndex, QString category);
+    void addOrRemoveProcessCategory(QModelIndex processIndex, QString category, bool alreadyInCategory);
+    void renameCategory(QModelIndex categoryIndex, QString newName);
 
     void restoreTableFilterState(int categorySelection);
-    void tableResetFilter(QModelIndex index = QModelIndex());
+    void tableResetFilter(QModelIndex categoryIndex = QModelIndex());
     void tableFilterByCategory(QModelIndex index);
 
 private: // Variables
