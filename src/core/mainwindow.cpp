@@ -277,13 +277,13 @@ void MainWindow::saveWindowData()
 
 void MainWindow::pollProcesses()
 {
-    QMap<QString, int> processList;
+    QMap<QString, int> realProcessList;
 
     for (int row = 0; row < processFilterProxyModel->sourceModel()->rowCount(); row++)
         if (getRealIndexData(row, ProcessColumns::Tracking).toString() == processIsActiveSymbol)
-            processList.insert(getRealIndexData(row, ProcessColumns::Name).toString(), row);
+            realProcessList.insert(getRealIndexData(row, ProcessColumns::Name).toString(), row);
 
-    emit checkRunningProcesses(processList);
+    emit checkRunningProcesses(realProcessList);
 }
 
 void MainWindow::foundRunningProcess(QString processName)
@@ -291,10 +291,10 @@ void MainWindow::foundRunningProcess(QString processName)
     runningProcesses.append(processName);
 }
 
-void MainWindow::foundStoppedProcesses(QMap<QString, int> stoppedProcesses)
+void MainWindow::foundStoppedProcesses(QMap<QString, int> realStoppedProcesses)
 {
-    foreach (QString processName, stoppedProcesses.keys())
-        updateLastSeenIfRunningAndRemoveFromRunning(processName, stoppedProcesses[processName]);
+    foreach (QString processName, realStoppedProcesses.keys())
+        updateLastSeenIfRunningAndRemoveFromRunning(processName, realStoppedProcesses[processName]);
 }
 
 void MainWindow::updateRunningProcessDurations()
@@ -348,14 +348,13 @@ void MainWindow::updateLastSeenForRunningProcesses()
         updateLastSeenIfRunningAndRemoveFromRunning(getRealIndexData(row, ProcessColumns::Name).toString(), row);
 }
 
-void MainWindow::setProcessPaused(QModelIndex processIndex, bool paused)
+void MainWindow::setProcessPaused(QModelIndex proxyProcessIndex, bool paused)
 {
-    // processIndex is from the proxy view model
-    QModelIndex realProcessIndex = processFilterProxyModel->mapToSource(processIndex);
+    QModelIndex realProcessIndex = processFilterProxyModel->mapToSource(proxyProcessIndex);
     updateLastSeenIfRunningAndRemoveFromRunning(getRealIndexData(realProcessIndex.row(), ProcessColumns::Name).toString(), realProcessIndex.row());
 
-    QModelIndex processTracking = getIndex(processIndex.row(), ProcessColumns::Tracking);
-    processFilterProxyModel->setData(processTracking, paused ? processIsPausedSymbol : processIsActiveSymbol);
+    QModelIndex proxyProcessTracking = getIndex(proxyProcessIndex.row(), ProcessColumns::Tracking);
+    processFilterProxyModel->setData(proxyProcessTracking, paused ? processIsPausedSymbol : processIsActiveSymbol);
 }
 
 void MainWindow::userOptionsChosen(uint processPollInterval)
@@ -376,24 +375,24 @@ int MainWindow::getConfirmDialogAnswer(QString title, QString text)
     return confirmDialog.exec();
 }
 
-void MainWindow::removeSelectedRows(QList<QModelIndex> selectedRows)
+void MainWindow::removeSelectedRows(QList<QModelIndex> proxySelectedRows)
 {
-    QString processName = getIndexData(selectedRows.first().row(), ProcessColumns::Name).toString();
+    QString processName = getIndexData(proxySelectedRows.first().row(), ProcessColumns::Name).toString();
 
     int answer = getConfirmDialogAnswer("Confirm removal", QString("Remove %1? This action is irreversible!")
-        .arg(selectedRows.size() == 1 ? processName : "multiple processes"));
+        .arg(proxySelectedRows.size() == 1 ? processName : "multiple processes"));
 
     if (answer == QMessageBox::Yes)
     {
         quicksettings("processList");
-        foreach(QModelIndex index, selectedRows)
+        foreach(QModelIndex index, proxySelectedRows)
         {
             QString currentProcessName = getIndexData(index.row(), ProcessColumns::Name).toString();
             settings.remove(currentProcessName);
             runningProcesses.removeAll(currentProcessName);
         }
 
-        QList<QModelIndex> indexes = selectedRows;
+        QList<QModelIndex> indexes = proxySelectedRows;
         std::sort(indexes.begin(), indexes.end());
         while (!indexes.isEmpty())
         {
@@ -418,7 +417,7 @@ void MainWindow::normalizeProcessNumbers()
         processFilterProxyModel->sourceModel()->setData(realIndexNumbers.at(row), row + 1);
 }
 
-void MainWindow::exportSelectedRows(QList<QModelIndex> selectedRows)
+void MainWindow::exportSelectedRows(QList<QModelIndex> proxySelectedRows)
 {
     QString exportLocation = QFileDialog::getSaveFileName(this, "Choose export location", "", "Text files (*.json)");
     if (exportLocation.isEmpty())
@@ -429,7 +428,7 @@ void MainWindow::exportSelectedRows(QList<QModelIndex> selectedRows)
 
     QJsonObject processesJson;
 
-    foreach (QModelIndex index, selectedRows)
+    foreach (QModelIndex index, proxySelectedRows)
     {
         QJsonObject processData;
         QString processName = getIndexData(index.row(), ProcessColumns::Name).toString();
@@ -502,28 +501,28 @@ void MainWindow::removeCategoryAndItsEntries(QModelIndex categoryIndex)
     categoriesTableModel->removeRows(categoryIndex.row(), 1);
 }
 
-void MainWindow::addAllSelectedProcessesToCategory(QList<QModelIndex> selectedRows, QString category)
+void MainWindow::addAllSelectedProcessesToCategory(QList<QModelIndex> proxySelectedProcesses, QString category)
 {
-    foreach (QModelIndex index, selectedRows)
-        if (!processIsInCategory(index, category))
+    foreach (QModelIndex index, proxySelectedProcesses)
+        if (!isProcessInCategory(index, category))
             addOrRemoveProcessCategory(index, category, false);
 }
 
-void MainWindow::removeAllCategoriesFromSelectedProcesses(QList<QModelIndex> selectedRows)
+void MainWindow::removeAllCategoriesFromSelectedProcesses(QList<QModelIndex> proxySelectedRows)
 {
-    foreach (QModelIndex index, selectedRows)
+    foreach (QModelIndex index, proxySelectedRows)
         processFilterProxyModel->setData(getIndex(index.row(), ProcessColumns::HiddenCategories), "");
 }
 
-bool MainWindow::processIsInCategory(QModelIndex processIndex, QString category)
+bool MainWindow::isProcessInCategory(QModelIndex proxyProcessIndex, QString category)
 {
-    QStringList processCategories = getIndexData(processIndex.row(), ProcessColumns::HiddenCategories).toString().split(categoryDelimiter);
+    QStringList processCategories = getIndexData(proxyProcessIndex.row(), ProcessColumns::HiddenCategories).toString().split(categoryDelimiter);
     return processCategories.contains(category);
 }
 
-void MainWindow::addOrRemoveProcessCategory(QModelIndex processIndex, QString category, bool alreadyInCategory)
+void MainWindow::addOrRemoveProcessCategory(QModelIndex proxyProcessIndex, QString category, bool alreadyInCategory)
 {
-    QStringList processCategories = getIndexData(processIndex.row(), ProcessColumns::HiddenCategories).toString().split(categoryDelimiter);
+    QStringList processCategories = getIndexData(proxyProcessIndex.row(), ProcessColumns::HiddenCategories).toString().split(categoryDelimiter);
     processCategories.removeAll("");
 
     if (alreadyInCategory)
@@ -531,7 +530,7 @@ void MainWindow::addOrRemoveProcessCategory(QModelIndex processIndex, QString ca
     else
         processCategories.append(category);
 
-    processFilterProxyModel->setData(getIndex(processIndex.row(), ProcessColumns::HiddenCategories), processCategories.join(categoryDelimiter));
+    processFilterProxyModel->setData(getIndex(proxyProcessIndex.row(), ProcessColumns::HiddenCategories), processCategories.join(categoryDelimiter));
 }
 
 void MainWindow::renameCategory(QModelIndex categoryIndex, QString newName)
@@ -589,40 +588,39 @@ void MainWindow::tableFilterByText(QString text)
 
 /*---------------------------------------------------- User input ----------------------------------------------------*/
 
-void MainWindow::on_tableView_doubleClicked(const QModelIndex &index)
+void MainWindow::on_tableView_doubleClicked(const QModelIndex &proxyIndex)
 {
-    QString processName = getIndexData(index.row(), ProcessColumns::Name).toString();
+    QString processName = getIndexData(proxyIndex.row(), ProcessColumns::Name).toString();
 
-    switch (index.column())
+    switch (proxyIndex.column())
     {
         case ProcessColumns::Tracking:
         {
-            setProcessPaused(index, getIndexData(index.row(), ProcessColumns::Tracking).toString() == processIsActiveSymbol);
+            setProcessPaused(proxyIndex, getIndexData(proxyIndex.row(), ProcessColumns::Tracking).toString() == processIsActiveSymbol);
             break;
         }
 
         case ProcessColumns::Icon:
         {
             QString fileName = QFileDialog::getOpenFileName(this, "Open Image", "", Utility::imageFormats);
-            QIcon icon = getIcon(getIndexData(index.row(), ProcessColumns::Name).toString(), fileName);
+            QIcon icon = getIcon(getIndexData(proxyIndex.row(), ProcessColumns::Name).toString(), fileName);
 
             if (!fileName.isEmpty() && !icon.isNull())
-                processFilterProxyModel->setData(getIndex(index.row(), ProcessColumns::Icon), icon, Qt::DecorationRole);
+                processFilterProxyModel->setData(getIndex(proxyIndex.row(), ProcessColumns::Icon), icon, Qt::DecorationRole);
 
             break;
         }
 
         case ProcessColumns::Name:
         {
-            removeSelectedRows(QList<QModelIndex>() << index);
-
+            removeSelectedRows(QList<QModelIndex>() << proxyIndex);
             break;
         }
 
         case ProcessColumns::Duration:
         {
             bool ok;
-            QString displayDuration = getIndexData(index.row(), ProcessColumns::Duration).toString();
+            QString displayDuration = getIndexData(proxyIndex.row(), ProcessColumns::Duration).toString();
             QString durationInput = QInputDialog::getText(this, "Custom duration", "Set custom duration", QLineEdit::Normal, displayDuration, &ok);
 
             if (ok)
@@ -635,12 +633,12 @@ void MainWindow::on_tableView_doubleClicked(const QModelIndex &index)
 
 void MainWindow::tableCellCustomContextMenuRequested(const QPoint &pos)
 {
-    QList<QModelIndex> selectedRows = ui->tableView->selectionModel()->selectedRows();
-    if (selectedRows.size() == 0)
+    QList<QModelIndex> proxySelectedRows = ui->tableView->selectionModel()->selectedRows();
+    if (proxySelectedRows.size() == 0)
         return;
 
     QList<QPair<QString, ProcessColumns::ProcessColumns>> actionNames = {{"Resume / Pause", ProcessColumns::Tracking}};
-    if (selectedRows.size() == 1)
+    if (proxySelectedRows.size() == 1)
     {
         actionNames.append({"Change icon", ProcessColumns::Icon});
         actionNames.append({"Change duration", ProcessColumns::Duration});
@@ -648,12 +646,12 @@ void MainWindow::tableCellCustomContextMenuRequested(const QPoint &pos)
 
     QMenu *menu = new QMenu(this);
 
-    //If multiple rows are selected, one action is displayed which is connected to all the selected rows
+    // If multiple rows are selected, one action is displayed which is connected to all the selected rows
     foreach (auto actionName, actionNames)
     {
         QAction *action = new QAction(actionName.first, this);
 
-        foreach (QModelIndex index, selectedRows)
+        foreach (QModelIndex index, proxySelectedRows)
             connect(action, &QAction::triggered, this, [=](){on_tableView_doubleClicked(
                 processFilterProxyModel->index(index.row(), actionName.second));});
 
@@ -664,19 +662,19 @@ void MainWindow::tableCellCustomContextMenuRequested(const QPoint &pos)
     // On multiple selected - Add all to specific category or remove all categories
     // On single selected - Add to specific category or remove from specific category via checked actions
     QMenu *categoriesSubMenu = menu->addMenu("Categories");
-    if (selectedRows.size() > 1)
+    if (proxySelectedRows.size() > 1)
     {
         // Multiple
         QMenu *addAllSubMenu = categoriesSubMenu->addMenu("Add all to...");
         foreach (QString category, getDelimitedCategories())
         {
             QAction *action = new QAction(category, this);
-            connect(action, &QAction::triggered, this, [=](){addAllSelectedProcessesToCategory(selectedRows, category);});
+            connect(action, &QAction::triggered, this, [=](){addAllSelectedProcessesToCategory(proxySelectedRows, category);});
             addAllSubMenu->addAction(action);
         }
 
         QAction *action = new QAction("Remove all", this);
-        connect(action, &QAction::triggered, this, [=](){removeAllCategoriesFromSelectedProcesses(selectedRows);});
+        connect(action, &QAction::triggered, this, [=](){removeAllCategoriesFromSelectedProcesses(proxySelectedRows);});
         categoriesSubMenu->addAction(action);
     }
     else
@@ -686,20 +684,20 @@ void MainWindow::tableCellCustomContextMenuRequested(const QPoint &pos)
         {
             QAction *action = new QAction(category, this);
             action->setCheckable(true);
-            action->setChecked(processIsInCategory(selectedRows.first(), category));
-            connect(action, &QAction::triggered, this, [=](bool checked){addOrRemoveProcessCategory(selectedRows.first(), category, !checked);});
+            action->setChecked(isProcessInCategory(proxySelectedRows.first(), category));
+            connect(action, &QAction::triggered, this, [=](bool checked){addOrRemoveProcessCategory(proxySelectedRows.first(), category, !checked);});
             categoriesSubMenu->addAction(action);
         }
     }
 
     // Remove action
     QAction *action = new QAction("Remove", this);
-    connect(action, &QAction::triggered, this, [=](){removeSelectedRows(selectedRows);});
+    connect(action, &QAction::triggered, this, [=](){removeSelectedRows(proxySelectedRows);});
     menu->addAction(action);
 
     // Export action
     action = new QAction("Export", this);
-    connect(action, &QAction::triggered, this, [=](){exportSelectedRows(selectedRows);});
+    connect(action, &QAction::triggered, this, [=](){exportSelectedRows(proxySelectedRows);});
     menu->addAction(action);
 
     menu->popup(ui->tableView->viewport()->mapToGlobal(pos));

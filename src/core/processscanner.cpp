@@ -53,13 +53,13 @@ QStringList ProcessScanner::getProcessList(ProcessDialog *thiz)
     return processList;
 }
 
-void ProcessScanner::checkRunningProcesses(QMap<QString, int> processList)
+void ProcessScanner::checkRunningProcesses(QMap<QString, int> realProcessList)
 {
     #if defined Q_OS_LINUX
 
     foreach (QString pid, QDir("/proc").entryList(QDir::Dirs | QDir::NoDotAndDotDot, QDir::Name))
     {
-        if (processList.isEmpty())
+        if (realProcessList.isEmpty())
             break;
 
         QFile file("/proc/" + pid + "/comm");
@@ -67,18 +67,18 @@ void ProcessScanner::checkRunningProcesses(QMap<QString, int> processList)
         {
             QString currentProcessName = QString(file.readAll()).remove("\n");
 
-            foreach (QString processName, processList.keys())
+            foreach (QString processName, realProcessList.keys())
             {
                 if (QString::compare(currentProcessName, processName) == 0)
                 {
                     emit foundRunningProcess(currentProcessName);
-                    processList.remove(processName);
+                    realProcessList.remove(processName);
                 }
             }
         }
     }
 
-    emit foundStoppedProcesses(processList);
+    emit foundStoppedProcesses(realProcessList);
 
     #elif defined Q_OS_MACOS
 
