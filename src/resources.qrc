@@ -14,6 +14,8 @@
         <file alias="export-icon.svg">../Assets/Icons/export-icon.svg</file>
         <file alias="move-up-icon.svg">../Assets/Icons/move-up-icon.svg</file>
         <file alias="move-down-icon.svg">../Assets/Icons/move-down-icon.svg</file>
+        <file alias="move-to-top-icon.svg">../Assets/Icons/move-to-top-icon.svg</file>
+        <file alias="move-to-bottom-icon.svg">../Assets/Icons/move-to-bottom-icon.svg</file>
         <file alias="Help.md">../Assets/InternalText/Help.md</file>
         <file alias="AboutQt.md">../Assets/InternalText/AboutQt.md</file>
         <file alias="COPYING">../COPYING</file>

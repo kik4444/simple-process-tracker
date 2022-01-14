@@ -803,6 +803,11 @@ void MainWindow::on_actionPoll_triggered()
     pollProcesses();
 }
 
+void MainWindow::on_actionMove_to_Top_triggered()
+{
+
+}
+
 void MainWindow::on_actionMove_Up_triggered()
 {
     QList<QModelIndex> selectedRows = ui->tableView->selectionModel()->selectedRows();
@@ -839,6 +844,11 @@ void MainWindow::on_actionMove_Down_triggered()
         processFilterProxyModel->setData(getIndex(last->row(), ProcessColumns::Number), lower.data());
         processFilterProxyModel->setData(lower, tempNumber);
     }
+}
+
+void MainWindow::on_actionMove_to_Bottom_triggered()
+{
+
 }
 
 void MainWindow::on_actionOptions_triggered()
