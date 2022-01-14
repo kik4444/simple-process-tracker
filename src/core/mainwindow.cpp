@@ -87,7 +87,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     loadWindowData();
     pollProcesses();
 
-    ui->tableView->hideColumn(ProcessColumns::HiddenCategories);
+    ui->tableView->showColumn(ProcessColumns::HiddenCategories);
 
     // Background timers
     processPollTimer = new QTimer(this);
@@ -453,11 +453,11 @@ bool MainWindow::categoryAlreadyExists(QString category)
     return false;
 }
 
-void MainWindow::removeCategoryAndItsEntries(QModelIndex index)
+void MainWindow::removeCategoryAndItsEntries(QModelIndex categoryIndex)
 {
     tableResetFilter();
-    removeCategoryFromAllProcesses(categoriesTableModel->item(index.row(), CategoryColumns::Name)->text());
-    categoriesTableModel->removeRows(index.row(), 1);
+    removeCategoryFromAllProcesses(categoriesTableModel->item(categoryIndex.row(), CategoryColumns::Name)->text());
+    categoriesTableModel->removeRows(categoryIndex.row(), 1);
 }
 
 void MainWindow::removeCategoryFromAllProcesses(QString category)
@@ -479,15 +479,15 @@ void MainWindow::removeAllCategoriesFromSelectedProcesses(QList<QModelIndex> sel
         processFilterProxyModel->setData(getIndex(index.row(), ProcessColumns::HiddenCategories), "");
 }
 
-bool MainWindow::processIsInCategory(QModelIndex index, QString category)
+bool MainWindow::processIsInCategory(QModelIndex processIndex, QString category)
 {
-    QStringList processCategories = getIndexData(index.row(), ProcessColumns::HiddenCategories).toString().split(categoryDelimiter);
+    QStringList processCategories = getIndexData(processIndex.row(), ProcessColumns::HiddenCategories).toString().split(categoryDelimiter);
     return processCategories.contains(category);
 }
 
-void MainWindow::addOrRemoveProcessCategory(QModelIndex index, QString category, bool alreadyInCategory)
+void MainWindow::addOrRemoveProcessCategory(QModelIndex processIndex, QString category, bool alreadyInCategory)
 {
-    QStringList processCategories = getIndexData(index.row(), ProcessColumns::HiddenCategories).toString().split(categoryDelimiter);
+    QStringList processCategories = getIndexData(processIndex.row(), ProcessColumns::HiddenCategories).toString().split(categoryDelimiter);
     processCategories.removeAll("");
 
     if (alreadyInCategory)
@@ -495,20 +495,20 @@ void MainWindow::addOrRemoveProcessCategory(QModelIndex index, QString category,
     else
         processCategories.append(category);
 
-    processFilterProxyModel->setData(getIndex(index.row(), ProcessColumns::HiddenCategories), processCategories.join(categoryDelimiter));
+    processFilterProxyModel->setData(getIndex(processIndex.row(), ProcessColumns::HiddenCategories), processCategories.join(categoryDelimiter));
 }
 
-void MainWindow::renameCategory(QModelIndex index, QString newName)
+void MainWindow::renameCategory(QModelIndex categoryIndex, QString newName)
 {
-    tableResetFilter(index);
+    tableResetFilter(categoryIndex);
     for (int row = 0; row < processFilterProxyModel->rowCount(); row++)
     {
         QModelIndex processIndex = getIndex(row, ProcessColumns::HiddenCategories);
-        QStringList processCategories = processIndex.data().toString().split(categoryDelimiter);
-        processFilterProxyModel->setData(processIndex, processCategories.replaceInStrings(index.data().toString(), newName).join(categoryDelimiter));
+        QString processCategories = processIndex.data().toString();
+        processFilterProxyModel->setData(processIndex, processCategories.replace(categoryIndex.data().toString(), newName));
     }
 
-    categoriesTableModel->setData(index, newName);
+    categoriesTableModel->setData(categoryIndex, newName);
 }
 
 void MainWindow::restoreTableFilterState(int lastCategoryRow)
