@@ -410,11 +410,15 @@ void MainWindow::normalizeProcessNumbers()
     for (int row = 0; row < processFilterProxyModel->sourceModel()->rowCount(); row++)
         realIndexNumbers.append(getRealIndex(row, ProcessColumns::Number));
 
-    std::sort(realIndexNumbers.begin(), realIndexNumbers.end(),
-        [](const QModelIndex &left, const QModelIndex &right){return left.data().toUInt() < right.data().toUInt();});
+    std::sort(realIndexNumbers.begin(), realIndexNumbers.end(), MainWindow::compareIndexProcessNumbers);
 
     for (int row = 0; row < processFilterProxyModel->sourceModel()->rowCount(); row++)
         processFilterProxyModel->sourceModel()->setData(realIndexNumbers.at(row), row + 1);
+}
+
+bool MainWindow::compareIndexProcessNumbers(const QModelIndex &left, const QModelIndex &right)
+{
+    return left.data().toUInt() < right.data().toUInt();
 }
 
 void MainWindow::exportProcesses(QList<QModelIndex> realProcesses)
@@ -805,25 +809,53 @@ void MainWindow::on_actionPoll_triggered()
 
 void MainWindow::on_actionMove_to_Top_triggered()
 {
+    QList<QModelIndex> proxySelectedRows = ui->tableView->selectionModel()->selectedRows();
+     if (proxySelectedRows.size() < 1 || proxySelectedRows.size() == processFilterProxyModel->sourceModel()->rowCount())
+         return;
 
+     QList<QModelIndex> proyxSelectedRowsNumbers;
+     foreach (QModelIndex index, proxySelectedRows)
+         proyxSelectedRowsNumbers.append(getIndex(index.row(), ProcessColumns::Number));
+
+    std::sort(proyxSelectedRowsNumbers.begin(), proyxSelectedRowsNumbers.end(), MainWindow::compareIndexProcessNumbers);
+
+    on_actionMove_Up_triggered(getIndexData(proyxSelectedRowsNumbers.first().row(), ProcessColumns::Number).toUInt() - 1);
 }
 
-void MainWindow::on_actionMove_Up_triggered()
+//TODO
+//Make two functions - one to prepare the two QList<QModelIndex> and one to only reorder based on them
+
+void MainWindow::on_actionMove_Up_triggered(int count)
 {
-    QList<QModelIndex> selectedRows = ui->tableView->selectionModel()->selectedRows();
-    if (selectedRows.size() < 1)
+    QList<QModelIndex> proxySelectedRows = ui->tableView->selectionModel()->selectedRows();
+    if (proxySelectedRows.size() < 1 || proxySelectedRows.size() == processFilterProxyModel->sourceModel()->rowCount())
         return;
 
-    QModelIndex first = selectedRows.first();
-    if (first.row() == 0 || selectedRows.size() == processFilterProxyModel->rowCount())
+    QList<QModelIndex> realSelectedRowsNumbers;
+    foreach (QModelIndex index, proxySelectedRows)
+        realSelectedRowsNumbers.append(processFilterProxyModel->mapToSource(getIndex(index.row(), ProcessColumns::Number)));
+
+    std::sort(realSelectedRowsNumbers.begin(), realSelectedRowsNumbers.end(), MainWindow::compareIndexProcessNumbers);
+
+    if (realSelectedRowsNumbers.first().data().toUInt() == 1)
         return;
 
-    for (auto first = selectedRows.begin(); first < selectedRows.end(); first++)
+    QList<QModelIndex> allRowNumbers;
+    for (int row = 0; row < processFilterProxyModel->sourceModel()->rowCount(); row++)
+        allRowNumbers.append(getRealIndex(row, ProcessColumns::Number));
+
+    std::sort(allRowNumbers.begin(), allRowNumbers.end(), MainWindow::compareIndexProcessNumbers);
+
+    while (count > 0)
     {
-        QModelIndex upper = processFilterProxyModel->index(first->row() - 1, ProcessColumns::Number);
-        QVariant tempNumber = getIndexData(first->row(), ProcessColumns::Number);
-        processFilterProxyModel->setData(getIndex(first->row(), ProcessColumns::Number), upper.data());
-        processFilterProxyModel->setData(upper, tempNumber);
+        for (int i = 0; i < realSelectedRowsNumbers.size(); i++)
+        {
+            QModelIndex upper = allRowNumbers[realSelectedRowsNumbers[i].data().toUInt() - 2];
+            processFilterProxyModel->sourceModel()->setData(realSelectedRowsNumbers[i], realSelectedRowsNumbers[i].data().toUInt() - 1);
+            processFilterProxyModel->sourceModel()->setData(upper, upper.data().toUInt() + 1);
+            std::sort(allRowNumbers.begin(), allRowNumbers.end(), MainWindow::compareIndexProcessNumbers);
+        }
+        count--;
     }
 }
 
