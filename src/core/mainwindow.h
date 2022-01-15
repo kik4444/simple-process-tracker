@@ -197,7 +197,7 @@ private slots:
     void on_actionAdd_triggered();
     void on_actionPoll_triggered();
     void on_actionMove_Up_triggered(int count = 1);
-    void on_actionMove_Down_triggered();
+    void on_actionMove_Down_triggered(int count = 1);
     void on_actionOptions_triggered();
     void on_actionExport_triggered();
     void on_actionImport_triggered();
