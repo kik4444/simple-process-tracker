@@ -21,6 +21,14 @@
 #include "mystandarditemmodel.h"
 #include "../core/parser.h"
 
+namespace FilterProcessColumns
+{
+    enum FilterProcessColumns
+    {
+        NameAndNotes = 100
+    };
+}
+
 class MySortFilterProxyModel : public QSortFilterProxyModel
 {
 
@@ -43,14 +51,17 @@ public:
         }
     }
 
-    void beginResetModel()
+    bool filterAcceptsRow(int source_row, const QModelIndex &source_parent) const override
     {
-        QAbstractItemModel::beginResetModel();
-    }
+        switch (filterKeyColumn())
+        {
+            case FilterProcessColumns::NameAndNotes:
+                return sourceModel()->index(source_row, ProcessColumns::Name).data().toString().contains(filterRegularExpression())
+                    || sourceModel()->index(source_row, ProcessColumns::Notes).data().toString().contains(filterRegularExpression());
 
-    void endResetModel()
-    {
-        QAbstractItemModel::endResetModel();
+            default:
+                return QSortFilterProxyModel::filterAcceptsRow(source_row, source_parent);
+        }
     }
 };
 
