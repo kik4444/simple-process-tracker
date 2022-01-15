@@ -813,13 +813,13 @@ void MainWindow::on_actionMove_to_Top_triggered()
      if (proxySelectedRows.size() < 1 || proxySelectedRows.size() == processFilterProxyModel->sourceModel()->rowCount())
          return;
 
-     QList<QModelIndex> proyxSelectedRowsNumbers;
+     QList<QModelIndex> proxySelectedRowsNumbers;
      foreach (QModelIndex index, proxySelectedRows)
-         proyxSelectedRowsNumbers.append(getIndex(index.row(), ProcessColumns::Number));
+         proxySelectedRowsNumbers.append(getIndex(index.row(), ProcessColumns::Number));
 
-    std::sort(proyxSelectedRowsNumbers.begin(), proyxSelectedRowsNumbers.end(), MainWindow::compareIndexProcessNumbers);
+    std::sort(proxySelectedRowsNumbers.begin(), proxySelectedRowsNumbers.end(), MainWindow::compareIndexProcessNumbers);
 
-    on_actionMove_Up_triggered(getIndexData(proyxSelectedRowsNumbers.first().row(), ProcessColumns::Number).toUInt() - 1);
+    on_actionMove_Up_triggered(getIndexData(proxySelectedRowsNumbers.first().row(), ProcessColumns::Number).toUInt() - 1);
 }
 
 void MainWindow::on_actionMove_Up_triggered(int count)
@@ -896,14 +896,14 @@ void MainWindow::on_actionMove_to_Bottom_triggered()
      if (proxySelectedRows.size() < 1 || proxySelectedRows.size() == processFilterProxyModel->sourceModel()->rowCount())
          return;
 
-     QList<QModelIndex> proyxSelectedRowsNumbers;
+     QList<QModelIndex> proxySelectedRowsNumbers;
      foreach (QModelIndex index, proxySelectedRows)
-         proyxSelectedRowsNumbers.append(getIndex(index.row(), ProcessColumns::Number));
+         proxySelectedRowsNumbers.append(getIndex(index.row(), ProcessColumns::Number));
 
-    std::sort(proyxSelectedRowsNumbers.begin(), proyxSelectedRowsNumbers.end(), MainWindow::compareIndexProcessNumbers);
+    std::sort(proxySelectedRowsNumbers.begin(), proxySelectedRowsNumbers.end(), MainWindow::compareIndexProcessNumbers);
 
     on_actionMove_Down_triggered(processFilterProxyModel->sourceModel()->rowCount()
-        - getIndexData(proyxSelectedRowsNumbers.last().row(), ProcessColumns::Number).toUInt());
+        - getIndexData(proxySelectedRowsNumbers.last().row(), ProcessColumns::Number).toUInt());
 }
 
 void MainWindow::on_actionOptions_triggered()
