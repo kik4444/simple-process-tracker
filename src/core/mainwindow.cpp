@@ -522,7 +522,7 @@ bool MainWindow::categoryAlreadyExists(QString category)
 
 void MainWindow::removeCategoryAndItsEntries(QModelIndex categoryIndex)
 {
-    tableResetFilter(categoryIndex);
+    tableResetFilter();
 
     for (int row = 0; row < processFilterProxyModel->sourceModel()->rowCount(); row++)
     {
@@ -610,9 +610,9 @@ void MainWindow::restoreTableFilterState(int lastCategoryRow)
         tableFilterByCategory(categoriesTableModel->index(lastCategoryRow, CategoryColumns::Name));
 }
 
-void MainWindow::tableResetFilter(QModelIndex categoryIndex)
+void MainWindow::tableResetFilter()
 {
-    ui->categoriesTable->selectionModel()->select(categoriesTableModel->index(categoryIndex.row(), CategoryColumns::Name), QItemSelectionModel::Deselect);
+    ui->categoriesTable->clearSelection();
     currentlySelectedCategoriesRow = -1;
     processFilterProxyModel->setFilterFixedString("");
     processFilterProxyModel->setFilterKeyColumn(-1); // -1 means all columns
@@ -900,7 +900,7 @@ void MainWindow::categoriesTableCustomContextMenuRequested(const QPoint &pos)
 void MainWindow::on_categoriesTable_clicked(const QModelIndex &index)
 {
     if (currentlySelectedCategoriesRow == index.row())
-        tableResetFilter(index);
+        tableResetFilter();
     else
         tableFilterByCategory(index);
 }
@@ -1063,7 +1063,7 @@ void MainWindow::on_moveCategoryUpButton_clicked()
 
 void MainWindow::on_moveCategoryDownButton_clicked()
 {
-    if (currentlySelectedCategoriesRow >= categoriesTableModel->rowCount() - 1)
+    if (currentlySelectedCategoriesRow < 0 || currentlySelectedCategoriesRow >= categoriesTableModel->rowCount() - 1)
         return;
 
     QModelIndex selectedCategoryNumber = categoriesTableModel->index(currentlySelectedCategoriesRow++, CategoryColumns::HiddenNumber);

@@ -72,7 +72,7 @@
 #define quicksettings(location) QSettings settings(QSettings::IniFormat, QSettings::UserScope, "simple-process-tracker", location)
 
 // To easily switch to and from debug mode
-#define DEBUG_MODE
+//#define DEBUG_MODE
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -140,7 +140,7 @@ private: // Methods
     void renameCategory(QModelIndex categoryIndex, QString newName);
 
     void restoreTableFilterState(int categorySelection);
-    void tableResetFilter(QModelIndex categoryIndex = QModelIndex());
+    void tableResetFilter();
     void tableFilterByCategory(QModelIndex index);
     void tableFilterByText(QString text);
 
