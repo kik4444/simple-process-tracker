@@ -570,7 +570,7 @@ void MainWindow::restoreTableFilterState(int lastCategoryRow)
 
 void MainWindow::tableResetFilter(QModelIndex categoryIndex)
 {
-    ui->categoriesTable->selectionModel()->select(categoryIndex, QItemSelectionModel::Deselect);
+    ui->categoriesTable->selectionModel()->select(categoriesTableModel->index(categoryIndex.row(), CategoryColumns::Name), QItemSelectionModel::Deselect);
     currentlySelectedCategoriesRow = -1;
     processFilterProxyModel->setFilterFixedString("");
     processFilterProxyModel->setFilterKeyColumn(-1); // -1 means all columns
@@ -579,7 +579,7 @@ void MainWindow::tableResetFilter(QModelIndex categoryIndex)
 void MainWindow::tableFilterByCategory(QModelIndex categoryIndex)
 {
     currentlySelectedCategoriesRow = categoryIndex.row();
-    ui->categoriesTable->selectionModel()->select(categoryIndex, QItemSelectionModel::Select);
+    ui->categoriesTable->selectionModel()->select(categoriesTableModel->index(categoryIndex.row(), CategoryColumns::Name), QItemSelectionModel::Select);
     processFilterProxyModel->setFilterFixedString(categoriesTableModel->item(categoryIndex.row(), CategoryColumns::Name)->text());
     processFilterProxyModel->setFilterKeyColumn(ProcessColumns::HiddenCategories);
 }
@@ -823,7 +823,7 @@ void MainWindow::categoriesTableCustomContextMenuRequested(const QPoint &pos)
     menu->addAction(action);
 
     QModelIndex selectedCategory = ui->categoriesTable->indexAt(pos);
-    if (selectedCategory.row() >= 0 && selectedCategory.column() >= 0)
+    if (selectedCategory.row() >= 0 && selectedCategory.column() == CategoryColumns::Name)
     {
         action = new QAction("Rename category", this);
         connect(action, &QAction::triggered, this, [=]()
