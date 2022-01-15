@@ -97,7 +97,7 @@ private: // Methods
     void updateRunningProcessDurations();
 
     QIcon getIcon(QString processName, QString iconPath);
-    void createProcessInTable(QString categories, QString number, QString activeSymbol, QIcon icon, QString processName, QString notes, quint64 duration, QString lastSeen, QString dateAdded);
+    void createProcessInTable(QString categories, QString number, QString activeSymbol, QIcon icon, QString processName, quint64 duration, QString notes, QString lastSeen, QString dateAdded);
     void createCategoryInTable(uint categoryNumber, QString categoryName);
 
     QModelIndex getIndex(int row, int column);
