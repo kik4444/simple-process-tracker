@@ -88,6 +88,8 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     loadWindowData();
     pollProcesses();
 
+    ui->categoriesTable->sortByColumn(CategoryColumns::HiddenNumber, Qt::AscendingOrder);
+
     #ifdef DEBUG_MODE
     ui->tableView->showColumn(ProcessColumns::HiddenCategories);
     ui->categoriesTable->showColumn(CategoryColumns::HiddenNumber);
