@@ -202,8 +202,10 @@ private slots:
 
     void on_actionAdd_triggered();
     void on_actionPoll_triggered();
+    void on_actionMove_to_Top_triggered();
     void on_actionMove_Up_triggered();
     void on_actionMove_Down_triggered();
+    void on_actionMove_to_Bottom_triggered();
     void on_actionOptions_triggered();
     void on_actionExport_triggered();
     void on_actionImport_triggered();
@@ -211,12 +213,13 @@ private slots:
     void on_actionExit_triggered();
     void processFilterLineEdit_textChanged(const QString &arg1);
 
+    void on_moveCategoryUpButton_clicked();
+    void on_moveCategoryDownButton_clicked();
+
     void systemTrayIconActionOpen();
     void systemTrayIconActionResumeAll();
     void systemTrayIconActionPauseAll();
     void systemTrayIconActionExit();
     void on_actionHelp_triggered();
-    void on_actionMove_to_Top_triggered();
-    void on_actionMove_to_Bottom_triggered();
 };
 #endif // MAINWINDOW_H
