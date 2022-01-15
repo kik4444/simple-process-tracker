@@ -88,8 +88,6 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     loadWindowData();
     pollProcesses();
 
-    ui->categoriesTable->sortByColumn(CategoryColumns::HiddenNumber, Qt::AscendingOrder);
-
     #ifdef DEBUG_MODE
     ui->tableView->showColumn(ProcessColumns::HiddenCategories);
     ui->categoriesTable->showColumn(CategoryColumns::HiddenNumber);
@@ -179,6 +177,8 @@ void MainWindow::loadCategoryData()
     quicksettings("categories");
     foreach (QString categoryName, settings.childGroups())
         createCategoryInTable(settings.value(categoryName + "/number", categoriesTableModel->rowCount() + 1).toUInt(), categoryName);
+
+    ui->categoriesTable->sortByColumn(CategoryColumns::HiddenNumber, Qt::AscendingOrder);
 }
 
 void MainWindow::saveCategoryData()
@@ -1040,6 +1040,25 @@ void MainWindow::processFilterLineEdit_textChanged(const QString &arg1)
     }
     else
         tableFilterByText(arg1);
+}
+
+void MainWindow::on_moveCategoryUpButton_clicked()
+{
+    if (currentlySelectedCategoriesRow <= 0)
+        return;
+
+    QModelIndex selectedCategoryNumber = categoriesTableModel->index(currentlySelectedCategoriesRow--, CategoryColumns::HiddenNumber);
+
+    QModelIndex upper = categoriesTableModel->index(selectedCategoryNumber.row() - 1, CategoryColumns::HiddenNumber);
+    QVariant tempNumber = categoriesTableModel->data(selectedCategoryNumber);
+    categoriesTableModel->setData(selectedCategoryNumber, upper.data());
+    categoriesTableModel->setData(upper, tempNumber);
+    ui->categoriesTable->sortByColumn(CategoryColumns::HiddenNumber, Qt::AscendingOrder);
+}
+
+void MainWindow::on_moveCategoryDownButton_clicked()
+{
+
 }
 
 void MainWindow::systemTrayIconActionOpen()
