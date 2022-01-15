@@ -629,7 +629,7 @@ void MainWindow::tableFilterByCategory(QModelIndex categoryIndex)
 void MainWindow::tableFilterByText(QString text)
 {
     processFilterProxyModel->setFilterRegularExpression(QRegularExpression(text, QRegularExpression::CaseInsensitiveOption));
-    processFilterProxyModel->setFilterKeyColumn(ProcessColumns::Name);
+    processFilterProxyModel->setFilterKeyColumn(FilterProcessColumns::NameAndNotes);
 }
 
 void MainWindow::moveSelectedRowsUp(int count)
