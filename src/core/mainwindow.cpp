@@ -822,9 +822,6 @@ void MainWindow::on_actionMove_to_Top_triggered()
     on_actionMove_Up_triggered(getIndexData(proyxSelectedRowsNumbers.first().row(), ProcessColumns::Number).toUInt() - 1);
 }
 
-//TODO
-//Make two functions - one to prepare the two QList<QModelIndex> and one to only reorder based on them
-
 void MainWindow::on_actionMove_Up_triggered(int count)
 {
     QList<QModelIndex> proxySelectedRows = ui->tableView->selectionModel()->selectedRows();
@@ -859,28 +856,54 @@ void MainWindow::on_actionMove_Up_triggered(int count)
     }
 }
 
-void MainWindow::on_actionMove_Down_triggered()
+void MainWindow::on_actionMove_Down_triggered(int count)
 {
-    QList<QModelIndex> selectedRows = ui->tableView->selectionModel()->selectedRows();
-    if (selectedRows.size() < 1)
+    QList<QModelIndex> proxySelectedRows = ui->tableView->selectionModel()->selectedRows();
+    if (proxySelectedRows.size() < 1 || proxySelectedRows.size() == processFilterProxyModel->sourceModel()->rowCount())
         return;
 
-    QModelIndex last = selectedRows.last();
-    if (last.row() >= processFilterProxyModel->rowCount() - 1 || selectedRows.size() == processFilterProxyModel->rowCount())
+    QList<QModelIndex> realSelectedRowsNumbers;
+    foreach (QModelIndex index, proxySelectedRows)
+        realSelectedRowsNumbers.append(processFilterProxyModel->mapToSource(getIndex(index.row(), ProcessColumns::Number)));
+
+    std::sort(realSelectedRowsNumbers.begin(), realSelectedRowsNumbers.end(), MainWindow::compareIndexProcessNumbers);
+
+    if (realSelectedRowsNumbers.last().data().toUInt() >= processFilterProxyModel->sourceModel()->rowCount())
         return;
 
-    for (auto last = selectedRows.rbegin(); last < selectedRows.rend(); last++)
+    QList<QModelIndex> allRowNumbers;
+    for (int row = 0; row < processFilterProxyModel->sourceModel()->rowCount(); row++)
+        allRowNumbers.append(getRealIndex(row, ProcessColumns::Number));
+
+    std::sort(allRowNumbers.begin(), allRowNumbers.end(), MainWindow::compareIndexProcessNumbers);
+
+    while (count > 0)
     {
-        QModelIndex lower = processFilterProxyModel->index(last->row() + 1, ProcessColumns::Number);
-        QVariant tempNumber = getIndexData(last->row(), ProcessColumns::Number);
-        processFilterProxyModel->setData(getIndex(last->row(), ProcessColumns::Number), lower.data());
-        processFilterProxyModel->setData(lower, tempNumber);
+        for (int i = realSelectedRowsNumbers.size() - 1; i >= 0 ; i--)
+        {
+            QModelIndex lower = allRowNumbers[realSelectedRowsNumbers[i].data().toUInt()];
+            processFilterProxyModel->sourceModel()->setData(realSelectedRowsNumbers[i], realSelectedRowsNumbers[i].data().toUInt() + 1);
+            processFilterProxyModel->sourceModel()->setData(lower, lower.data().toUInt() - 1);
+            std::sort(allRowNumbers.begin(), allRowNumbers.end(), MainWindow::compareIndexProcessNumbers);
+        }
+        count--;
     }
 }
 
 void MainWindow::on_actionMove_to_Bottom_triggered()
 {
+    QList<QModelIndex> proxySelectedRows = ui->tableView->selectionModel()->selectedRows();
+     if (proxySelectedRows.size() < 1 || proxySelectedRows.size() == processFilterProxyModel->sourceModel()->rowCount())
+         return;
 
+     QList<QModelIndex> proyxSelectedRowsNumbers;
+     foreach (QModelIndex index, proxySelectedRows)
+         proyxSelectedRowsNumbers.append(getIndex(index.row(), ProcessColumns::Number));
+
+    std::sort(proyxSelectedRowsNumbers.begin(), proyxSelectedRowsNumbers.end(), MainWindow::compareIndexProcessNumbers);
+
+    on_actionMove_Down_triggered(processFilterProxyModel->sourceModel()->rowCount()
+        - getIndexData(proyxSelectedRowsNumbers.last().row(), ProcessColumns::Number).toUInt());
 }
 
 void MainWindow::on_actionOptions_triggered()
