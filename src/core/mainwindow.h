@@ -98,7 +98,7 @@ private: // Methods
 
     QIcon getIcon(QString processName, QString iconPath);
     void createProcessInTable(QString categories, QString number, QString activeSymbol, QIcon icon, QString processName, QString notes, quint64 duration, QString lastSeen, QString dateAdded);
-    void createCategoryInTable(QString category);
+    void createCategoryInTable(uint categoryNumber, QString categoryName);
 
     QModelIndex getIndex(int row, int column);
     QVariant getIndexData(int row, int column);
@@ -106,9 +106,11 @@ private: // Methods
     QVariant getRealIndexData(int row, int column);
 
     QStringList getDelimitedCategories();
-    void createCategoriesFromDelimitedList(QString delimitedCategories);
+//    void createCategoriesFromDelimitedList(QString delimitedCategories);
 
     void loadProcessData();
+    void loadCategoryData();
+    void saveCategoryData();
     void loadWindowData();
     void saveWindowData();
 

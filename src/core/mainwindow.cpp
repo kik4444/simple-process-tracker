@@ -84,6 +84,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     ui->toolBar->addWidget(processFilterLineEdit);
 
     loadProcessData();
+    loadCategoryData();
     loadWindowData();
     pollProcesses();
 
@@ -135,6 +136,7 @@ MainWindow::~MainWindow()
     processDataAutoSaveTimer->stop();
     updateLastSeenForRunningProcesses();
     saveProcessData();
+    saveCategoryData();
     saveWindowData();
     delete ui;
 }
@@ -142,7 +144,7 @@ MainWindow::~MainWindow()
 #ifdef DEBUG_MODE
 void MainWindow::on_actionDebug_triggered()
 {
-    normalizeProcessNumbers();
+    categoriesTableModel->setData(categoriesTableModel->index(0, 0), 5);
 }
 #endif
 
@@ -170,6 +172,25 @@ void MainWindow::loadProcessData()
     }
 }
 
+void MainWindow::loadCategoryData()
+{
+    quicksettings("categories");
+    foreach (QString categoryName, settings.childGroups())
+        createCategoryInTable(settings.value(categoryName + "/number", categoriesTableModel->rowCount() + 1).toUInt(), categoryName);
+}
+
+void MainWindow::saveCategoryData()
+{
+    quicksettings("categories");
+    settings.clear();
+    for (int row = 0; row < categoriesTableModel->rowCount(); row++)
+    {
+        uint categoryNumber = categoriesTableModel->data(categoriesTableModel->index(row, CategoryColumns::HiddenNumber)).toUInt();
+        QString categoryName = categoriesTableModel->data(categoriesTableModel->index(row, CategoryColumns::Name)).toString();
+        settings.setValue(categoryName + "/number", categoryNumber);
+    }
+}
+
 QIcon MainWindow::getIcon(QString processName, QString iconPath)
 {
     processIcons[processName] = iconPath.isEmpty() ? ":/app-icon.svg" : iconPath;
@@ -192,10 +213,14 @@ void MainWindow::createProcessInTable(QString categories, QString number, QStrin
     processTableViewModel->setItem(newestRow, ProcessColumns::DateAdded, new MyStandardItem(dateAdded));
 }
 
-void MainWindow::createCategoryInTable(QString category)
+void MainWindow::createCategoryInTable(uint categoryNumber, QString categoryName)
 {
-    if (!category.isEmpty())
-        categoriesTableModel->setItem(categoriesTableModel->rowCount(), CategoryColumns::Name, new MyStandardItem(category));
+    if (!categoryName.isEmpty())
+    {
+        int newestRow = categoriesTableModel->rowCount();
+        categoriesTableModel->setItem(newestRow, CategoryColumns::HiddenNumber, new MyStandardItem(QString::number(categoryNumber)));
+        categoriesTableModel->setItem(newestRow, CategoryColumns::Name, new MyStandardItem(categoryName));
+    }
 }
 
 QModelIndex MainWindow::getIndex(int row, int column)
@@ -227,11 +252,11 @@ QStringList MainWindow::getDelimitedCategories()
     return categories;
 }
 
-void MainWindow::createCategoriesFromDelimitedList(QString delimitedCategories)
-{
-    foreach (QString category, delimitedCategories.split(categoryDelimiter))
-        createCategoryInTable(category);
-}
+//void MainWindow::createCategoriesFromDelimitedList(QString delimitedCategories)
+//{
+//    foreach (QString category, delimitedCategories.split(categoryDelimiter))
+//        createCategoryInTable(category);
+//}
 
 void MainWindow::saveProcessData()
 {
@@ -261,7 +286,7 @@ void MainWindow::loadWindowData()
     this->resizeDocks({ui->categoriesDock}, {settings.value("categoriesDockWidth", 300).toInt()}, Qt::Horizontal);
     processPollInterval = settings.value("processPollInterval", processPollInterval).toUInt();
     ui->tableView->horizontalHeader()->restoreState(settings.value("tableHorizontalHeader", "").toByteArray());
-    createCategoriesFromDelimitedList(settings.value("categories").toString());
+//    createCategoriesFromDelimitedList(settings.value("categories").toString());
     restoreTableFilterState(settings.value("lastCategoryRow", -1).toInt());
 }
 
@@ -273,7 +298,7 @@ void MainWindow::saveWindowData()
     settings.setValue("categoriesDockWidth", ui->categoriesDock->width());
     settings.setValue("processPollInterval", processPollInterval);
     settings.setValue("tableHorizontalHeader", ui->tableView->horizontalHeader()->saveState());
-    settings.setValue("categories", getDelimitedCategories().join(categoryDelimiter));
+//    settings.setValue("categories", getDelimitedCategories().join(categoryDelimiter));
     settings.setValue("lastCategoryRow", currentlySelectedCategoriesRow);
 }
 
@@ -817,7 +842,7 @@ void MainWindow::categoriesTableCustomContextMenuRequested(const QPoint &pos)
         if (!category.isEmpty())
         {
             if (!categoryAlreadyExists(category))
-                createCategoryInTable(category);
+                createCategoryInTable(categoriesTableModel->rowCount() + 1, category);
             else
                 systemTrayIcon->showMessage("Error", "Category " + category + " already exists", QSystemTrayIcon::Warning, 3000);
         }
