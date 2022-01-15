@@ -999,8 +999,13 @@ void MainWindow::on_actionImport_triggered()
 
             QJsonObject processData = jsonObject[processName].toObject();
 
+            QString categories = processData["categories"].toString();
+            foreach (QString category, categories.split(categoryDelimiter))
+                if (!categoryAlreadyExists(category))
+                    createCategoryInTable(categoriesTableModel->rowCount() + 1, category);
+
             createProcessInTable(
-                processData["categories"].toString(),
+                categories,
                 QString::number(processFilterProxyModel->sourceModel()->rowCount() + 1),
                 processData["tracking"].toBool() ? processIsActiveSymbol : processIsPausedSymbol,
                 getIcon(processName, processData["iconPath"].toString()),
