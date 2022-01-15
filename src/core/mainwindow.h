@@ -123,6 +123,7 @@ private: // Methods
 
     void removeSelectedRows(QList<QModelIndex> proxySelectedRows);
     void normalizeProcessNumbers();
+    static bool compareIndexProcessNumbers(const QModelIndex &left, const QModelIndex &right);
 
     void exportProcesses(QList<QModelIndex> proxySelectedRows);
     bool isJsonValid(QJsonObject jsonObject);
@@ -195,7 +196,7 @@ private slots:
 
     void on_actionAdd_triggered();
     void on_actionPoll_triggered();
-    void on_actionMove_Up_triggered();
+    void on_actionMove_Up_triggered(int count = 1);
     void on_actionMove_Down_triggered();
     void on_actionOptions_triggered();
     void on_actionExport_triggered();
