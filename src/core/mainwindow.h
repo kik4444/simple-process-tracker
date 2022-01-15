@@ -141,6 +141,9 @@ private: // Methods
     void tableFilterByCategory(QModelIndex index);
     void tableFilterByText(QString text);
 
+    void moveSelectedRowsUp(int count = 1);
+    void moveSelectedRowsDown(int count = 1);
+
 private: // Variables
     Ui::MainWindow *ui;
 
@@ -196,8 +199,8 @@ private slots:
 
     void on_actionAdd_triggered();
     void on_actionPoll_triggered();
-    void on_actionMove_Up_triggered(int count = 1);
-    void on_actionMove_Down_triggered(int count = 1);
+    void on_actionMove_Up_triggered();
+    void on_actionMove_Down_triggered();
     void on_actionOptions_triggered();
     void on_actionExport_triggered();
     void on_actionImport_triggered();
