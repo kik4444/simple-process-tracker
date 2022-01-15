@@ -1058,7 +1058,16 @@ void MainWindow::on_moveCategoryUpButton_clicked()
 
 void MainWindow::on_moveCategoryDownButton_clicked()
 {
+    if (currentlySelectedCategoriesRow >= categoriesTableModel->rowCount() - 1)
+        return;
 
+    QModelIndex selectedCategoryNumber = categoriesTableModel->index(currentlySelectedCategoriesRow++, CategoryColumns::HiddenNumber);
+
+    QModelIndex lower = categoriesTableModel->index(selectedCategoryNumber.row() + 1, CategoryColumns::HiddenNumber);
+    QVariant tempNumber = categoriesTableModel->data(selectedCategoryNumber);
+    categoriesTableModel->setData(selectedCategoryNumber, lower.data());
+    categoriesTableModel->setData(lower, tempNumber);
+    ui->categoriesTable->sortByColumn(CategoryColumns::HiddenNumber, Qt::AscendingOrder);
 }
 
 void MainWindow::systemTrayIconActionOpen()
