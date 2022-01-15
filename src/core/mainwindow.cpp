@@ -63,10 +63,6 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     connect(ui->tableView->horizontalHeader(), &QHeaderView::customContextMenuRequested, this, &MainWindow::tableHorizontalHeaderCustomContextMenuRequested);
 
     // Setup categories table
-    QPalette inactiveBasePalette = ui->categoriesTable->palette();
-    inactiveBasePalette.setBrush(QPalette::Inactive, QPalette::Base, QColor(49, 54, 59, 255));
-    ui->categoriesTable->setPalette(inactiveBasePalette);
-
     categoriesTableModel->setHorizontalHeaderLabels(QStringList() << "#" << "Categories");
     ui->categoriesTable->setModel(categoriesTableModel);
     ui->categoriesTable->setItemDelegate(new MyItemDelegate());
