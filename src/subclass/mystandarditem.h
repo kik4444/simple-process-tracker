@@ -19,6 +19,7 @@
 
 #include <QStandardItem>
 #include "../core/parser.h"
+#include "mystandarditemmodel.h"
 
 class MyStandardItem : public QStandardItem
 {
@@ -32,6 +33,9 @@ public:
 
     bool operator < (const QStandardItem &other) const
     {
+        if (other.column() == CategoryColumns::HiddenNumber)
+            return text().toUInt() < other.text().toUInt();
+
         return text().toLower() < other.text().toLower();
     }
 };
