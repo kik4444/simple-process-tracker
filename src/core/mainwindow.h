@@ -125,13 +125,14 @@ private: // Methods
 
     void removeSelectedRows(QList<QModelIndex> proxySelectedRows);
     void normalizeProcessNumbers();
-    static bool compareIndexProcessNumbers(const QModelIndex &left, const QModelIndex &right);
+    static bool compareQModelIndexData(const QModelIndex &left, const QModelIndex &right);
 
     void exportProcesses(QList<QModelIndex> proxySelectedRows);
     bool isJsonValid(QJsonObject jsonObject);
 
     bool categoryAlreadyExists(QString category);
     void removeCategoryAndItsEntries(QModelIndex categoryIndex);
+    void normalizeCategoryNumbers();
     void addAllSelectedProcessesToCategory(QList<QModelIndex> proxySelectedProcesses, QString category);
     void removeAllCategoriesFromSelectedProcesses(QList<QModelIndex> proxySelectedRows);
     bool isProcessInCategory(QModelIndex proxyProcessIndex, QString category);

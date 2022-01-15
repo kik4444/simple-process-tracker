@@ -437,13 +437,13 @@ void MainWindow::normalizeProcessNumbers()
     for (int row = 0; row < processFilterProxyModel->sourceModel()->rowCount(); row++)
         realIndexNumbers.append(getRealIndex(row, ProcessColumns::Number));
 
-    std::sort(realIndexNumbers.begin(), realIndexNumbers.end(), MainWindow::compareIndexProcessNumbers);
+    std::sort(realIndexNumbers.begin(), realIndexNumbers.end(), MainWindow::compareQModelIndexData);
 
     for (int row = 0; row < processFilterProxyModel->sourceModel()->rowCount(); row++)
         processFilterProxyModel->sourceModel()->setData(realIndexNumbers.at(row), row + 1);
 }
 
-bool MainWindow::compareIndexProcessNumbers(const QModelIndex &left, const QModelIndex &right)
+bool MainWindow::compareQModelIndexData(const QModelIndex &left, const QModelIndex &right)
 {
     return left.data().toUInt() < right.data().toUInt();
 }
@@ -530,6 +530,19 @@ void MainWindow::removeCategoryAndItsEntries(QModelIndex categoryIndex)
     }
 
     categoriesTableModel->removeRows(categoryIndex.row(), 1);
+    normalizeCategoryNumbers();
+}
+
+void MainWindow::normalizeCategoryNumbers()
+{
+    QList<QModelIndex> realIndexNumbers;
+    for (int row = 0; row < categoriesTableModel->rowCount(); row++)
+        realIndexNumbers.append(categoriesTableModel->index(row, CategoryColumns::HiddenNumber));
+
+    std::sort(realIndexNumbers.begin(), realIndexNumbers.end(), MainWindow::compareQModelIndexData);
+
+    for (int row = 0; row < categoriesTableModel->rowCount(); row++)
+        categoriesTableModel->setData(realIndexNumbers.at(row), row + 1);
 }
 
 void MainWindow::addAllSelectedProcessesToCategory(QList<QModelIndex> proxySelectedProcesses, QString category)
@@ -627,7 +640,7 @@ void MainWindow::moveSelectedRowsUp(int count)
     foreach (QModelIndex index, proxySelectedRows)
         realSelectedRowsNumbers.append(processFilterProxyModel->mapToSource(getIndex(index.row(), ProcessColumns::Number)));
 
-    std::sort(realSelectedRowsNumbers.begin(), realSelectedRowsNumbers.end(), MainWindow::compareIndexProcessNumbers);
+    std::sort(realSelectedRowsNumbers.begin(), realSelectedRowsNumbers.end(), MainWindow::compareQModelIndexData);
 
     if (realSelectedRowsNumbers.first().data().toUInt() == 1)
         return;
@@ -636,7 +649,7 @@ void MainWindow::moveSelectedRowsUp(int count)
     for (int row = 0; row < processFilterProxyModel->sourceModel()->rowCount(); row++)
         allRowNumbers.append(getRealIndex(row, ProcessColumns::Number));
 
-    std::sort(allRowNumbers.begin(), allRowNumbers.end(), MainWindow::compareIndexProcessNumbers);
+    std::sort(allRowNumbers.begin(), allRowNumbers.end(), MainWindow::compareQModelIndexData);
 
     while (count > 0)
     {
@@ -645,7 +658,7 @@ void MainWindow::moveSelectedRowsUp(int count)
             QModelIndex upper = allRowNumbers[realSelectedRowsNumbers[i].data().toUInt() - 2];
             processFilterProxyModel->sourceModel()->setData(realSelectedRowsNumbers[i], realSelectedRowsNumbers[i].data().toUInt() - 1);
             processFilterProxyModel->sourceModel()->setData(upper, upper.data().toUInt() + 1);
-            std::sort(allRowNumbers.begin(), allRowNumbers.end(), MainWindow::compareIndexProcessNumbers);
+            std::sort(allRowNumbers.begin(), allRowNumbers.end(), MainWindow::compareQModelIndexData);
         }
         count--;
     }
@@ -661,7 +674,7 @@ void MainWindow::moveSelectedRowsDown(int count)
     foreach (QModelIndex index, proxySelectedRows)
         realSelectedRowsNumbers.append(processFilterProxyModel->mapToSource(getIndex(index.row(), ProcessColumns::Number)));
 
-    std::sort(realSelectedRowsNumbers.begin(), realSelectedRowsNumbers.end(), MainWindow::compareIndexProcessNumbers);
+    std::sort(realSelectedRowsNumbers.begin(), realSelectedRowsNumbers.end(), MainWindow::compareQModelIndexData);
 
     if (realSelectedRowsNumbers.last().data().toUInt() >= processFilterProxyModel->sourceModel()->rowCount())
         return;
@@ -670,7 +683,7 @@ void MainWindow::moveSelectedRowsDown(int count)
     for (int row = 0; row < processFilterProxyModel->sourceModel()->rowCount(); row++)
         allRowNumbers.append(getRealIndex(row, ProcessColumns::Number));
 
-    std::sort(allRowNumbers.begin(), allRowNumbers.end(), MainWindow::compareIndexProcessNumbers);
+    std::sort(allRowNumbers.begin(), allRowNumbers.end(), MainWindow::compareQModelIndexData);
 
     while (count > 0)
     {
@@ -679,7 +692,7 @@ void MainWindow::moveSelectedRowsDown(int count)
             QModelIndex lower = allRowNumbers[realSelectedRowsNumbers[i].data().toUInt()];
             processFilterProxyModel->sourceModel()->setData(realSelectedRowsNumbers[i], realSelectedRowsNumbers[i].data().toUInt() + 1);
             processFilterProxyModel->sourceModel()->setData(lower, lower.data().toUInt() - 1);
-            std::sort(allRowNumbers.begin(), allRowNumbers.end(), MainWindow::compareIndexProcessNumbers);
+            std::sort(allRowNumbers.begin(), allRowNumbers.end(), MainWindow::compareQModelIndexData);
         }
         count--;
     }
@@ -912,7 +925,7 @@ void MainWindow::on_actionMove_to_Top_triggered()
      foreach (QModelIndex index, proxySelectedRows)
          proxySelectedRowsNumbers.append(getIndex(index.row(), ProcessColumns::Number));
 
-    std::sort(proxySelectedRowsNumbers.begin(), proxySelectedRowsNumbers.end(), MainWindow::compareIndexProcessNumbers);
+    std::sort(proxySelectedRowsNumbers.begin(), proxySelectedRowsNumbers.end(), MainWindow::compareQModelIndexData);
 
     moveSelectedRowsUp(getIndexData(proxySelectedRowsNumbers.first().row(), ProcessColumns::Number).toUInt() - 1);
 }
@@ -937,7 +950,7 @@ void MainWindow::on_actionMove_to_Bottom_triggered()
      foreach (QModelIndex index, proxySelectedRows)
          proxySelectedRowsNumbers.append(getIndex(index.row(), ProcessColumns::Number));
 
-    std::sort(proxySelectedRowsNumbers.begin(), proxySelectedRowsNumbers.end(), MainWindow::compareIndexProcessNumbers);
+    std::sort(proxySelectedRowsNumbers.begin(), proxySelectedRowsNumbers.end(), MainWindow::compareQModelIndexData);
 
     moveSelectedRowsDown(processFilterProxyModel->sourceModel()->rowCount()
         - getIndexData(proxySelectedRowsNumbers.last().row(), ProcessColumns::Number).toUInt());
