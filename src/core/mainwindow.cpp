@@ -48,7 +48,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     // Setup processes table
     ui->tableView->setItemDelegate(new MyItemDelegate());
     processTableViewModel->setHorizontalHeaderLabels(QStringList()
-        << "Categories" << "#" << "Tracking" << "Icon" << "Name" << "Notes" << "Duration" << "Last seen" << "Date added");
+        << "Categories" << "#" << "Tracking" << "Icon" << "Name" << "Duration" << "Notes" << "Last seen" << "Date added");
 
     processFilterProxyModel = new MySortFilterProxyModel(this);
     processFilterProxyModel->setSourceModel(processTableViewModel);
@@ -163,8 +163,8 @@ void MainWindow::loadProcessData()
             settings.value("tracking", true).toBool() ? processIsActiveSymbol : processIsPausedSymbol,
             getIcon(processName, settings.value("iconPath").toString()),
             processName,
-            settings.value("notes").toString(),
             processDurations[processName],
+            settings.value("notes").toString(),
             settings.value("lastSeen").toString(),
             settings.value("dateAdded").toString());
 
@@ -199,7 +199,7 @@ QIcon MainWindow::getIcon(QString processName, QString iconPath)
     return QIcon(processIcons[processName]);
 }
 
-void MainWindow::createProcessInTable(QString categories, QString number, QString activeSymbol, QIcon icon, QString processName, QString notes, quint64 duration, QString lastSeen, QString dateAdded)
+void MainWindow::createProcessInTable(QString categories, QString number, QString activeSymbol, QIcon icon, QString processName, quint64 duration, QString notes, QString lastSeen, QString dateAdded)
 {
     processDurations.insert(processName, duration);
 
@@ -209,8 +209,8 @@ void MainWindow::createProcessInTable(QString categories, QString number, QStrin
     processTableViewModel->setItem(newestRow, ProcessColumns::Tracking, new MyStandardItem(activeSymbol));
     processTableViewModel->setItem(newestRow, ProcessColumns::Icon, new MyStandardItem(icon, ""));
     processTableViewModel->setItem(newestRow, ProcessColumns::Name, new MyStandardItem(processName));
-    processTableViewModel->setItem(newestRow, ProcessColumns::Notes, new MyStandardItem(notes));
     processTableViewModel->setItem(newestRow, ProcessColumns::Duration, new MyStandardItem(Parser::parseDurationToString(duration)));
+    processTableViewModel->setItem(newestRow, ProcessColumns::Notes, new MyStandardItem(notes));
     processTableViewModel->setItem(newestRow, ProcessColumns::LastSeen, new MyStandardItem(lastSeen));
     processTableViewModel->setItem(newestRow, ProcessColumns::DateAdded, new MyStandardItem(dateAdded));
 }
@@ -272,8 +272,8 @@ void MainWindow::saveProcessData()
         settings.setValue("number", getRealIndexData(row, ProcessColumns::Number).toString());
         settings.setValue("tracking", getRealIndexData(row, ProcessColumns::Tracking).toString() == processIsActiveSymbol);
         settings.setValue("iconPath", processIcons[processName]);
-        settings.setValue("notes", getRealIndexData(row, ProcessColumns::Notes).toString());
         settings.setValue("duration", processDurations[processName]);
+        settings.setValue("notes", getRealIndexData(row, ProcessColumns::Notes).toString());
         settings.setValue("lastSeen", getRealIndexData(row, ProcessColumns::LastSeen).toString());
         settings.setValue("dateAdded", getRealIndexData(row, ProcessColumns::DateAdded).toString());
 
@@ -349,7 +349,7 @@ void MainWindow::newProcessAdded(QString processName, QString iconPath)
     }
 
     createProcessInTable("", QString::number(processFilterProxyModel->sourceModel()->rowCount() + 1),
-        processIsActiveSymbol, getIcon(processName, iconPath), processName, "", 0, "Now", QDateTime::currentDateTime().toString("yyyy/MM/dd hh:mm:ss"));
+        processIsActiveSymbol, getIcon(processName, iconPath), processName, 0, "", "Now", QDateTime::currentDateTime().toString("yyyy/MM/dd hh:mm:ss"));
 }
 
 bool MainWindow::processAlreadyExists(QString processName)
@@ -469,8 +469,8 @@ void MainWindow::exportProcesses(QList<QModelIndex> realProcesses)
         processData["categories"] = getRealIndexData(index.row(), ProcessColumns::HiddenCategories).toString();
         processData["tracking"] = getRealIndexData(index.row(), ProcessColumns::Tracking).toString() == processIsActiveSymbol;
         processData["iconPath"] = processIcons[processName];
-        processData["notes"] = getRealIndexData(index.row(), ProcessColumns::Notes).toString();
         processData["duration"] = QJsonValue::fromVariant(processDurations[processName]);
+        processData["notes"] = getRealIndexData(index.row(), ProcessColumns::Notes).toString();
         processData["lastSeen"] = QDateTime::currentDateTime().toString("yyyy/MM/dd hh:mm:ss");
         processData["dateAdded"] = getRealIndexData(index.row(), ProcessColumns::DateAdded).toString();
 
@@ -500,8 +500,8 @@ bool MainWindow::isJsonValid(QJsonObject jsonObject)
             if (!processName.isEmpty()
                 && processData["tracking"].isBool()
                 && processData["iconPath"].isString()
-                && processData["notes"].isString()
                 && quint64ConversionSuccess
+                && processData["notes"].isString()
                 && processData["lastSeen"].isString()
                 && processData["dateAdded"].isString())
                     return true;
@@ -1010,8 +1010,8 @@ void MainWindow::on_actionImport_triggered()
                 processData["tracking"].toBool() ? processIsActiveSymbol : processIsPausedSymbol,
                 getIcon(processName, processData["iconPath"].toString()),
                 processName,
-                processData["notes"].toString(),
                 processData["duration"].toVariant().toULongLong(),
+                processData["notes"].toString(),
                 processData["lastSeen"].toString(),
                 processData["dateAdded"].toString());
         }

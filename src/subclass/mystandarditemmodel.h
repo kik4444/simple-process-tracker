@@ -32,8 +32,8 @@ namespace ProcessColumns
         Tracking,
         Icon,
         Name,
-        Notes,
         Duration,
+        Notes,
         LastSeen,
         DateAdded
     };
