@@ -67,7 +67,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     inactiveBasePalette.setBrush(QPalette::Inactive, QPalette::Base, QColor(49, 54, 59, 255));
     ui->categoriesTable->setPalette(inactiveBasePalette);
 
-    categoriesTableModel->setHorizontalHeaderLabels(QStringList() << "Categories");
+    categoriesTableModel->setHorizontalHeaderLabels(QStringList() << "#" << "Categories");
     ui->categoriesTable->setModel(categoriesTableModel);
     ui->categoriesTable->setItemDelegate(new MyItemDelegate());
     ui->categoriesTable->horizontalHeader()->sectionResizeMode(QHeaderView::Stretch);
@@ -89,9 +89,11 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
 
     #ifdef DEBUG_MODE
     ui->tableView->showColumn(ProcessColumns::HiddenCategories);
+    ui->categoriesTable->showColumn(CategoryColumns::HiddenNumber);
     ui->actionDebug->setVisible(true);
     #else
     ui->tableView->hideColumn(ProcessColumns::HiddenCategories);
+    ui->categoriesTable->hideColumn(CategoryColumns::HiddenNumber);
     #endif
 
     // Background timers
