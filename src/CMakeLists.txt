@@ -43,8 +43,6 @@ set(source_files
     subclass/mystandarditemmodel.h
     subclass/mystandarditem.h
     subclass/mysortfilterproxymodel.h
-
-#    platform/platform.h
 )
 
 # Set Mac OS X specifics
