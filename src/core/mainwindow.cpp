@@ -1044,8 +1044,13 @@ void MainWindow::on_actionImport_triggered()
 
             QString categories = processData["categories"].toString();
             foreach (QString category, categories.split(categoryDelimiter))
+            {
                 if (!categoryAlreadyExists(category))
+                {
                     createCategoryInTable(categoriesTableModel->rowCount() + 1, category);
+                    systemTrayIcon->showMessage("Import created missing category", category, QSystemTrayIcon::Information, 3000);
+                }
+            }
 
             createProcessInTable(
                 categories,
