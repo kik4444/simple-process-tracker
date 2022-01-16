@@ -84,6 +84,9 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     loadWindowData();
     pollProcesses();
 
+    ui->tableView->horizontalHeader()->setSectionsMovable(true);
+    ui->tableView->horizontalHeader()->setDragDropMode(QTableView::InternalMove);
+
     #ifdef DEBUG_MODE
     ui->tableView->showColumn(ProcessColumns::HiddenCategories);
     ui->categoriesTable->showColumn(CategoryColumns::HiddenNumber);
@@ -140,7 +143,7 @@ MainWindow::~MainWindow()
 #ifdef DEBUG_MODE
 void MainWindow::on_actionDebug_triggered()
 {
-    categoriesTableModel->setData(categoriesTableModel->index(0, 0), 5);
+    qDebug() << getIndexData(2, ProcessColumns::Duration).toString();
 }
 #endif
 
