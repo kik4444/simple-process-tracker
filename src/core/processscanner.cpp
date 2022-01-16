@@ -71,7 +71,7 @@ void ProcessScanner::checkRunningProcesses(QMap<QString, int> realProcessList)
             {
                 if (QString::compare(currentProcessName, processName) == 0)
                 {
-                    emit foundRunningProcess(currentProcessName);
+                    emit foundRunningProcess(processName);
                     realProcessList.remove(processName);
                 }
             }
@@ -83,6 +83,32 @@ void ProcessScanner::checkRunningProcesses(QMap<QString, int> realProcessList)
     #elif defined Q_OS_MACOS
 
     #elif defined Q_OS_WINDOWS
+
+    PROCESSENTRY32 entry;
+    entry.dwSize = sizeof(PROCESSENTRY32);
+    const auto snapshot = CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, NULL);
+
+    if (!Process32First(snapshot, &entry))
+    {
+        CloseHandle(snapshot);
+        return;
+    }
+
+    while (Process32Next(snapshot, &entry))
+    {
+        foreach (QString processName, realProcessList.keys())
+        {
+            if (!_tcsicmp(entry.szExeFile, processName.toStdWString().c_str()))
+            {
+                emit foundRunningProcess(processName);
+                realProcessList.remove(processName);
+            }
+        }
+    }
+
+    CloseHandle(snapshot);
+
+    emit foundStoppedProcesses(realProcessList);
 
     #endif
 }

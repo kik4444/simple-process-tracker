@@ -51,7 +51,7 @@ set(source_files
 if (APPLE)
 
     set(MACOSX_BUNDLE_ICON_FILE app-icon.icns)
-    set(app_icon_macos "${CMAKE_CURRENT_SOURCE_DIR}/Assets/Icons/macos_icon/app-icon.icns")
+    set(app_icon_macos "${CMAKE_CURRENT_SOURCE_DIR}/../Assets/Icons/macos_icon/app-icon.icns")
     set_source_files_properties(${app_icon_macos} PROPERTIES MACOSX_PACKAGE_LOCATION "Resources")
     set(additional_arguments MACOSX_BUNDLE ${app_icon_macos})
 
@@ -60,7 +60,7 @@ endif()
 # Set Windows specifics
 if (WIN32)
 
-    set(additional_arguments WIN32 "${CMAKE_CURRENT_SOURCE_DIR}/Assets/Icons/windows_icon/windows-app-icon.rc")
+    set(additional_arguments WIN32 "${CMAKE_CURRENT_SOURCE_DIR}/../Assets/Icons/windows_icon/windows-app-icon.rc")
 
 endif()
 
