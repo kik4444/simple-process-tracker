@@ -116,6 +116,13 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     processFilterLineEdit->setVisible(true);
     ui->toolBar->addWidget(processFilterLineEdit);
 
+    // Setup changing toolbar style on layout change
+    for (QToolBar *toolbar : {ui->toolBar, ui->toolBar_2})
+        connect(toolbar, &QToolBar::orientationChanged, this, [=](Qt::Orientation orientation)
+        {
+            toolbar->setToolButtonStyle(orientation == Qt::Vertical ? Qt::ToolButtonTextUnderIcon : Qt::ToolButtonTextBesideIcon);
+        });
+
     loadProcessData();
     loadCategoryData();
     loadWindowData();
