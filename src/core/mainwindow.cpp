@@ -431,9 +431,8 @@ void MainWindow::setProcessPaused(QModelIndex proxyProcessIndex, bool paused)
 
 void MainWindow::userOptionsChosen(uint processPollInterval)
 {
-    uint pollInterval = processPollInterval * 1000;
-    this->processPollInterval = pollInterval;
-    processPollTimer->setInterval(pollInterval);
+    this->processPollInterval = processPollInterval;
+    processPollTimer->setInterval(processPollInterval);
 }
 
 int MainWindow::getConfirmDialogAnswer(QString title, QString text)
@@ -1006,7 +1005,7 @@ void MainWindow::on_actionMove_to_Bottom_triggered()
 
 void MainWindow::on_actionOptions_triggered()
 {
-    Options *options = new Options(nullptr, processPollInterval / 1000);
+    Options *options = new Options();
     connect(options, &Options::userOptionsChosen, this, &MainWindow::userOptionsChosen);
     options->show();
 }

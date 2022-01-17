@@ -28,6 +28,12 @@ int main(int argc, char *argv[])
     a.setQuitOnLastWindowClosed(false);
 
     MainWindow w;
-    w.show();
+
+    {
+        quicksettings("config");
+        if (!settings.value("startInBackground").toBool())
+            w.show();
+    }
+
     return a.exec();
 }

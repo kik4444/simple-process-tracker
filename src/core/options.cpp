@@ -17,10 +17,13 @@
 #include "options.h"
 #include "ui_options.h"
 
-Options::Options(QWidget *parent, uint pollInterval) : QWidget(parent), ui(new Ui::Options)
+Options::Options(QWidget *parent) : QWidget(parent), ui(new Ui::Options)
 {
     ui->setupUi(this);
-    ui->processPollIntervalSpinBox->setValue(pollInterval);
+//    ui->processPollIntervalSpinBox->setValue(pollInterval);
+    quicksettings("config");
+    ui->processPollIntervalSpinBox->setValue(settings.value("processPollInterval", 5).toUInt() / 1000);
+    ui->startInBackgroundCheckBox->setChecked(settings.value("startInBackground").toBool());
 }
 
 Options::~Options()
@@ -36,8 +39,13 @@ void Options::on_confirmBox_rejected()
 void Options::on_confirmBox_accepted()
 {
     quicksettings("config");
-    settings.setValue("processPollInterval", ui->processPollIntervalSpinBox->value());
-    emit userOptionsChosen(ui->processPollIntervalSpinBox->value());
+
+    uint processPollInterval = ui->processPollIntervalSpinBox->value() * 1000;
+
+    settings.setValue("processPollInterval", processPollInterval);
+    settings.setValue("startInBackground", ui->startInBackgroundCheckBox->isChecked());
+
+    emit userOptionsChosen(processPollInterval);
 
     this->~Options();
 }
