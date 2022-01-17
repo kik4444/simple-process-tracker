@@ -106,7 +106,6 @@ private: // Methods
     QVariant getRealIndexData(int row, int column);
 
     QStringList getDelimitedCategories();
-//    void createCategoriesFromDelimitedList(QString delimitedCategories);
 
     void loadProcessData();
     void loadCategoryData();
