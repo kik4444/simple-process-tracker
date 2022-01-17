@@ -83,6 +83,7 @@ void ProcessScanner::checkRunningProcesses(QMap<QString, int> realProcessList)
     #elif defined Q_OS_MACOS
 
     #elif defined Q_OS_WINDOWS
+    // Credit - https://stackoverflow.com/a/57164620
 
     PROCESSENTRY32 entry;
     entry.dwSize = sizeof(PROCESSENTRY32);
