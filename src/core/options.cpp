@@ -20,7 +20,6 @@
 Options::Options(QWidget *parent) : QWidget(parent), ui(new Ui::Options)
 {
     ui->setupUi(this);
-//    ui->processPollIntervalSpinBox->setValue(pollInterval);
     quicksettings("config");
     ui->processPollIntervalSpinBox->setValue(settings.value("processPollInterval", 5).toUInt() / 1000);
     ui->startInBackgroundCheckBox->setChecked(settings.value("startInBackground").toBool());

@@ -297,12 +297,6 @@ QStringList MainWindow::getDelimitedCategories()
     return categories;
 }
 
-//void MainWindow::createCategoriesFromDelimitedList(QString delimitedCategories)
-//{
-//    foreach (QString category, delimitedCategories.split(categoryDelimiter))
-//        createCategoryInTable(category);
-//}
-
 void MainWindow::saveProcessData()
 {
     quicksettings("processList");
@@ -331,7 +325,6 @@ void MainWindow::loadWindowData()
     this->resizeDocks({ui->categoriesDock}, {settings.value("categoriesDockWidth", 300).toInt()}, Qt::Horizontal);
     processPollInterval = settings.value("processPollInterval", processPollInterval).toUInt();
     ui->tableView->horizontalHeader()->restoreState(settings.value("tableHorizontalHeader", "").toByteArray());
-//    createCategoriesFromDelimitedList(settings.value("categories").toString());
     restoreTableFilterState(settings.value("lastCategoryRow", -1).toInt());
 }
 
@@ -343,7 +336,6 @@ void MainWindow::saveWindowData()
     settings.setValue("categoriesDockWidth", ui->categoriesDock->width());
     settings.setValue("processPollInterval", processPollInterval);
     settings.setValue("tableHorizontalHeader", ui->tableView->horizontalHeader()->saveState());
-//    settings.setValue("categories", getDelimitedCategories().join(categoryDelimiter));
     settings.setValue("lastCategoryRow", currentlySelectedCategoriesRow);
 }
 
