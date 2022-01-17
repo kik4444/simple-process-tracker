@@ -599,8 +599,11 @@ void MainWindow::addAllSelectedProcessesToCategory(QList<QModelIndex> proxySelec
 
 void MainWindow::removeAllCategoriesFromSelectedProcesses(QList<QModelIndex> proxySelectedRows)
 {
-    foreach (QModelIndex index, proxySelectedRows)
-        processFilterProxyModel->setData(getIndex(index.row(), ProcessColumns::HiddenCategories), "");
+    if (getConfirmDialogAnswer("Remove all categories", "Are you sure you wish to remove all categories from the selected processes?") == QDialogButtonBox::Yes)
+    {
+        for (auto index = proxySelectedRows.rbegin(); index < proxySelectedRows.rend(); index++)
+            processFilterProxyModel->setData(getIndex(index->row(), ProcessColumns::HiddenCategories), "");
+    }
 }
 
 bool MainWindow::isProcessInCategory(QModelIndex proxyProcessIndex, QString category)
