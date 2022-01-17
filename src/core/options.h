@@ -29,7 +29,7 @@ class Options : public QWidget
     Q_OBJECT
 
 public:
-    explicit Options(QWidget *parent = nullptr, uint pollInterval = 5);
+    explicit Options(QWidget *parent = nullptr);
     ~Options();
 
 signals:
