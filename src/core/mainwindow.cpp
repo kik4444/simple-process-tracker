@@ -414,14 +414,11 @@ void MainWindow::updateLastSeenForRunningProcesses()
 
 void MainWindow::setProcessesPaused(QList<QModelIndex> realProcesses, bool paused)
 {
-//    QModelIndex realProcessIndex = processFilterProxyModel->mapToSource(proxyProcessIndex);
     foreach (QModelIndex index, realProcesses)
     {
         updateLastSeenIfRunningAndRemoveFromRunning(getRealIndexData(index.row(), ProcessColumns::Name).toString(), index.row());
         processFilterProxyModel->sourceModel()->setData(getRealIndex(index.row(), ProcessColumns::Tracking), paused ? processIsPausedSymbol : processIsActiveSymbol);
     }
-
-//    QModelIndex proxyProcessTracking = getIndex(proxyProcessIndex.row(), ProcessColumns::Tracking);
 }
 
 void MainWindow::userOptionsChosen(uint processPollInterval)
@@ -679,8 +676,6 @@ void MainWindow::moveSelectedRowsUp(int count)
         return;
 
     QList<QModelIndex> realSelectedRowsNumbers = getRealIndexList(proxySelectedRows, ProcessColumns::Number);
-//    foreach (QModelIndex index, proxySelectedRows)
-//        realSelectedRowsNumbers.append(processFilterProxyModel->mapToSource(getIndex(index.row(), ProcessColumns::Number)));
 
     std::sort(realSelectedRowsNumbers.begin(), realSelectedRowsNumbers.end(), MainWindow::compareQModelIndexData);
 
@@ -713,8 +708,6 @@ void MainWindow::moveSelectedRowsDown(int count)
         return;
 
     QList<QModelIndex> realSelectedRowsNumbers = getRealIndexList(proxySelectedRows, ProcessColumns::Number);
-//    foreach (QModelIndex index, proxySelectedRows)
-//        realSelectedRowsNumbers.append(processFilterProxyModel->mapToSource(getIndex(index.row(), ProcessColumns::Number)));
 
     std::sort(realSelectedRowsNumbers.begin(), realSelectedRowsNumbers.end(), MainWindow::compareQModelIndexData);
 
@@ -766,7 +759,6 @@ void MainWindow::on_tableView_doubleClicked(const QModelIndex &proxyIndex)
     {
         case ProcessColumns::Tracking:
         {
-//            setProcessesPaused(proxyIndex, getIndexData(proxyIndex.row(), ProcessColumns::Tracking).toString() == processIsActiveSymbol);
             setProcessesPaused(QList<QModelIndex>() << processFilterProxyModel->mapToSource(proxyIndex), getIndexData(proxyIndex.row(), ProcessColumns::Tracking).toString() == processIsActiveSymbol);
             break;
         }
@@ -807,27 +799,6 @@ void MainWindow::tableCellCustomContextMenuRequested(const QPoint &pos)
     QList<QModelIndex> proxySelectedRows = ui->tableView->selectionModel()->selectedRows();
     if (proxySelectedRows.size() == 0)
         return;
-
-//    QList<QPair<QString, ProcessColumns::ProcessColumns>> actionNames = {{"Resume / Pause", ProcessColumns::Tracking}};
-//    if (proxySelectedRows.size() == 1)
-//    {
-//        actionNames.append({"Change icon", ProcessColumns::Icon});
-//        actionNames.append({"Change duration", ProcessColumns::Duration});
-//    }
-
-//    QMenu *menu = new QMenu(this);
-
-//    // If multiple rows are selected, one action is displayed which is connected to all the selected rows
-//    foreach (auto actionName, actionNames)
-//    {
-//        QAction *action = new QAction(actionName.first, this);
-
-//        foreach (QModelIndex index, proxySelectedRows)
-//            connect(action, &QAction::triggered, this, [=](){on_tableView_doubleClicked(
-//                processFilterProxyModel->index(index.row(), actionName.second));});
-
-//        menu->addAction(action);
-//    }
 
     QMenu *menu = new QMenu(this);
 
@@ -891,12 +862,7 @@ void MainWindow::tableCellCustomContextMenuRequested(const QPoint &pos)
 
     // Export action
     action = new QAction("Export", this);
-    connect(action, &QAction::triggered, this, [=](){
-        QList<QModelIndex> realProcesses = getRealIndexList(proxySelectedRows, ProcessColumns::Name);
-//        foreach (QModelIndex index, proxySelectedRows)
-//            realProcesses.append(processFilterProxyModel->mapToSource(index));
-        exportProcesses(realProcesses);
-    });
+    connect(action, &QAction::triggered, this, [=](){exportProcesses(getRealIndexList(proxySelectedRows, ProcessColumns::Name));});
     menu->addAction(action);
 
     menu->popup(ui->tableView->viewport()->mapToGlobal(pos));
@@ -1167,13 +1133,11 @@ void MainWindow::systemTrayIconActionOpen()
 
 void MainWindow::systemTrayIconActionResumeAll()
 {
-//    for (int row = 0; row < processFilterProxyModel->rowCount(); row++)
       setProcessesPaused(getRealVisibleRows(), false);
 }
 
 void MainWindow::systemTrayIconActionPauseAll()
 {
-//    for (int row = 0; row < processFilterProxyModel->rowCount(); row++)
     setProcessesPaused(getRealVisibleRows(), true);
 }
 
