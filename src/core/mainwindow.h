@@ -146,6 +146,8 @@ private: // Methods
     void moveSelectedRowsUp(int count = 1);
     void moveSelectedRowsDown(int count = 1);
 
+    QList<QModelIndex> getRealIndexList(QList<QModelIndex> proxyIndexList, int column);
+
 private: // Variables
     Ui::MainWindow *ui;
 
