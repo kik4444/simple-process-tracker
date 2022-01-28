@@ -808,24 +808,47 @@ void MainWindow::tableCellCustomContextMenuRequested(const QPoint &pos)
     if (proxySelectedRows.size() == 0)
         return;
 
-    QList<QPair<QString, ProcessColumns::ProcessColumns>> actionNames = {{"Resume / Pause", ProcessColumns::Tracking}};
-    if (proxySelectedRows.size() == 1)
-    {
-        actionNames.append({"Change icon", ProcessColumns::Icon});
-        actionNames.append({"Change duration", ProcessColumns::Duration});
-    }
+//    QList<QPair<QString, ProcessColumns::ProcessColumns>> actionNames = {{"Resume / Pause", ProcessColumns::Tracking}};
+//    if (proxySelectedRows.size() == 1)
+//    {
+//        actionNames.append({"Change icon", ProcessColumns::Icon});
+//        actionNames.append({"Change duration", ProcessColumns::Duration});
+//    }
+
+//    QMenu *menu = new QMenu(this);
+
+//    // If multiple rows are selected, one action is displayed which is connected to all the selected rows
+//    foreach (auto actionName, actionNames)
+//    {
+//        QAction *action = new QAction(actionName.first, this);
+
+//        foreach (QModelIndex index, proxySelectedRows)
+//            connect(action, &QAction::triggered, this, [=](){on_tableView_doubleClicked(
+//                processFilterProxyModel->index(index.row(), actionName.second));});
+
+//        menu->addAction(action);
+//    }
 
     QMenu *menu = new QMenu(this);
 
-    // If multiple rows are selected, one action is displayed which is connected to all the selected rows
-    foreach (auto actionName, actionNames)
+    // Pause action
+    QAction *action = new QAction("Pause", this);
+    connect(action, &QAction::triggered, this, [=](){setProcessesPaused(getRealIndexList(proxySelectedRows, ProcessColumns::Tracking), true);});
+    menu->addAction(action);
+
+    // Resume action
+    action = new QAction("Resume", this);
+    connect(action, &QAction::triggered, this, [=](){setProcessesPaused(getRealIndexList(proxySelectedRows, ProcessColumns::Tracking), false);});
+    menu->addAction(action);
+
+    if (proxySelectedRows.size() == 1)
     {
-        QAction *action = new QAction(actionName.first, this);
+        action = new QAction("Change icon", this);
+        connect(action, &QAction::triggered, this, [=](){on_tableView_doubleClicked(processFilterProxyModel->index(proxySelectedRows.first().row(), ProcessColumns::Icon));});
+        menu->addAction(action);
 
-        foreach (QModelIndex index, proxySelectedRows)
-            connect(action, &QAction::triggered, this, [=](){on_tableView_doubleClicked(
-                processFilterProxyModel->index(index.row(), actionName.second));});
-
+        action = new QAction("Change duration", this);
+        connect(action, &QAction::triggered, this, [=](){on_tableView_doubleClicked(processFilterProxyModel->index(proxySelectedRows.first().row(), ProcessColumns::Duration));});
         menu->addAction(action);
     }
 
@@ -839,12 +862,12 @@ void MainWindow::tableCellCustomContextMenuRequested(const QPoint &pos)
         QMenu *addAllSubMenu = categoriesSubMenu->addMenu("Add all to...");
         foreach (QString category, getDelimitedCategories())
         {
-            QAction *action = new QAction(category, this);
+            action = new QAction(category, this);
             connect(action, &QAction::triggered, this, [=](){addAllSelectedProcessesToCategory(proxySelectedRows, category);});
             addAllSubMenu->addAction(action);
         }
 
-        QAction *action = new QAction("Remove all", this);
+        action = new QAction("Remove all", this);
         connect(action, &QAction::triggered, this, [=](){removeAllCategoriesFromSelectedProcesses(proxySelectedRows);});
         categoriesSubMenu->addAction(action);
     }
@@ -853,7 +876,7 @@ void MainWindow::tableCellCustomContextMenuRequested(const QPoint &pos)
         // Single
         foreach (QString category, getDelimitedCategories())
         {
-            QAction *action = new QAction(category, this);
+            action = new QAction(category, this);
             action->setCheckable(true);
             action->setChecked(isProcessInCategory(proxySelectedRows.first(), category));
             connect(action, &QAction::triggered, this, [=](bool checked){addOrRemoveProcessCategory(proxySelectedRows.first(), category, !checked);});
@@ -862,7 +885,7 @@ void MainWindow::tableCellCustomContextMenuRequested(const QPoint &pos)
     }
 
     // Remove action
-    QAction *action = new QAction("Remove", this);
+    action = new QAction("Remove", this);
     connect(action, &QAction::triggered, this, [=](){removeSelectedRows(proxySelectedRows);});
     menu->addAction(action);
 
