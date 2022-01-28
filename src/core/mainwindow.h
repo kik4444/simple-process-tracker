@@ -132,7 +132,7 @@ private: // Methods
     bool categoryAlreadyExists(QString category);
     void removeCategoryAndItsEntries(QModelIndex categoryIndex);
     void normalizeCategoryNumbers();
-    void addAllSelectedProcessesToCategory(QList<QModelIndex> proxySelectedProcesses, QString category);
+    void addAllSelectedProcessesToCategory(QList<QModelIndex> realSelectedRows, QString category);
     void removeAllCategoriesFromSelectedProcesses(QList<QModelIndex> proxySelectedRows);
     bool isProcessInCategory(QModelIndex proxyProcessIndex, QString category);
     void addOrRemoveProcessCategory(QModelIndex proxyProcessIndex, QString category, bool alreadyInCategory);
