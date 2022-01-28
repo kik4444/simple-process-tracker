@@ -63,6 +63,11 @@ public:
                 return QSortFilterProxyModel::filterAcceptsRow(source_row, source_parent);
         }
     }
+
+    QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override
+    {
+        return (index.column() == ProcessColumns::Tracking && role == Qt::FontRole) ? QFont("Monospace") : QSortFilterProxyModel::data(index, role);
+    }
 };
 
 #endif // MYSORTFILTERPROXYMODEL_H
