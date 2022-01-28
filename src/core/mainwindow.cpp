@@ -187,7 +187,7 @@ MainWindow::~MainWindow()
 #ifdef DEBUG_MODE
 void MainWindow::on_actionDebug_triggered()
 {
-    qDebug() << getIndexData(2, ProcessColumns::Duration).toString();
+    qDebug() << QFontDatabase::families();
 }
 #endif
 
