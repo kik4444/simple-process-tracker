@@ -675,9 +675,9 @@ void MainWindow::moveSelectedRowsUp(int count)
     if (proxySelectedRows.size() < 1 || proxySelectedRows.size() == processFilterProxyModel->sourceModel()->rowCount())
         return;
 
-    QList<QModelIndex> realSelectedRowsNumbers;
-    foreach (QModelIndex index, proxySelectedRows)
-        realSelectedRowsNumbers.append(processFilterProxyModel->mapToSource(getIndex(index.row(), ProcessColumns::Number)));
+    QList<QModelIndex> realSelectedRowsNumbers = getRealIndexList(proxySelectedRows, ProcessColumns::Number);
+//    foreach (QModelIndex index, proxySelectedRows)
+//        realSelectedRowsNumbers.append(processFilterProxyModel->mapToSource(getIndex(index.row(), ProcessColumns::Number)));
 
     std::sort(realSelectedRowsNumbers.begin(), realSelectedRowsNumbers.end(), MainWindow::compareQModelIndexData);
 
@@ -709,9 +709,9 @@ void MainWindow::moveSelectedRowsDown(int count)
     if (proxySelectedRows.size() < 1 || proxySelectedRows.size() == processFilterProxyModel->sourceModel()->rowCount())
         return;
 
-    QList<QModelIndex> realSelectedRowsNumbers;
-    foreach (QModelIndex index, proxySelectedRows)
-        realSelectedRowsNumbers.append(processFilterProxyModel->mapToSource(getIndex(index.row(), ProcessColumns::Number)));
+    QList<QModelIndex> realSelectedRowsNumbers = getRealIndexList(proxySelectedRows, ProcessColumns::Number);
+//    foreach (QModelIndex index, proxySelectedRows)
+//        realSelectedRowsNumbers.append(processFilterProxyModel->mapToSource(getIndex(index.row(), ProcessColumns::Number)));
 
     std::sort(realSelectedRowsNumbers.begin(), realSelectedRowsNumbers.end(), MainWindow::compareQModelIndexData);
 
@@ -735,6 +735,14 @@ void MainWindow::moveSelectedRowsDown(int count)
         }
         count--;
     }
+}
+
+QList<QModelIndex> MainWindow::getRealIndexList(QList<QModelIndex> proxyIndexList, int column)
+{
+    QList<QModelIndex> realIndexList;
+    foreach (QModelIndex proxyIndex, proxyIndexList)
+        realIndexList.append(processFilterProxyModel->mapToSource(getIndex(proxyIndex.row(), column)));
+    return realIndexList;
 }
 
 /*---------------------------------------------------- User input ----------------------------------------------------*/
@@ -849,9 +857,9 @@ void MainWindow::tableCellCustomContextMenuRequested(const QPoint &pos)
     // Export action
     action = new QAction("Export", this);
     connect(action, &QAction::triggered, this, [=](){
-        QList<QModelIndex> realProcesses;
-        foreach (QModelIndex index, proxySelectedRows)
-            realProcesses.append(processFilterProxyModel->mapToSource(index));
+        QList<QModelIndex> realProcesses = getRealIndexList(proxySelectedRows, ProcessColumns::Name);
+//        foreach (QModelIndex index, proxySelectedRows)
+//            realProcesses.append(processFilterProxyModel->mapToSource(index));
         exportProcesses(realProcesses);
     });
     menu->addAction(action);
