@@ -588,12 +588,12 @@ void MainWindow::addAllSelectedProcessesToCategory(QList<QModelIndex> proxySelec
             addOrRemoveProcessCategory(index, category, false);
 }
 
-void MainWindow::removeAllCategoriesFromSelectedProcesses(QList<QModelIndex> proxySelectedRows)
+void MainWindow::removeAllCategoriesFromSelectedProcesses(QList<QModelIndex> realSelectedRows)
 {
     if (getConfirmDialogAnswer("Remove all categories", "Are you sure you wish to remove all categories from the selected processes?") == QDialogButtonBox::Yes)
     {
-        for (auto index = proxySelectedRows.rbegin(); index < proxySelectedRows.rend(); index++)
-            processFilterProxyModel->setData(getIndex(index->row(), ProcessColumns::HiddenCategories), "");
+        foreach (QModelIndex index, realSelectedRows)
+            processFilterProxyModel->sourceModel()->setData(getRealIndex(index.row(), ProcessColumns::HiddenCategories), "");
     }
 }
 
@@ -839,7 +839,7 @@ void MainWindow::tableCellCustomContextMenuRequested(const QPoint &pos)
         }
 
         action = new QAction("Remove all", this);
-        connect(action, &QAction::triggered, this, [=](){removeAllCategoriesFromSelectedProcesses(proxySelectedRows);});
+        connect(action, &QAction::triggered, this, [=](){removeAllCategoriesFromSelectedProcesses(getRealIndexList(proxySelectedRows, ProcessColumns::HiddenCategories));});
         categoriesSubMenu->addAction(action);
     }
     else
