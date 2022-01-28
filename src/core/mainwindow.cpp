@@ -412,13 +412,16 @@ void MainWindow::updateLastSeenForRunningProcesses()
         updateLastSeenIfRunningAndRemoveFromRunning(getRealIndexData(row, ProcessColumns::Name).toString(), row);
 }
 
-void MainWindow::setProcessPaused(QModelIndex proxyProcessIndex, bool paused)
+void MainWindow::setProcessesPaused(QList<QModelIndex> realProcesses, bool paused)
 {
-    QModelIndex realProcessIndex = processFilterProxyModel->mapToSource(proxyProcessIndex);
-    updateLastSeenIfRunningAndRemoveFromRunning(getRealIndexData(realProcessIndex.row(), ProcessColumns::Name).toString(), realProcessIndex.row());
+//    QModelIndex realProcessIndex = processFilterProxyModel->mapToSource(proxyProcessIndex);
+    foreach (QModelIndex index, realProcesses)
+    {
+        updateLastSeenIfRunningAndRemoveFromRunning(getRealIndexData(index.row(), ProcessColumns::Name).toString(), index.row());
+        processFilterProxyModel->sourceModel()->setData(getRealIndex(index.row(), ProcessColumns::Tracking), paused ? processIsPausedSymbol : processIsActiveSymbol);
+    }
 
-    QModelIndex proxyProcessTracking = getIndex(proxyProcessIndex.row(), ProcessColumns::Tracking);
-    processFilterProxyModel->setData(proxyProcessTracking, paused ? processIsPausedSymbol : processIsActiveSymbol);
+//    QModelIndex proxyProcessTracking = getIndex(proxyProcessIndex.row(), ProcessColumns::Tracking);
 }
 
 void MainWindow::userOptionsChosen(uint processPollInterval)
@@ -745,6 +748,14 @@ QList<QModelIndex> MainWindow::getRealIndexList(QList<QModelIndex> proxyIndexLis
     return realIndexList;
 }
 
+QList<QModelIndex> MainWindow::getRealVisibleRows()
+{
+    QList<QModelIndex> proxyVisibleRows;
+    for (int row = 0; row < processFilterProxyModel->rowCount(); row++)
+        proxyVisibleRows.append(processFilterProxyModel->index(row, ProcessColumns::Name));
+    return getRealIndexList(proxyVisibleRows, ProcessColumns::Name);
+}
+
 /*---------------------------------------------------- User input ----------------------------------------------------*/
 
 void MainWindow::on_tableView_doubleClicked(const QModelIndex &proxyIndex)
@@ -755,7 +766,8 @@ void MainWindow::on_tableView_doubleClicked(const QModelIndex &proxyIndex)
     {
         case ProcessColumns::Tracking:
         {
-            setProcessPaused(proxyIndex, getIndexData(proxyIndex.row(), ProcessColumns::Tracking).toString() == processIsActiveSymbol);
+//            setProcessesPaused(proxyIndex, getIndexData(proxyIndex.row(), ProcessColumns::Tracking).toString() == processIsActiveSymbol);
+            setProcessesPaused(QList<QModelIndex>() << processFilterProxyModel->mapToSource(proxyIndex), getIndexData(proxyIndex.row(), ProcessColumns::Tracking).toString() == processIsActiveSymbol);
             break;
         }
 
@@ -1132,14 +1144,14 @@ void MainWindow::systemTrayIconActionOpen()
 
 void MainWindow::systemTrayIconActionResumeAll()
 {
-    for (int row = 0; row < processFilterProxyModel->rowCount(); row++)
-        setProcessPaused(processFilterProxyModel->index(row, ProcessColumns::Tracking), false);
+//    for (int row = 0; row < processFilterProxyModel->rowCount(); row++)
+      setProcessesPaused(getRealVisibleRows(), false);
 }
 
 void MainWindow::systemTrayIconActionPauseAll()
 {
-    for (int row = 0; row < processFilterProxyModel->rowCount(); row++)
-        setProcessPaused(processFilterProxyModel->index(row, ProcessColumns::Tracking), true);
+//    for (int row = 0; row < processFilterProxyModel->rowCount(); row++)
+    setProcessesPaused(getRealVisibleRows(), true);
 }
 
 void MainWindow::systemTrayIconActionExit()
