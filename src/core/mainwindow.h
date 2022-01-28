@@ -120,7 +120,7 @@ private: // Methods
     void updateLastSeenIfRunningAndRemoveFromRunning(QString processName, int row);
     void updateLastSeenForRunningProcesses();
 
-    void setProcessPaused(QModelIndex proxyProcessIndex, bool paused);
+    void setProcessesPaused(QList<QModelIndex> realProcesses, bool paused);
 
     void removeSelectedRows(QList<QModelIndex> proxySelectedRows);
     void normalizeProcessNumbers();
@@ -147,6 +147,7 @@ private: // Methods
     void moveSelectedRowsDown(int count = 1);
 
     QList<QModelIndex> getRealIndexList(QList<QModelIndex> proxyIndexList, int column);
+    QList<QModelIndex> getRealVisibleRows();
 
 private: // Variables
     Ui::MainWindow *ui;
