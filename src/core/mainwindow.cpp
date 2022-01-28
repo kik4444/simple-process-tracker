@@ -561,8 +561,7 @@ void MainWindow::removeCategoryAndItsEntries(QModelIndex categoryIndex)
     for (int row = 0; row < processFilterProxyModel->sourceModel()->rowCount(); row++)
     {
         QModelIndex realProcessIndex = processFilterProxyModel->sourceModel()->index(row, ProcessColumns::HiddenCategories);
-        addOrRemoveProcessCategory(processFilterProxyModel->mapFromSource(realProcessIndex),
-            categoriesTableModel->item(categoryIndex.row(), CategoryColumns::Name)->text(), true);
+        addOrRemoveProcessCategory(realProcessIndex, categoriesTableModel->item(categoryIndex.row(), CategoryColumns::Name)->text(), true);
     }
 
     categoriesTableModel->removeRows(categoryIndex.row(), 1);
@@ -581,9 +580,9 @@ void MainWindow::normalizeCategoryNumbers()
         categoriesTableModel->setData(realIndexNumbers.at(row), row + 1);
 }
 
-void MainWindow::addAllSelectedProcessesToCategory(QList<QModelIndex> proxySelectedProcesses, QString category)
+void MainWindow::addAllSelectedProcessesToCategory(QList<QModelIndex> realSelectedRows, QString category)
 {
-    foreach (QModelIndex index, proxySelectedProcesses)
+    foreach (QModelIndex index, realSelectedRows)
         if (!isProcessInCategory(index, category))
             addOrRemoveProcessCategory(index, category, false);
 }
@@ -597,15 +596,15 @@ void MainWindow::removeAllCategoriesFromSelectedProcesses(QList<QModelIndex> rea
     }
 }
 
-bool MainWindow::isProcessInCategory(QModelIndex proxyProcessIndex, QString category)
+bool MainWindow::isProcessInCategory(QModelIndex realProcessIndex, QString category)
 {
-    QStringList processCategories = getIndexData(proxyProcessIndex.row(), ProcessColumns::HiddenCategories).toString().split(categoryDelimiter);
+    QStringList processCategories = getRealIndexData(realProcessIndex.row(), ProcessColumns::HiddenCategories).toString().split(categoryDelimiter);
     return processCategories.contains(category);
 }
 
-void MainWindow::addOrRemoveProcessCategory(QModelIndex proxyProcessIndex, QString category, bool alreadyInCategory)
+void MainWindow::addOrRemoveProcessCategory(QModelIndex realProcessIndex, QString category, bool alreadyInCategory)
 {
-    QStringList processCategories = getIndexData(proxyProcessIndex.row(), ProcessColumns::HiddenCategories).toString().split(categoryDelimiter);
+    QStringList processCategories = getRealIndexData(realProcessIndex.row(), ProcessColumns::HiddenCategories).toString().split(categoryDelimiter);
     processCategories.removeAll("");
 
     if (alreadyInCategory)
@@ -613,7 +612,7 @@ void MainWindow::addOrRemoveProcessCategory(QModelIndex proxyProcessIndex, QStri
     else
         processCategories.append(category);
 
-    processFilterProxyModel->setData(getIndex(proxyProcessIndex.row(), ProcessColumns::HiddenCategories), processCategories.join(categoryDelimiter));
+    processFilterProxyModel->sourceModel()->setData(getRealIndex(realProcessIndex.row(), ProcessColumns::HiddenCategories), processCategories.join(categoryDelimiter));
 }
 
 void MainWindow::renameCategory(QModelIndex categoryIndex, QString newName)
@@ -829,12 +828,12 @@ void MainWindow::tableCellCustomContextMenuRequested(const QPoint &pos)
     QMenu *categoriesSubMenu = menu->addMenu("Categories");
     if (proxySelectedRows.size() > 1)
     {
-        // Multiple
+        // Categories menu for multiple selected
         QMenu *addAllSubMenu = categoriesSubMenu->addMenu("Add all to...");
         foreach (QString category, getDelimitedCategories())
         {
             action = new QAction(category, this);
-            connect(action, &QAction::triggered, this, [=](){addAllSelectedProcessesToCategory(proxySelectedRows, category);});
+            connect(action, &QAction::triggered, this, [=](){addAllSelectedProcessesToCategory(getRealIndexList(proxySelectedRows, ProcessColumns::HiddenCategories), category);});
             addAllSubMenu->addAction(action);
         }
 
@@ -844,13 +843,15 @@ void MainWindow::tableCellCustomContextMenuRequested(const QPoint &pos)
     }
     else
     {
-        // Single
+        // Categories menu for single selected
+        QModelIndex realIndex = processFilterProxyModel->mapToSource(proxySelectedRows.first());
+
         foreach (QString category, getDelimitedCategories())
         {
             action = new QAction(category, this);
             action->setCheckable(true);
-            action->setChecked(isProcessInCategory(proxySelectedRows.first(), category));
-            connect(action, &QAction::triggered, this, [=](bool checked){addOrRemoveProcessCategory(proxySelectedRows.first(), category, !checked);});
+            action->setChecked(isProcessInCategory(realIndex, category));
+            connect(action, &QAction::triggered, this, [=](bool checked){addOrRemoveProcessCategory(realIndex, category, !checked);});
             categoriesSubMenu->addAction(action);
         }
     }

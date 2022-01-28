@@ -126,16 +126,16 @@ private: // Methods
     void normalizeProcessNumbers();
     static bool compareQModelIndexData(const QModelIndex &left, const QModelIndex &right);
 
-    void exportProcesses(QList<QModelIndex> proxySelectedRows);
+    void exportProcesses(QList<QModelIndex> realProcesses);
     bool isJsonValid(QJsonObject jsonObject);
 
     bool categoryAlreadyExists(QString category);
     void removeCategoryAndItsEntries(QModelIndex categoryIndex);
     void normalizeCategoryNumbers();
     void addAllSelectedProcessesToCategory(QList<QModelIndex> realSelectedRows, QString category);
-    void removeAllCategoriesFromSelectedProcesses(QList<QModelIndex> proxySelectedRows);
-    bool isProcessInCategory(QModelIndex proxyProcessIndex, QString category);
-    void addOrRemoveProcessCategory(QModelIndex proxyProcessIndex, QString category, bool alreadyInCategory);
+    void removeAllCategoriesFromSelectedProcesses(QList<QModelIndex> realSelectedRows);
+    bool isProcessInCategory(QModelIndex realProcessIndex, QString category);
+    void addOrRemoveProcessCategory(QModelIndex realProcessIndex, QString category, bool alreadyInCategory);
     void renameCategory(QModelIndex categoryIndex, QString newName);
 
     void restoreTableFilterState(int categorySelection);
