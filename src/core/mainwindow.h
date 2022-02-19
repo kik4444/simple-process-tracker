@@ -172,6 +172,8 @@ private: // Variables
     const QString processIsActiveSymbol = "▶";
     const QString processIsPausedSymbol = "⏸";
 
+    const QString defaultProcessIcon = ":/app-icon.svg";
+
     const uint processSecondIncrementInterval = 1000;
     const uint processAutoSaveInterval = 60000;
 
