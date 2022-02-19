@@ -158,7 +158,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
 
     // Create system tray icon
     systemTrayIcon = new QSystemTrayIcon(this);
-    systemTrayIcon->setIcon(QIcon(":/app-icon.svg"));
+    systemTrayIcon->setIcon(QIcon(defaultProcessIcon));
 
     QMenu *systemTrayIconMenu = new QMenu();
     systemTrayIconMenu->addAction("Open", this, &MainWindow::systemTrayIconActionOpen);
@@ -238,7 +238,7 @@ void MainWindow::saveCategoryData()
 
 QIcon MainWindow::getIcon(QString processName, QString iconPath)
 {
-    processIcons[processName] = iconPath.isEmpty() ? ":/app-icon.svg" : iconPath;
+    processIcons[processName] = iconPath.isEmpty() ? defaultProcessIcon : iconPath;
     return QIcon(processIcons[processName]);
 }
 
@@ -764,10 +764,14 @@ void MainWindow::on_tableView_doubleClicked(const QModelIndex &proxyIndex)
 
         case ProcessColumns::Icon:
         {
-            QString fileName = QFileDialog::getOpenFileName(this, "Open Image", "", Utility::imageFormats);
-            QIcon icon = getIcon(getIndexData(proxyIndex.row(), ProcessColumns::Name).toString(), fileName);
+            QString iconPath = QFileDialog::getOpenFileName(this, "Open Image", "", Utility::imageFormats);
 
-            if (!fileName.isEmpty() && !icon.isNull())
+            if (iconPath.isEmpty() && processIcons[processName] != defaultProcessIcon)
+                return;
+
+            QIcon icon = getIcon(processName, iconPath);
+
+            if (!iconPath.isEmpty() && !icon.isNull())
                 processFilterProxyModel->setData(getIndex(proxyIndex.row(), ProcessColumns::Icon), icon, Qt::DecorationRole);
 
             break;
