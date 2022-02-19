@@ -78,8 +78,6 @@ void ProcessScanner::checkRunningProcesses(QMap<QString, int> realProcessList)
         }
     }
 
-    emit foundStoppedProcesses(realProcessList);
-
     #elif defined Q_OS_MACOS
 
     #elif defined Q_OS_WINDOWS
@@ -109,7 +107,7 @@ void ProcessScanner::checkRunningProcesses(QMap<QString, int> realProcessList)
 
     CloseHandle(snapshot);
 
-    emit foundStoppedProcesses(realProcessList);
-
     #endif
+
+    emit foundStoppedProcesses(realProcessList);
 }
