@@ -80,6 +80,24 @@ void ProcessScanner::checkRunningProcesses(QMap<QString, int> realProcessList)
 
     #elif defined Q_OS_MACOS
 
+    QProcess *qprocess = new QProcess(this);
+    qprocess->start("ps", QStringList() << "-eo" << "ucomm");
+    qprocess->waitForFinished();
+    QStringList processList = QString(qprocess->readAllStandardOutput()).split("\n");
+
+    foreach (QString processName, processList)
+    {
+        processName = processName.trimmed();
+
+        if (realProcessList.contains(processName))
+        {
+            emit foundRunningProcess(processName);
+            realProcessList.remove(processName);
+        }
+    }
+
+    qprocess->deleteLater();
+
     #elif defined Q_OS_WINDOWS
     // Credit - https://stackoverflow.com/a/57164620
 
