@@ -66,27 +66,17 @@ C:\Qt\6.2.3\mingw_64\bin\windeployqt.exe --no-translations .\simple-process-trac
 You will now have a working portable program in the directory `C:\Users\YOUR_USER_NAME\Desktop\simple-process-tracker-master\build-dir`.
 
 # Screenshots for Windows / Mac OS X / Linux
-## Adding new process entry
-![1](https://user-images.githubusercontent.com/7779637/140617125-652b62c4-c48d-4b44-a0f5-cd24a591c844.PNG)
-![1](https://user-images.githubusercontent.com/7779637/140617162-afa14cdf-bf6b-40d5-9e2b-295c2ae49873.png)
-![1](https://user-images.githubusercontent.com/7779637/140617163-525c74be-9ad2-43e5-b1cf-e13bb0a00287.png)
+## Main window tracking 3 processes
+![Windows-1](https://user-images.githubusercontent.com/7779637/154819200-f7aeec4c-ec88-4266-bc9d-068fe69ba2aa.png)
+![MacOS-1](https://user-images.githubusercontent.com/7779637/154819227-0307720b-d882-4626-9b11-d7884c0da359.png)
+![Linux-1](https://user-images.githubusercontent.com/7779637/154819239-b1ef88fa-4216-467c-8a79-6f8bf0a396e2.png)
 
-## Choosing which process to track
-![2](https://user-images.githubusercontent.com/7779637/140617343-652c7825-0c06-4dbd-ba97-aa23e48ef28c.PNG)
-![2](https://user-images.githubusercontent.com/7779637/140617344-8e179e22-372f-42c5-8db1-5cd36e703025.png)
-![2](https://user-images.githubusercontent.com/7779637/140617346-6bcd4b59-2bbd-4d74-854f-0b52f7dcb9da.png)
+## Adding a new process to track
+![Windows-2](https://user-images.githubusercontent.com/7779637/154819189-f41babfe-c96a-4138-b38d-0182a9ae3dc5.png)
+![MacOS-2](https://user-images.githubusercontent.com/7779637/154819230-c1855d3e-6dde-447e-9dbb-c0b02e407f4c.png)
+![Linux-2](https://user-images.githubusercontent.com/7779637/154819240-e4aac09d-377c-442e-b0fa-dfb34fe9de09.png)
 
-## Tracking several processes
-![3](https://user-images.githubusercontent.com/7779637/140617373-365c09c0-a3e3-4874-ba2c-f9727b9a0d5e.PNG)
-![3](https://user-images.githubusercontent.com/7779637/140617374-66a8d18b-2293-4e70-af37-51538adeac7d.png)
-![3](https://user-images.githubusercontent.com/7779637/140617377-038f6a80-59b1-48f7-a6fa-47f6df13b74e.png)
-
-## Hiding a process
-![4](https://user-images.githubusercontent.com/7779637/140617383-b2024a53-6da5-4b9d-b286-b63bf16016db.PNG)
-![4](https://user-images.githubusercontent.com/7779637/140617384-fed8d57b-4d08-4e2a-a2f5-780f832c8a75.png)
-![4](https://user-images.githubusercontent.com/7779637/140617386-a419081c-7456-46f9-a41e-eaadef488735.png)
-
-## Options
-![5](https://user-images.githubusercontent.com/7779637/140617398-65620483-59a1-4721-abb9-d110b65445c2.PNG)
-![5](https://user-images.githubusercontent.com/7779637/140617400-c8246161-e11f-46fd-965a-38521777dc7e.png)
-![5](https://user-images.githubusercontent.com/7779637/140617401-83781aeb-aa42-4af5-a265-8cdd636211c9.png)
+## Options menu
+![Windows-3](https://user-images.githubusercontent.com/7779637/154819196-e541133e-9367-4beb-9a44-7073224a7aec.png)
+![MacOS-3](https://user-images.githubusercontent.com/7779637/154819232-b59a940a-a836-41e0-a847-99868e2dbb5a.png)
+![Linux-3](https://user-images.githubusercontent.com/7779637/154819241-a95c4a08-df8b-40f3-b950-362702af2619.png)
