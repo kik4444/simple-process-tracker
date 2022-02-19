@@ -18,7 +18,7 @@ make -j$(nproc)
 # Mac OS X
 1. Download the open source version of Qt from https://www.qt.io/download-qt-installer.
 2. Register a Qt account to log into the installer.
-3. Start the installer and accept the request to install the commandline developer tools. Open the subdirectory `Qt/Qt 6.2.1`. From there choose the component:
+3. Start the installer and accept the request to install the commandline developer tools. Open the subdirectory `Qt/Qt 6.2.3`. From there choose the component:
 - macOS
 4. Now go to the directory `Develop and Designer Tools` and select:
 - CMake
@@ -30,9 +30,9 @@ git clone https://github.com/kik4444/simple-process-tracker
 cd simple-process-tracker
 mkdir build-dir && cd build-dir
 export PATH=/Users/$USER/Qt/Tools/Ninja:$PATH
-/Users/$USER/Qt/Tools/CMake/CMake.app/Contents/bin/cmake -S .. -B . -GNinja -DCMAKE_BUILD_TYPE:STRING=Release "-DCMAKE_PROJECT_INCLUDE_BEFORE:PATH=/Users/$USER/Qt/Qt Creator.app/Contents/Resources/package-manager/auto-setup.cmake" -DQT_QMAKE_EXECUTABLE:STRING=/Users/$USER/Qt/6.2.1/macos/bin/qmake -DCMAKE_PREFIX_PATH:STRING=/Users/$USER/Qt/6.2.1/macos -DCMAKE_C_COMPILER:STRING=/usr/bin/clang -DCMAKE_CXX_COMPILER:STRING=/usr/bin/clang++
+/Users/$USER/Qt/Tools/CMake/CMake.app/Contents/bin/cmake -S .. -B . -GNinja -DCMAKE_BUILD_TYPE:STRING=Release "-DCMAKE_PROJECT_INCLUDE_BEFORE:PATH=/Users/$USER/Qt/Qt Creator.app/Contents/Resources/package-manager/auto-setup.cmake" -DQT_QMAKE_EXECUTABLE:STRING=/Users/$USER/Qt/6.2.3/macos/bin/qmake -DCMAKE_PREFIX_PATH:STRING=/Users/$USER/Qt/6.2.3/macos -DCMAKE_C_COMPILER:STRING=/usr/bin/clang -DCMAKE_CXX_COMPILER:STRING=/usr/bin/clang++
 /Users/$USER/Qt/Tools/CMake/CMake.app/Contents/bin/cmake --build . --target all -- -j$(sysctl -n hw.ncpu)
-/Users/$USER/Qt/6.2.1/macos/bin/macdeployqt simple-process-tracker.app -dmg
+/Users/$USER/Qt/6.2.3/macos/bin/macdeployqt simple-process-tracker.app -dmg
 ```
 
 You will now have a dmg file containing the application that you can drag and drop into the applications folder in Finder.
@@ -40,7 +40,7 @@ You will now have a dmg file containing the application that you can drag and dr
 # Windows
 1. Download the open source version of Qt from https://www.qt.io/download-qt-installer.
 2. Register a Qt account to log into the installer.
-3. Start the installer, when you need to select which components to install, open the subdirectory `Qt/Qt 6.2.2`. From there choose the components:
+3. Start the installer, when you need to select which components to install, open the subdirectory `Qt/Qt 6.2.3`. From there choose the components:
 - MinGW 9.0.0 64-bit
 4. Now go to the directory `Develop and Designer Tools` and select:
 - CMake 64-bit
@@ -55,12 +55,12 @@ cd simple-process-tracker-master
 mkdir build-dir
 cd build-dir
 $env:Path = "C:\Qt\Tools\mingw900_64\bin;C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem;C:\Windows\System32\WindowsPowerShell\v1.0\;C:\Windows\System32\OpenSSH\;C:\Qt\Tools\Ninja;"
-C:\Qt\Tools\CMake_64\bin\cmake.exe -S .. -B . -GNinja "-DCMAKE_BUILD_TYPE:STRING=Release" "-DCMAKE_PROJECT_INCLUDE_BEFORE:PATH=C:/Qt/Tools/QtCreator/share/qtcreator/package-manager/auto-setup.cmake" "-DQT_QMAKE_EXECUTABLE:STRING=C:/Qt/6.2.2/mingw81_64/bin/qmake.exe" "-DCMAKE_PREFIX_PATH:STRING=C:/Qt/6.2.2/mingw_64" "-DCMAKE_C_COMPILER:STRING=C:/Qt/Tools/mingw900_64/bin/gcc.exe" "-DCMAKE_CXX_COMPILER:STRING=C:/Qt/Tools/mingw900_64/bin/g++.exe"
+C:\Qt\Tools\CMake_64\bin\cmake.exe -S .. -B . -GNinja "-DCMAKE_BUILD_TYPE:STRING=Release" "-DCMAKE_PROJECT_INCLUDE_BEFORE:PATH=C:/Qt/Tools/QtCreator/share/qtcreator/package-manager/auto-setup.cmake" "-DQT_QMAKE_EXECUTABLE:STRING=C:/Qt/6.2.3/mingw81_64/bin/qmake.exe" "-DCMAKE_PREFIX_PATH:STRING=C:/Qt/6.2.3/mingw_64" "-DCMAKE_C_COMPILER:STRING=C:/Qt/Tools/mingw900_64/bin/gcc.exe" "-DCMAKE_CXX_COMPILER:STRING=C:/Qt/Tools/mingw900_64/bin/g++.exe"
 C:\Qt\Tools\CMake_64\bin\cmake.exe --build . --target all -- -j $((Get-CimInstance Win32_ComputerSystem).NumberOfLogicalProcessors)
 mv .\simple-process-tracker.exe ..
 rm -Recurse *
 mv ..\simple-process-tracker.exe .
-C:\Qt\6.2.2\mingw_64\bin\windeployqt.exe --no-translations .\simple-process-tracker.exe
+C:\Qt\6.2.3\mingw_64\bin\windeployqt.exe --no-translations .\simple-process-tracker.exe
 ```
 
 You will now have a working portable program in the directory `C:\Users\YOUR_USER_NAME\Desktop\simple-process-tracker-master\build-dir`.
