@@ -123,6 +123,9 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
             toolbar->setToolButtonStyle(orientation == Qt::Vertical ? Qt::ToolButtonTextUnderIcon : Qt::ToolButtonTextBesideIcon);
         });
 
+    // Hide empty space in top of categories dock widget
+    ui->categoriesDock->setTitleBarWidget(new QWidget());
+
     loadProcessData();
     loadCategoryData();
     loadWindowData();
