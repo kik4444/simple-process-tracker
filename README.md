@@ -9,7 +9,7 @@ A simple, lightweight Qt-based app that tracks how long user-selected processes 
 2. Execute the following:
 ```bash
 git clone https://github.com/kik4444/simple-process-tracker
-cd simple-process-tracker
+cd simple-process-tracker/src
 mkdir build-dir && cd build-dir
 cmake -S .. -B . -DCMAKE_BUILD_TYPE:STRING=Release
 make -j$(nproc)
