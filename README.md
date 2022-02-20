@@ -67,9 +67,9 @@ You will now have a working portable program in the directory `C:\Users\YOUR_USE
 
 # Screenshots for Windows / Mac OS X / Linux
 ## Main window tracking 3 processes
-![Windows-1](https://user-images.githubusercontent.com/7779637/154819200-f7aeec4c-ec88-4266-bc9d-068fe69ba2aa.png)
-![MacOS-1](https://user-images.githubusercontent.com/7779637/154819227-0307720b-d882-4626-9b11-d7884c0da359.png)
-![Linux-1](https://user-images.githubusercontent.com/7779637/154822944-4659850d-6ec2-42d6-8d7c-b4108c1ce2d8.png)
+![Windows-1](https://user-images.githubusercontent.com/7779637/154840366-d9162191-7fec-4602-9b91-9a7bf7c655f3.png)
+![MacOS-1](https://user-images.githubusercontent.com/7779637/154840547-9c1db673-4f05-4432-9261-f47081982aa3.png)
+![Linux-1](https://user-images.githubusercontent.com/7779637/154840364-a5d16ae5-435d-4862-8bf2-ea258adab2d0.png)
 
 ## Adding a new process to track
 ![Windows-2](https://user-images.githubusercontent.com/7779637/154819189-f41babfe-c96a-4138-b38d-0182a9ae3dc5.png)
