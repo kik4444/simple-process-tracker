@@ -502,13 +502,14 @@ void MainWindow::exportProcesses(QList<QModelIndex> realProcesses)
     {
         QJsonObject processData;
         QString processName = getRealIndexData(index.row(), ProcessColumns::Name).toString();
+        QString lastSeenTime = getRealIndexData(index.row(), ProcessColumns::LastSeen).toString();
 
         processData["categories"] = getRealIndexData(index.row(), ProcessColumns::HiddenCategories).toString();
         processData["tracking"] = getRealIndexData(index.row(), ProcessColumns::Tracking).toString() == processIsActiveSymbol;
         processData["iconPath"] = processIcons[processName];
         processData["duration"] = QJsonValue::fromVariant(processDurations[processName]);
         processData["notes"] = getRealIndexData(index.row(), ProcessColumns::Notes).toString();
-        processData["lastSeen"] = QDateTime::currentDateTime().toString("yyyy/MM/dd hh:mm:ss");
+        processData["lastSeen"] = lastSeenTime == "Now" ? QDateTime::currentDateTime().toString("yyyy/MM/dd hh:mm:ss") : lastSeenTime;
         processData["dateAdded"] = getRealIndexData(index.row(), ProcessColumns::DateAdded).toString();
 
         processesJson.insert(processName, processData);
