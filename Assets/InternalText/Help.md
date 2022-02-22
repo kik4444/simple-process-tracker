@@ -1,4 +1,4 @@
-# Simple Process Tracker v2.0.1
+# Simple Process Tracker v2.0.2
 
 A simple, lightweight app that tracks how long user-selected processes have cumulatively been running on the system.
 
