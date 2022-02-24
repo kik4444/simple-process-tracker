@@ -27,7 +27,7 @@ make -j$(nproc)
 6. Execute the following from a terminal:
 ```bash
 git clone https://github.com/kik4444/simple-process-tracker
-cd simple-process-tracker
+cd simple-process-tracker/src
 mkdir build-dir && cd build-dir
 export PATH=/Users/$USER/Qt/Tools/Ninja:$PATH
 /Users/$USER/Qt/Tools/CMake/CMake.app/Contents/bin/cmake -S .. -B . -GNinja -DCMAKE_BUILD_TYPE:STRING=Release "-DCMAKE_PROJECT_INCLUDE_BEFORE:PATH=/Users/$USER/Qt/Qt Creator.app/Contents/Resources/package-manager/auto-setup.cmake" -DQT_QMAKE_EXECUTABLE:STRING=/Users/$USER/Qt/6.2.3/macos/bin/qmake -DCMAKE_PREFIX_PATH:STRING=/Users/$USER/Qt/6.2.3/macos -DCMAKE_C_COMPILER:STRING=/usr/bin/clang -DCMAKE_CXX_COMPILER:STRING=/usr/bin/clang++
@@ -51,7 +51,7 @@ You will now have a dmg file containing the application that you can drag and dr
 cd C:\Users\$env:UserName\Desktop
 Start-BitsTransfer -Source https://github.com/kik4444/simple-process-tracker/archive/refs/heads/master.zip -Destination .
 Expand-Archive -Path .\master.zip -DestinationPath .
-cd simple-process-tracker-master
+cd simple-process-tracker-master\src
 mkdir build-dir
 cd build-dir
 $env:Path = "C:\Qt\Tools\mingw900_64\bin;C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem;C:\Windows\System32\WindowsPowerShell\v1.0\;C:\Windows\System32\OpenSSH\;C:\Qt\Tools\Ninja;"
