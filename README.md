@@ -15,6 +15,15 @@ cmake -S .. -B . -DCMAKE_BUILD_TYPE:STRING=Release
 make -j$(nproc)
 ```
 
+## Alternative Linux Qt5
+```bash
+git clone https://github.com/kik4444/simple-process-tracker
+cd simple-process-tracker/src
+mkdir build-dir && cd build-dir
+qmake -o Makefile ../simple-process-tracker.pro -spec linux-g++
+make -j$(nproc)
+```
+
 # Mac OS X
 1. Download the open source version of Qt from https://www.qt.io/download-qt-installer.
 2. Register a Qt account to log into the installer.
