@@ -1,4 +1,4 @@
-QT       += core gui widgets
+QT       += core gui widgets svg
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -14,7 +14,7 @@ SOURCES += \
     core/mainwindow.cpp \
     core/options.cpp \
     core/processdialog.cpp \
-    core/processscanner.cpp \
+    core/processscanner.cpp 
 
 HEADERS += \
     core/about.h \
@@ -23,17 +23,16 @@ HEADERS += \
     core/parser.h \
     core/processdialog.h \
     core/processscanner.h \
-
     subclass/myitemdelegate.h \
     subclass/mysortfilterproxymodel.h \
     subclass/mystandarditem.h \
-    subclass/mystandarditemmodel.h \
+    subclass/mystandarditemmodel.h 
 
 FORMS += \
     core/about.ui \
     core/mainwindow.ui \
     core/options.ui \
-    core/processdialog.ui \
+    core/processdialog.ui 
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
